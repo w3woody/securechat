@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" initialViewController="Tgz-L5-RdZ">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="ogp-4c-82d">
+            <objects>
+                <navigationController id="Tgz-L5-RdZ" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="nMf-yb-a6Z">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="i2M-tb-ahZ" kind="relationship" relationship="rootViewController" id="3Pc-l6-bQp"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ucR-GD-spf" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-549" y="689"/>
+        </scene>
+        <!--SecureChat-->
+        <scene sceneID="Ztc-dL-cKT">
+            <objects>
+                <viewController id="i2M-tb-ahZ" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="pDM-Un-ugw"/>
+                        <viewControllerLayoutGuide type="bottom" id="fhW-FJ-2An"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="zmV-9j-6nx">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SLR-ZA-bkT">
+                                <rect key="frame" x="0.0" y="556" width="600" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="lkT-ne-UBn"/>
+                                </constraints>
+                                <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="LeY-Jg-r85"/>
+                                    <barButtonItem title="Settings" id="WiX-mW-u0K"/>
+                                </items>
+                            </toolbar>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="SLR-ZA-bkT" secondAttribute="trailing" id="FKd-Mw-Bgq"/>
+                            <constraint firstItem="SLR-ZA-bkT" firstAttribute="leading" secondItem="zmV-9j-6nx" secondAttribute="leading" id="emw-e6-DXi"/>
+                            <constraint firstItem="fhW-FJ-2An" firstAttribute="top" secondItem="SLR-ZA-bkT" secondAttribute="bottom" id="vKg-Ll-1ca"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="SecureChat" id="dCd-nd-G7v">
+                        <barButtonItem key="leftBarButtonItem" systemItem="edit" id="yng-0b-Pu6"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="compose" id="FIH-yp-mmY"/>
+                    </navigationItem>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0ub-Xg-VUu" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="161" y="685"/>
+        </scene>
+    </scenes>
+</document>

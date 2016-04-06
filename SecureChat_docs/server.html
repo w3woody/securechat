@@ -1,0 +1,118 @@
+<html>
+	<head>
+		<title>SecureChat Server</title>
+		<link type="text/css" rel="stylesheet" href="SecureChat.css"> 
+	</head>
+	<body>
+		<h1>Server Overview</h1>
+		<p>This provides an overview of the SecureChat server source kit, including the
+			database components, servlet components and notification service.</p>
+		<h2>Design Goals</h2>
+		<p>The SecureChat server is deliberately designed to be as minimal as possible,
+			serving principally as a public key keystore and a message queue for sending
+			and receiving messages between chat clients.</p>
+		<p>The principle design goal for the SecureChat server is to reduce exposure to a
+			hacker or agency from capturing message data or useful metadata through the
+			following techniques:</p>
+		<ul><li>Do not associate user account information with personally identifying
+			information. The server only captures a username and password, and associates
+			device identifiers (which are deliberately anonymous unique identifiers)
+			with each device.</li>
+			<li>Minimize the amount of data captured for each device. The SecureChat server
+			only stores the device identifier and public RSA key for each device associated
+			with the user.</li>
+			<li>Only store messages in encrypted format. The messages handled by the 
+			SecureChat server are all encrypted with the destination device's public key, 
+			and can only be decrypted on the device using the private key for that 
+			device.</li></ul>
+		<p>These design goals make the server very simple: as no identifying information needs
+			to be stored, the server database schema is quite simple:</p>
+		<img class="diagram" src="images/serverdb.png">
+		<p>The protocol used by the server to communicate with the client is also equally
+			simple, and is <a href="network.html">documented separately.</a></p>
+		<h3>Limitations</h3>
+		<p>The current SecureChat server is not designed to scale to handle a large number
+			of users, but to describe a system which can better protect communications
+			between a smaller number of users. To scale some changes would need to be made
+			to the way messages are stored in the database and to the way notifications
+			would be handled.</p>
+		
+		<h2>Server Source Overview</h2>
+		<h3>Configuration</h3>
+		<p>The class <b>Config</b> <i>(com.chaosinmotion.securechat.server.config)</i>
+			provides a standard mechanism for loading a configuration
+			file for identifying the database and database credentials. This class looks
+			for the securechat.properties file from the following locations, in order:</p>
+		<ul><li>/home/s/securechat.properties</li>
+			<li>~/.warconfig/securechat.properties</li></ul>
+		<p>You need to modify this class if you need to store the configuration file at a
+			different location.</p>
+		<p>The format of the configuration file is as follows:</p>
+		<pre class="samplecode"># Database connection properties
+dburl = jdbc:postgresql://<i>hostname</i>:<i>port (i.e., 5432)</i>/<i>database</i>
+username = <i>postgresql username</i>
+password = <i>postgresql password</i></pre>
+		
+		<h3>Database</h3>
+		<p>The SecureChat server by design expects to communicate with a 
+			<a href="http://www.postgresql.org">PostgreSQL</a> database. The configuration is
+			obtained from the configuration settings above.</p>
+		<p>When first started, the class <b>DatabaseBuilder</b> verifies that a version table 
+			is present in the database, and uses that to read the current version of the
+			schema stored in the database. This then is used to determine which of the
+			<i>schema<b>N</b>.sql</i> files are read to initialize the database schema.</p>
+		<p>This design allows us to incrementally upgrade the server in the future; on startup,
+			each <i>schema<b>N</b>.sql</i> file contained in the package 
+			<i>com.chaosinmotion.securechat.server.database</i> is read, starting with the
+			first unread schema file determined by the version number stored in the version
+			database. This implies that each schema file contains the changes from the previous
+			schema to update to the current version.</p>
+			
+		<h3>RSA Support</h3>
+		<p>The package <i>com.chaosinmotion.securechat.rsa</i> contains a <a href="rsa.html">
+			subset of the classes described on the client front end</a> to perform RSA 
+			encoding and key management. This is used to allow the server to send admin 
+			messages to each device in response to admin events.</p>
+		
+		<h3>Servlet Interface</h3>
+		<p><a hef="network.html">Network requests</a> received by the SecureChat server are
+			received by the classes declared in <i>com.chaosinmotion.securechat.server,</i>
+			which parse the incoming POST requests, determine if the user is authenticated to
+			make the call, and calls the appropriate command class (described below) to
+			actually handle the command. There are three servlets which handle each of the
+			three groups of network requests: <b>LoginServlet</b> handles requests to the
+			/login URI, <b>DeviceServlet</b> for /device and <b>MessageServlet</b> for 
+			/messages requests. A fourth servlet, <b>ValidateServlet</b> is used to determine
+			if the SecureChat server has been set up correctly and to help identify the
+			correct URL for chat clients to use.</p>
+		<p>This uses the <a href="http://json.org">JSON parser library for Java</a> for 
+			parsing incoming requests. Responses are also constructed using the classes
+			defined in <i>com.chaosinmotion.securechat.server.json</i>, including standard
+			error responses and the more complex response payloads.</p>
+		
+		<h3>Commands</h3>
+		<p>The <i>com.chaosinmotion.securechat.commands</i> package contains the individual
+			classes which handle each of the 11 major network requests that a client can make.
+			This is the "business logic" of the SecureChat server.</p>
+		
+		<h3>Message Queue</h3>
+		<p>The logic for handling sending messages to a specific user is handled by the 
+			<b>MessageQueue</b> class contained in 
+			<i>com.chaosinmotion.securechat.server.messages</i>. This class contains logic for 
+			identifying a device from the device's UUID, for inserting a message into the
+			database, and for sending out a notification to all devices that are listening for
+			notifications. This also contains the logic for sending an admin message when the
+			user requests to reset his password, and can by extension be used to extend the
+			types of admin messages sent in the future.</p>
+		
+		<h3>Notifications</h3>
+		<p>Notifications allow a chat client to immediately receive a message when a sender
+			sends them a chat message. The notification mechanism used by SecureChat involves
+			each client connecting to an advertised TCP/IP socket, logging into that socket,
+			and then receiving messages as they are enqueued by the <b>MessageQueue</b> class.</p>
+		<p>The code which listens for incoming requests is <b>NotificationService</b>, which
+			uses Java sockets to create a socket listener; individual connections are managed
+			by <b>NotificationSocket</b></p>
+		
+	</body>
+</html>

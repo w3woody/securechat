@@ -1,0 +1,86 @@
+<html>
+	<head>
+		<title>SecureChat Client Setup</title>
+		<link type="text/css" rel="stylesheet" href="SecureChat.css"> 
+	</head>
+	<body>
+		<h1>Client Setup</h1>
+		<p>This covers the steps for building and deploying a client, as well as setting up
+			the client device for chatting.</p>
+		<h2>Requirements</h2>
+		<p>The SecureChat iOS client was built with Xcode v7.</p>
+		<h2>Building</h2>
+		<ul><li>Open the <b>SecureChat.xcodeproj</b> file in Xcode. SecureChat has no other
+			dependencies.</li>
+		<li>Build the application. You will need an Apple Developer account in order to install
+			the application on your iOS devices; the type of account will determine what limits
+			on the number of devices you have during installation.</li></ul>
+		<h2>Setting up a running client.</h2>
+		<p>All of the steps for setting up the client, as well as steps for adding a new device,
+			for changing the password, and for unregistering a device, are handled through a
+			series of "wizard"-like screens which should help you set up your device. The
+			process should be self-explanatory.</p>
+		<h3>Onboarding Steps</h3>
+		<p>The steps used when starting up a client are outlined below. You must complete these
+			steps prior to using the application.</p>
+		<h4>Select a Passcode</h4>
+		<p>A passcode is a sequence of digits which is used to generate an encryption key for 
+			encrypting the contents of the keystore used to store your RSA key. The longer the
+			sequence, the more secure your keystore and the messages on your device. The
+			sequence must be at least 4 digits long.</p>
+		<h4>Generate an RSA Key</h4>
+		<p>All messages sent and received by the device are sent and received using RSA. The
+			longer the RSA key, the more time it takes to generate a key and to encrypt and
+			decrypt messages. In general a 1024 bit key is good enough, but if you are willing
+			to wait longer, you can pick a 2048 bit key or a 4096 bit key. Note that a
+			2048 bit key can take up to 2 minutes to generate, and a 4096 key can take several
+			minutes.</p>
+		<h4>Select SecureChat Server URL</h4>
+		<p>This will depend on where the SecureChat server was installed. You will need to
+			obtain this URL from the person who installed the server. By default the URL
+			is assumed to be https://, unless specified otherwise.</p>
+		<p>For example, if the server was installed at http://myserver.com (and that is the
+			URL returned during installation), you may enter:</p>
+		<p><b>http://myserver.com</b></p>
+		<p>If the server was installed with https://, you can instead enter:</p>
+		<p><b>myserver.com</b></p>
+		<p>If the wrong URL is entered or the server is not present, you will get an error.</p>
+		<h4>Create an account or log into an existing account</h4>
+		<p>If you have an existing account you may enter the credentials. If you have forgotten
+			your existing account's password, you can request to reset the password, but note
+			this will only work if you have a device currently registered to that account. 
+			(Password reset requests are broadcast to devices currently registered to the
+			account, as there are no e-mail addresses stored for each user account.)</p>
+		<p>Creating an account only requires a username (which you should select in a way
+			which does not identify yourself; i.e., don't use your name), and a password. The
+			password must contain at least 8 letters, including one capital letter, one
+			lowercase letter, one digit and one punctuation character.</p>
+		<p>Note that all passwords are hashed, and are not stored in clear text.</p>
+		
+		<h4>Done!</h4>
+		<p>Enjoy securely chatting with other users!</p>
+		
+		<h2>Maximizing Security</h2>
+		<p>Here are some steps you can do to make sure the security of your messages are
+			maximized.</p>
+		<h3>Account Security</h3>
+		<ul><li>Pick a username which does not identify who you are.</li>
+			<li>Pick a secure password that cannot be easily guessed.</li>
+			<li>Never share your password with anyone. The SecureChat password is hashed, so
+			there is never any need to share your password, and there is no way for others
+			to inspect the server to discover your password.</li></ul>
+		<h3>Device Security</h3>
+		<ul><li>Pick a good passcode, one that is hard to guess (like your birthday), but
+			one which is easy for you to remember.</li>
+			<li>Never share your device with anyone.</li>
+			<li>Always pay attention to the number of devices SecureChat thinks you have
+			registered to your account. If that number does not match the devices you think
+			you have, discontinue using your account immediately.</li></ul>
+		<h3>Secure chatting</h3>
+		<ul><li>Pay attention to the number of devices registered to the person you are
+			chatting with. If that number suddenly jumps, you may want to contact that
+			person separately and ask them if they've added a new device to their 
+			account.</li></ul> 
+		
+	</body>
+</html>

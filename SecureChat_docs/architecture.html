@@ -1,0 +1,176 @@
+<html>
+	<head>
+		<title>SecureChat Architecture</title>
+		<link type="text/css" rel="stylesheet" href="SecureChat.css"> 
+	</head>
+	<body>
+		<h1>Architecture</h1>
+		<h2>Assumptions</h2>
+		<p>No system is 100% secure. The design goal of SecureChat, however, is the following:</p>
+		<p class="headnote">Secure all messages end-to-end.</p>
+		<p>We use an RSA public/private key system to encode all messages on the client device,
+			and transmit only the encrypted message to the server for delivery to the
+			destination device. This implies if a user has multiple devices, we will encrypt
+			the message multiple times, once for each destination device.</p>
+		<p class="headnote">Minimize data on the server</p>
+		<p>One method by which an attacker can obtain data is to hack the back-end server. We
+			minimize the exposure to an attacker through the following techniques:</p>
+		<ul><li>Messages are removed from the server as soon as they are delivered to the
+			client. This means the only record of communications is on the user's device, and
+			not on the server. If the device is off-line, messages are stored, but only until
+			a destination device is brought on-line.</li>
+			<li>Minimize the amount of information captured during account setup. In the case
+			of SecureChat, the only data captured is a username and password during account
+			creation. Resetting the password requires an active device capable of receiving
+			messages from the server. Further, there is no 'user discovery' beyond trying to
+			chat with a specific user; it is assumed usernames are communicated separately.</li>
+			<li>Use randomly generated UUIDs (specifically cryptographically generated version 4
+			<a href="https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_.28random.29">UUIDs</a>)
+			in order to identify devices to the server. This reduces the possibility of using
+			certain UUID fields (such as network identifiers) in order to back-track a device
+			identifier on a back-end server to the specific iOS device being used.</li>
+			<li>Assume the database has been compromised by using SHA-256 to encrypt all
+			passwords on the back-end server. <i>(Look, this is security 101, and if you are
+			not doing this on your design, please do us a favor and switch professions. Become
+			an attorney; you'll do less damage.)</i>
+			</ul>
+		<p class="headnote">Minimize exposure to hacking on the device</p>
+		<p>Another method by which an attacker can obtain data is to obtain access to a device.
+			We minimize exposure to an attacker through the following techniques:</p>
+		<ul><li>Assume the secure keystore on iOS has been compromised by requiring a separate
+			passcode to decrypt our own keystore data. Our data is stored encrypted using
+			<a href="https://en.wikipedia.org/wiki/Blowfish_(cipher)">Blowfish,</a>
+			using a key generated from an SHA-256 hash of the entered passcode. We
+			further reduce the possibility of a brute-force attack by using a 
+			<a href="https://en.wikipedia.org/wiki/Cyclic_redundancy_check">CRC-8 hash</a>
+			to determine if our keystore has been decrypted. <b>This is a deliberate design
+			choice, which has the property of creating a 1 in 256 chance of destructively
+			destroying data if the wrong passcode is entered.</b> For a weak passcode of 4
+			digits, this means it is 39 times more likely a destructive passcode is entered
+			than the correct passcode.</li>
+			<li>Assume the data in the device is compromised by keeping all messages on the
+			device in the same encrypted from received from the server. Messages are decrypted
+			only as they are displayed using an in-memory cache.</li>
+			<li>Assume the RSA key encryption architecture on iOS has been compromised by
+			providing our own RSA encryption system. That system is documented 
+			<a href="rsa.html">in a separate section.</a></li>
+			<li>Because all messages are encrypted locally on the client, the client must know
+			the number of devices a receiver has registered. This number (as well as the
+			number of devices registered to you) are displayed at the top of each chat message.
+			If that number suspiciously increments, you can check separately with the user
+			that he did or did not register a new device, and stop communications 
+			immediately.</li></ul>
+		</ul>
+		<p class="headnote">Minimize exposure to packet sniffing</p>
+		<p>A third method is to listen to all network communications, in order to gain
+			insight into information that can be used to hack the system. We minimize exposure
+			to an attacker through the following techniques:</p>
+		<ul><li>Use a two-phase login process where we receive a randomly generated token from
+			the server, and use that token to hash the password sent. 
+			<a href="http://www.tech-faq.com/apop.html">This technique</a> should make
+			it harder to sniff the packet to determine the user's password, and spoof a
+			user through using a 
+			<a href="https://en.wikipedia.org/wiki/Replay_attack">replay attack.</a></li>
+			<li>The design of the system means all messages are sent and received encoded,
+			so sniffing for messages should be difficult.</li>
+			<li>Deleting messages on the back-end require the correct checksum to be sent to
+			verify the receiver did correctly decrypt the message (and thus, is in possession
+			of the correct RSA key). This prevents a hacker from destroying unreceived messages
+			by spoofing a client caller with sniffed credentials.</li></ul>
+		<p>(<b>Note:</b> We do not encrypt the entire message, which is sent as JSON
+			POST requests and received as JSON formatted data to an HTTP server. Thus, for 
+			additional security you should install the server on a server that uses an
+			SSH secured socket. Doing that is beyond the scope of this document.)</p>
+		<p>It is worth remembering that SSH by itself does not prevent a 
+			<a href="https://en.wikipedia.org/wiki/Man-in-the-middle_attack">Man in the middle attack</a>,
+			so it is worth considering designing your protocol as if it were sent 
+			in the clear.</p>
+	
+		
+		<h2>Architectural description</h2>
+		<h3>Server Overview</h3>
+		<p>The SecureChat Server is actually quite simple; it serves as a means by which
+			clients advertise their own public key, and for discovering the public key of
+			other devices belonging to a given user. Individual users can have multiple
+			devices associated with their account. Because the goal is to minimize storage
+			on each device, the database itself is quite simple.</p>
+		<img class="diagram" src="images/serverdb.png">
+		<p>The server database consists of 5 tables total, of which three are actively used.
+			(A fourth is used to track requests for forgotten passwords, and a fifth is used
+			to track the version of the schema loaded into the database.) These tables give
+			the list of users (storing only the username and the hashed password), the list
+			of devices owned by each user, and the list of messages that are waiting for 
+			delivery to each device. Note that because of the way messages are sent, encoded
+			with the public key of each device, a message may show up multiple times for 
+			each user. Further, this implies that when a user adds a device to his account,
+			he will not have access to his message history for that account. This is a
+			deliberate design decision.</p>
+		<h4>User Accounts</h4>
+		<p>A user account consists of only three fields: the internal ID of the user, the
+			username, and a password (which has been hashed using SHA-256). No other
+			personally identifying information is captured, not even an e-mail address.
+			This has a number of implications; for example, the only way a password can
+			be reset if the user forgets his password is to make a request from another
+			device.</p>
+		<h4>Devices</h4>
+		<p>Associated with each user is one or more devices. A device is identified by a
+			unique identifier (generated by the device using a cryptographically generated
+			random number) and an RSA public key. When a user is sent a message, the sending
+			client must download the public key for all devices the user owns, and separately
+			encrypt the message each time for each device.</p>
+		<h4>Message Queue</h4>
+		<p>Associated with each device is a separate message queue. This is used to temporarily
+			store messages for devices that are not on-line. Messages are then delivered to
+			devices that go on-line, and removed when the device successfully acknowledges
+			receipt of the message.</p>
+		<img class="diagram" src="images/sendmessage.png">
+		<p>When a message is sent to a user, the first thing the client does is obtain a
+			list of devices associated with a user. Then the client encodes the message
+			using the public key of each device the message is being sent to. Finally the
+			message is uploaded to the server, and the server notifies all devices which
+			received a message. Once the message is delivered to a device, the device responds
+			to the server to delete the message.</p>
+		<h4>Server block diagram</h4>
+		<img class="diagram" src="images/serverdiagram.png">
+		<p>In addition to serving as a public key directory for owned devices, the server
+			has the ability to handle direct socket connections from a client, so that 
+			messages sent to the server can be immediately relayed to an on-line client.
+			This is an optional service; if the server environment does not permit a socket
+			from being opened to receive non-HTTP connections, the client will default to
+			polling the server for messages on a 15 second interval.</p>
+		<p>The server also contains calls for new membership onboarding, updating the
+			user password, and for managing devices associated with a user.</p>
+			
+		<p>More information can be found on the <a href="server.html">Server 
+			Architecture</a> page.</p>
+			
+		<h3>Client Overview</h3>
+		<p>Because the client is responsible for far more than the server, the client is
+			necessarily more complex. Besides the <a href="rsa.html">custom RSA code</a>,
+			the client consists of a number of other components used for managing the public
+			and private key, for communicating with the back-end, and for storing and 
+			managing messages.</p>
+		<img class="diagram" src="images/clientblock.png">
+		<p>Elements of the client code include:</p>
+		<ul><li><b>Message Queue</b> which is responsible for sending and receiving messages,
+			and for organizing messages.</li>
+			<li><b>Message Database</b> which is responsible for saving and loading encrypted
+			messages to a SQLite database,</li>
+			<li><b>Device Cache</b> which caches the devices associated with a user,</li>
+			<li><b>Message Decryption Cache</b> which caches in memory decrypted messages
+			received from the server,</li>
+			<li><b>Message Delete Queue</b>, which handles requests for deleting messages,</li>
+			<li><b>Network Client</b> responsible for sending requests to the back end,</li>
+			<li><b>RSA Manager</b> which provides a single mechanism for managing the
+			public/private RSA key for this application, as well as the user credentials and
+			decrypting received messages,</li>
+			<li><b>RSA Encoder</b> which handles encoding messages using a public key,</li>
+			<li>and the various UI elements responsible for the look and feel of the 
+			application.</li></ul>
+		
+		<p>More information can be found on the <a href="client.html">Client 
+			Architecture</a> page.</p>
+			
+		
+	</body>
+</html>

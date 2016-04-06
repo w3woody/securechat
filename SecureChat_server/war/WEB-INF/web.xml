@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+              http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	version="2.5" xmlns="http://java.sun.com/xml/ns/javaee">
+
+	<!-- Servlets -->
+	<servlet>
+		<servlet-name>LoginServlet</servlet-name>
+		<servlet-class>com.chaosinmotion.securechat.server.LoginServlet
+		</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>DeviceServlet</servlet-name>
+		<servlet-class>com.chaosinmotion.securechat.server.DeviceServlet
+		</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>MessageServlet</servlet-name>
+		<servlet-class>com.chaosinmotion.securechat.server.MessageServlet
+		</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>ValidateServlet</servlet-name>
+		<servlet-class>com.chaosinmotion.securechat.server.ValidateServlet
+		</servlet-class>
+	</servlet>
+
+	<session-config>
+		<!-- time out session at 120 minutes -->
+		<session-timeout>120</session-timeout>
+	</session-config>
+
+	<servlet-mapping>
+		<servlet-name>ValidateServlet</servlet-name>
+		<url-pattern>/ss/v</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>LoginServlet</servlet-name>
+		<url-pattern>/ss/api/1/login/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>DeviceServlet</servlet-name>
+		<url-pattern>/ss/api/1/device/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>MessageServlet</servlet-name>
+		<url-pattern>/ss/api/1/messages/*</url-pattern>
+	</servlet-mapping>
+
+	<!-- Default page to serve -->
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+</web-app>

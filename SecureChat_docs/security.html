@@ -1,0 +1,114 @@
+<html>
+	<head>
+		<title>SecureChat Security</title>
+		<link type="text/css" rel="stylesheet" href="SecureChat.css"> 
+	</head>
+	<body>
+		<h1>Security</h1>
+		<p>Of course this is not a complete list, but is a list of the potential strengths 
+			and weaknesses of this design. With some effort many of these weaknesses 
+			could be overcome.</p>
+			<p>However, the point of this demonstration was not to make
+			the "perfect" chat system, but to demonstrate (via software) the way such a
+			secure chat system could be produced, which makes it difficult or impossible
+			for third parties to examine the messages being sent and received, and difficult
+			or impossible for someone with access to either a client or a server to
+			reconstruct the sent and received messages.</p>
+		<h2>Attacks on a client</h2>
+		<p>Clients in SecureChat assume full responsibility for encoding and decoding messages
+			sent to the SecureChat server. This makes them vulnerable if a third party hacker
+			or agency got access to the data stored on that device.</p>
+		<ul><li>All messages sent and received by a client are stored as RSA encoded 
+			messages using the device's public key, in a <a href="http://sqlite.org">SQLite</a>
+			database. Other fields in the SQLite database are not encrypted, which means 
+			someone who scrapes the file system of a device will have access to metadata 
+			associated with the chat application.</li>
+			<li>Because a hacker or agency who wants access to the data on a device has
+			access to the source code, it is not unreasonable to assume a determined hacker
+			could build a variation which allows the passcode to be guessed and to determine
+			based on attributes stored in the keystore to determine if the correct passcode
+			was selected. <br><i>One solution would be to alter the way data is stored in the
+			keystore so as to increase the entropy of the stored data, and to create a
+			storage scheme for the public and private RSA keys so that an incorrectly
+			entered passcode decrypts to a "valid" RSA key.</i></li>
+			<li>Because all communications are stored on the client (and no backup copy is
+			maintained on the server), loss of a device means loss of the chat history.</li>
+			<li>Because there is no means to discover users to chat with, it is assumed the
+			username is discovered through other, potentially unsecure channels.</li></ul>
+		<h2>Attacks on the server</h2>
+		<p>Because the server is used as a keystore for public keys and as a message queue
+			for when devices are not on-line, there are several possible attacks on a
+			server.</p>
+		<p>One advantage of this architecture is that it is impossible based solely on the
+			information on a server to determine which device belongs to which user, to 
+			resolve a device identifier to an actual physical device, or (so long as user
+			names are properly selected) to tie a username back to a user. Because messages
+			are only stored until they are successfully delivered, and because messages are
+			stored encoded on the back-end PosgreSQL database, it should be difficult to
+			reconstruct old messages.</p>
+		<p>However, there are some obvious potential attacks.</p>
+		<ul><li>A "fake" device can be registered to each user which causes the client to
+			encrypt each message to a third party-owned client. This would require
+			the fake device to be inserted either into the source code or into the
+			database.<br>
+			<i>Note one way to work around this is by examining the number of devices that
+			are registered to you and to the person you are sending messages from; if that
+			number changes, contact the sender via a separate channel to see if he has added
+			a new device.</i></li>
+			<li>A dirtier trick would be for a hacked version of the server to announce a
+			different public key for a specific device than the device published to the 
+			server. Then the sender encodes for the 'fake' device, and the message is then
+			decrypted using the fake private key, then re-encrypted to the destination
+			device's public key.<br>
+			<i>This is somewhat mitigated by having each device compare its own public key
+			with the one announced by the server, and complaining to the user if the
+			public key does not match.</i></li>
+			<li>Each message waiting to be delivered is stored encrypted on the PostgreSQL
+			server; however, other metadata is not encrypted (except passwords, which are
+			hashed using SHA-256). This implies it is possible, assuming users do not regularly
+			check for their messages, that some metadata can be recovered (helping to
+			identify which users are communicating with which).<br>
+			<i>This can somewhat be mitigated by making sure messages are read in a 
+			prompt fashion, and perhaps having a timeout mechanism which automatically
+			deletes messages older than a certain timeout threshold.</i></li></ul>
+		<h2>Attacks on the network</h2>
+		<p>There are a number of potential attacks that can be carried out on the network.</p>
+		<p>In general, the classic categories of network attacks are sniffing for information,
+			creating a 'man in the middle' which intercepts and perhaps either subtly modifies
+			or records packets as they are sent, and 'reply attacks' which attempt to spoof
+			a device by replaying previous messages. These are mitigated against, but are still
+			worth noting.</p>
+		<ul><li>Messages sent between the client and server are sent via HTTP. When installing
+			the server it is recommended that an SSL/TLS key be created so messages are sent
+			and received via HTTPS, in order to mitigate 'man in the middle' attacks and
+			packet sniffing.<br><i>This can be additionally mitigated by creating a specifically
+			formed SSL/TLS public/private signing key, and modifying the source code in the
+			client to fail if a different public key is announced by the server. That way
+			messages can neither be intercepted or a server endpoint spoofed.</i></li>
+			<li>While messages sent out during notifications are being sent encrypted using
+			the RSA encryption process on the sending client, the header is sent 'in the
+			clear.'<br>
+			<i>This can be mitigated by modifying the notification mechanism to SSL/TLS to
+			encrypt the notification port, and by having the client connect using a secure
+			socket connection.</i></li></ul>
+		<h2>"Social" attacks.</h2>
+		<p>Despite how hackers are portrayed in the press, magically typing away some weird
+			commands and suddenly some light goes off showing they're "in", the reality is
+			most hackers use "social engineering" to hack their way into a system. For example,
+			notorious hacker Kevin Mitnick gained access to a number of sensitive files by
+			dressing up and walking through the front door as a disoriented new employee.</p>
+		<ul><li>Because there is no means for discovery and no way to correlate a user
+			account with a specific person, you need to make sure the person you are
+			communicating with is who they say they are. This means finding a trusted way to
+			indicate the accounts to be used when chatting online.</li>
+			<li>Beware of the one-word typo for usernames; replacing a zero with a capital 
+			letter 'O', or replacing capital 'I' (<i>eye</i>) and lowercase 'l' (<i>ell</i>).</li>
+			<li>Beware chat messages asking to change accounts without verifying with
+			that person via another channel. Likewise, beware messages suggesting you
+			change accounts first.</li>
+			<li><b>Never give your password or your passcode to anyone.</b> Always use strong
+			passwords and passcodes that cannot be easily guessed. And pick usernames which
+			cannot be tied back to you.</li></ul>
+			
+	</body>
+</html>

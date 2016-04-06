@@ -1,0 +1,40 @@
+<html>
+	<head>
+		<title>SecureChat Table of Contents</title>
+		<link type="text/css" rel="stylesheet" href="SecureChat.css"> 
+	</head>
+	<body>
+		<h1>Table of Contents</h1>
+		<h2>How it works.</h2>
+		<a href="architecture.html" class="toc">Architectural Overview</a>
+		<p>This section describes the overall architecture of the SecureChat system, including
+			the assumptions that were made, the design goals, and the means by which we
+			attempt to achieve those goals. Start here if you want an overview of how the
+			SecureChat system works.</p>
+		<a href="security.html" class="toc">Security Strengths and Weaknesses</a>
+		<p>This section gives a few thoughts about the potential strengths and weaknesses of
+			this design, including potential attacks and ways to mitigate them.</p>
+		<a href="rsa.html" class="toc">RSA Implementation</a>
+		<p>SecureChat relies on RSA to secure all messages between the client and the server.
+			This section describes the custom implementation of RSA, including an outline of
+			the individual classes on the client and the server which implement the RSA
+			encoder and decoder.</p>
+		<a href="client.html" class="toc">Client Overview</a>
+		<p>Describes how the SecureClient application works, from the implementation of a
+			keystore to the implementation of the user interface elements.</p>
+		<a href="server.html" class="toc">Server Overview</a>
+		<p>Describes the Java server back-end, including the various classes which implement
+			database storage, notifications and secure communications.</p>
+		<a href="network.html" class="toc">Network Protocol</a>
+		<p>Describes the network protocol used to communicate with the back-end server,
+			including the protocol used to send notifications for real-time chat.</p>
+		<h2>Setup Instructions</h2>
+		<a href="installation.html" class="toc">Installation</a>
+		<p>Describes how to build the SecureChat client and server, how to install the back
+			end server, and verify everything is working.</p>
+		<a href="setup.html" class="toc">Client Setup</a>
+		<p>Describes how to set up an installed iOS client by creating an account or adding a
+			device to an existing account.</p>
+		</p>
+	</body>
+</html>

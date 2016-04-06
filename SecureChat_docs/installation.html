@@ -1,0 +1,137 @@
+<html>
+	<head>
+		<title>SecureChat Installation</title>
+		<link type="text/css" rel="stylesheet" href="SecureChat.css"> 
+	</head>
+	<body>
+		<h1>Installation Instructions</h1>
+		<h2>Prerequisites</h2>
+		<p>The SecureChat client was built using Xcode; details can be found on the 
+			<a href="setup.html">client setup page.</a></p>
+		<p>The SecureChat server was built using Eclipse and using GWT. (Yes, I know,
+			I don't really use GWT; it simply provides a good environment for rapidly
+			developing a Tomcat-based server application.</p>
+		<p>What you need (or rather, what I used):</p>
+		<ul><li><a href="http://eclipse.org">Eclipse.</a> (I used v4.5.1, the Mars.1 Release)</li>
+		<li><a href="http://gwtproject.org">GWT and the Eclipse plugin.</a> The version should
+		not matter; I used GWT version 2.7.0.</li></ul>
+		<h2>Setting up the database</h2>
+		<p>First, you need to install the <a href="http://postgresql.org">PostgreSQL server</a> 
+			on your server and set up an empty database and database credentials. This 
+			differs between different systems and in some cases PostgreSQL may be 
+			pre-installed for you if you are using a third party hosting system. So the steps 
+			for installation are left to your own devices.</p>
+		<p>Once installed you need to create a project file which contains the connection
+			information for connecting to your PostgreSQL server. That file should look like
+			the one below (which can be used as a template):</p>
+		<pre class="samplecode"># Database connection properties
+dburl = jdbc:postgresql://localhost:5432/ss
+username = postgres
+password = secretpassword
+
+# Notification connection properties
+# notifications = no
+hostname = myserver.com
+hostport = 1348
+
+# notificationssl = yes
+keystorefile = /path/to/keystore.jks
+keystorepassword = password</pre>
+		<p>This file can then be copied into a known location on your server. It can be
+			located in one of the following places:</p>
+		<ul><li>/home/s/securechat.properties</li>
+			<li>~/.warconfig/securechat.properties</li></ul>
+		<p>where '~' represents the home directory returned by examining the system
+			property "user.home".</p>
+		<p>If the file has to be located somewhere else, you may do so, but you will then need
+			to modify the source code (described below) to obtain the properties file.</p>
+		
+		<h2>Building the system</h2>
+		<p>Now you need to build the war file for installation.</p>
+		<ul><li>If, while installing the securechat.properties file above, you had to
+			install it at a different location than the default locations provided in the
+			SecureChat system, you will need to modify the <b>Config.java</b> source file
+			(located at <i>com.chaosinmotion.securechat.server.config</i>) with the correct
+			location of your properties file.</li>
+		<li>Examine the <b>build.xml</b> build file. The SDK for GWT on my system
+			is installed at <i>/Applications/eclipse/sdk/gwt-2.7.0</i>; this is the Applications
+			directory of the Macintosh I use for development. Edit the location to
+			point to the location where you installed the GWT SDK.</li>
+		<li>Run ant on the <b>build.xml</b> file. The default build should generate a war
+		file called <b>securechat.war</b> next to the build.xml file.</li></ul>
+		<h2>Notifications</h2>
+		<p>Notifications require that the server be able to open an arbitrary port capable of
+			receiving incoming connections. If your server is not capable of opening an
+			arbitrary port, then you will want to modify the notification settings in your
+			configuration file.</p>
+		<p>There are a few possible values.</p>
+		<p>If <b>notifications</b> is set to <i>no</i>, then notifications will be disabled
+			for your server installation. This is useful in environments where a port cannot
+			be opened, such as with hosting services that provide Tomcat services.</p>
+		<p>If <b>notifications</b> is not set, then a notification port will be opened 
+			and advertised via the notifications API.</p>
+		<p>The hostname and port used by the notifications API is advertised at the 
+			<b>hostname</b> and <b>hostport</b> parameters. If the values are not 
+			provided, hostname will attempt to get the hostname of the server; otherwise, 
+			it will be the hostname advertised.</p>
+		<p>If the <b>hostport</b> parameter is not provided, then the server will attempt to
+			open a random port. Otherwise the <b>hostport</b> value is interpreted as an
+			integer, and used as the port for the notifications API.</p>
+		<p>If you have a firewall that the server is behind, you must use the same port number
+			on both machines, but the <b>hostname</b> value is simply passed to the API for 
+			connection.</p>
+			
+		<h3>Securing Notifications using TLS v1.2</h3>
+		<p>Notifications sends all messages encrypted, but the header is sent in plain text.
+			So long as users pick names that cannot be easily traced back to them, this
+			represents a minor security breach. But you can protect the data stream sent via
+			notifications using SSL. (This is highly recommended.)</p>
+		<p>To set up the certificate for SSL, you must first create a certificate. You can
+			create a self-signed keystore by using the Java tool keystore:</p>
+		<pre class="samplecode">keytool -genkey -alias keystore -keyalg RSA -validity 9999 -keystore (filename) -storetype JKS</pre>
+		<p>You will be prompted for a keystore password, and for other information, including
+			your first name, last name, etc. This information will be sent when someone
+			attempts to connect to your server, and can be displayed using OpenSSL, so you
+			may wish to consider spoofing the information. You may also generate a signed
+			certificate; the way to do this is beyond the scope of this documentation.</p>
+		<p>(Note: there are security problems with self-signed certificates, including making
+			it far easier to engage in a man-in-the-middle attack. However, as all messages
+			are sent encrypted, and removing a message from the back end requires successful
+			decryption with the private RSA key, listening to messages is of relatively limited
+			use.)</p>
+		<p>To install the keystore, you use the <b>notificationssl</b> key, the <b>keystorefile</b>
+			key, and the <b>keystorepassword</b> key:</p>
+		<ul><li>The <b>notificationssl</b> key must be set to "yes".</li>
+			<li>The <b>keystorefile</b> key must be set to the full path to the keystore file
+			that you generated using the Java keytool program (above).</li>
+			<li>The <b>keystorepassword</b> key must be set to the password specified when you
+			generated the keystore file.</li></ul>
+
+		<h2>Installing and verifying your system</h2>
+		<p>Now you can upload the war file to a running Tomcat instance.</p>
+		<p>If you do not have Tomcat running on your server, you will need to 
+			<a href="htp://tomcat.apache.org">download and install it to your server.</a>
+			Because the requirements from hosting service to hosting service varies, the
+			specific steps are left to your imagination.</p>
+		<p>Once Tomcat is running you upload the war file using the Tomcat manager (or 
+			the Tomcat manager that was provided for you, such as CSI Probe.</p>
+		
+		<p>Once installed, you can verify the installation by connecting to the verify
+			servlet. For example, you would connect with your browser to the following
+			URL, assuming you installed SecureChat on Tomcat as "SecureChat":</p>
+		<ul><li>http://myserver.com/SecureChat/ss/v</li></ul>
+		<p>If all is running well, you should see the following response:</p>
+		
+		<pre class="samplecode">Validating
+DB: jdbc:postgresql://myserver.com:5432/securechatdb -- Success: schema version 1.
+Client path: http://myserver.com/SecureChat
+(Client path is what the user uses when prompted for a server URL.)
+Notification service running on myserver.com:1348
+<i>SecureChat Copyright © 2016 William Edward Woody.</i></pre>
+
+		<p>If the notification service has a keystore, this will be indicated in the message
+			displayed during validation.</p>
+
+		<p><a href="setup.html">Now you can set up the client.</a></p>
+	</body>
+</html>

@@ -1,0 +1,145 @@
+<?xml version="1.0"?>
+<!-- 
+	Blatantly stolen from http://www.rubiconred.com/blog/build-package-a-gwt-app-to-war-using-ant/ 
+
+	Note that this assumes the GWT SDK is located in /Applications/eclipse/sdk
+	which is the directory where I put my instance of Eclipse on a Macintosh.
+	(It is easy to keep it all together that way.) Modify if you are building
+	with your SDK somewhere else.
+-->
+
+<project name="SecureChat" basedir="." default="war">
+	<property name="gwt.root" value="/Applications/eclipse/sdk/gwt-2.7.0" />
+    <property name="gwt.module.name" value="com.chaosinmotion.securechat.SecureChat"/>
+    <property name="jar.name" value="securechat.jar"/>
+    <property name="war.name" value="securechat.war"/>
+    <property name="src.dir" location="src"/>
+    <property name="build.dir" location="build"/>    
+    <property name="lib.dir" location="war/WEB-INF/lib"/>
+    <property name="gwt.client.dir" location="com/chaosinmotion/securechat/client"/>
+
+    <path id="project.classpath">        
+        <fileset dir="${lib.dir}">
+            <include name="**/*.jar"/>
+        </fileset>
+    	<fileset dir="${build.dir}/libs">
+    		<include name="**/*.jar"/>
+    	</fileset>
+    	<fileset dir="war/WEB-INF/lib">
+    		<include name="**/*.jar"/>
+    	</fileset>
+    	<fileset dir="${gwt.root}">
+    		<include name="gwt-dev.jar"/>
+    		<include name="gwt-user.jar"/>
+    	</fileset>
+    </path>  
+
+    <target name="prepare">
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${build.dir}/libs"/>
+        <mkdir dir="${build.dir}/classes"/>
+        <mkdir dir="${build.dir}/gwt"/>
+        <mkdir dir="${build.dir}/war"/>
+    </target>
+    
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    </target>  
+	
+	<target name="dependencies" depends="prepare">
+	    <!-- None -->
+	</target>
+
+    <!-- Compile the java source code for GWT -->
+    <target name="compilegwt" depends="prepare, dependencies">        
+        <javac srcdir="${src.dir}" 
+               destdir="${build.dir}/gwt">
+            <classpath refid="project.classpath"/>
+        </javac> 
+        
+        <copy todir="${build.dir}/gwt">
+			<fileset dir="${src.dir}">
+				<exclude name="**/*.java" />
+				<exclude name="**/package.html" />
+				<exclude name="**/*.log" />
+			</fileset>
+		</copy>
+    </target>   
+	
+    <!-- Compile the java source code using javac -->
+    <target name="compile" depends="prepare, dependencies">        
+        <javac srcdir="${src.dir}" 
+               target="1.7"
+               destdir="${build.dir}/classes">
+            <classpath refid="project.classpath"/>
+        </javac>        
+    </target>   
+	
+    <!-- Invoke the GWT compiler to create the Javascript for us -->
+   <target name="gwt-compile" depends="compilegwt">
+        <java failonerror="true" fork="true" classname="com.google.gwt.dev.Compiler">
+            <classpath>
+                <!-- src dir is added to ensure the module.xml file(s) are on the classpath -->
+                <pathelement location="${src.dir}"/>                
+                <pathelement location="${build.dir}/gwt"/>
+                <path refid="project.classpath"/>
+            </classpath>
+            <jvmarg value="-Xmx256M"/>
+        	<arg value="-style" />
+        	<arg value="DETAILED" />
+        	<arg value="-war" />
+        		<arg value="${build.dir}/war" />
+            <arg value="${gwt.module.name}"/>
+    	</java>
+	</target>
+    <!-- Copy the static server resources into the required 
+    directory ready for packaging -->    
+    <target name="copy-resources">
+		<!-- Copy everything that isn't source -->
+		<copy todir="${build.dir}/classes">
+			<fileset dir="${src.dir}">
+				<exclude name="**/*.java" />
+				<exclude name="**/package.html" />
+				<exclude name="**/*.log" />
+			</fileset>
+		</copy>
+    </target>    
+    <!-- Package the compiled Java source into a JAR file -->
+    <target name="jar" depends="compile, copy-resources">        
+        <jar jarfile="${build.dir}/libs/${jar.name}" basedir="${build.dir}/classes">
+            <!-- Don't wrap any of the client only code into the JAR -->
+            <exclude name="${gwt.client.dir}/**/*.class"/>
+        </jar>    
+    </target>
+	
+    <!-- Package the JAR file, Javascript, static resources 
+    and external libraries into a WAR file -->
+    <target name="war" depends="gwt-compile, jar, copy-resources">
+    	<copy todir="${build.dir}/war">
+    		<fileset dir="war">
+    			<exclude name="networkserver/**" />
+    			<exclude name="WEB-INF/**" />
+    		</fileset>
+    	</copy>
+    	<copy todir="${build.dir}/war/WEB-INF/lib">
+    		<fileset dir="${lib.dir}">
+    			<include name="**/*.jar" />
+			</fileset>
+    		<fileset dir="${build.dir}/libs">
+    			<include name="**/*.jar" />
+    		</fileset>
+    		<fileset dir="war/WEB-INF/lib">
+    			<include name="**/*.jar" />
+    		</fileset>
+    	</copy>
+    	<copy todir="${build.dir}/war/WEB-INF">
+    		<fileset dir="war/WEB-INF">
+    			<include name="**/*.xml" />
+    		</fileset>
+    	</copy>
+    	
+    	<!-- Build war file -->
+    	<war basedir="${build.dir}/war" destfile="${war.name}" webxml="${build.dir}/war/WEB-INF/web.xml" />
+    </target>    
+</project>
+

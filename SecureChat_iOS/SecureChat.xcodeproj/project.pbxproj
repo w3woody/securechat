@@ -1,0 +1,1029 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		EF07E8AB1C87B4AB00B87F83 /* SCNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = EF07E8AA1C87B4AB00B87F83 /* SCNetwork.m */; };
+		EF07E8AE1C87B8AF00B87F83 /* SCNetworkRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = EF07E8AD1C87B8AF00B87F83 /* SCNetworkRequest.m */; };
+		EF0C4F361C7F3A580085A9ED /* SCRSAPadding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF0C4F351C7F3A580085A9ED /* SCRSAPadding.cpp */; };
+		EF0C4F371C7F3A580085A9ED /* SCRSAPadding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF0C4F351C7F3A580085A9ED /* SCRSAPadding.cpp */; };
+		EF0C4F3A1C7FD86E0085A9ED /* Onboarding.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EF0C4F381C7FD86E0085A9ED /* Onboarding.storyboard */; };
+		EF0C4F3E1C7FEB040085A9ED /* SCOnboardGenerateRSAViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EF0C4F3D1C7FEB040085A9ED /* SCOnboardGenerateRSAViewController.m */; };
+		EF0C4F461C8086740085A9ED /* SCRSAManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF0C4F451C8086740085A9ED /* SCRSAManager.mm */; };
+		EF0C4F471C8086740085A9ED /* SCRSAManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF0C4F451C8086740085A9ED /* SCRSAManager.mm */; };
+		EF0C4F4B1C808A780085A9ED /* SCBlowfish.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF0C4F491C808A780085A9ED /* SCBlowfish.cpp */; };
+		EF0C4F4C1C808A780085A9ED /* SCBlowfish.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF0C4F491C808A780085A9ED /* SCBlowfish.cpp */; };
+		EF0C4F4E1C8099BD0085A9ED /* BlowfishTest.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF0C4F4D1C8099BD0085A9ED /* BlowfishTest.mm */; };
+		EF6BCECD1C809E7400713CC8 /* SCUUIDGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF6BCECB1C809E7400713CC8 /* SCUUIDGenerator.cpp */; };
+		EF6BCECE1C809E7400713CC8 /* SCUUIDGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF6BCECB1C809E7400713CC8 /* SCUUIDGenerator.cpp */; };
+		EF6BCED11C80A3F200713CC8 /* SCRSAEncoder.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF6BCED01C80A3F200713CC8 /* SCRSAEncoder.mm */; };
+		EF6BCED21C80A3F200713CC8 /* SCRSAEncoder.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF6BCED01C80A3F200713CC8 /* SCRSAEncoder.mm */; };
+		EF6BCED51C80A50F00713CC8 /* SCKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = EF6BCED41C80A50F00713CC8 /* SCKeychain.m */; };
+		EF6BCED61C80A50F00713CC8 /* SCKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = EF6BCED41C80A50F00713CC8 /* SCKeychain.m */; };
+		EF6BCED81C80ABD000713CC8 /* KeychainTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EF6BCED71C80ABD000713CC8 /* KeychainTests.m */; };
+		EF6BCEDB1C80ADCE00713CC8 /* SCSecuredData.m in Sources */ = {isa = PBXBuildFile; fileRef = EF6BCEDA1C80ADCE00713CC8 /* SCSecuredData.m */; };
+		EF6BCEDC1C80ADCE00713CC8 /* SCSecuredData.m in Sources */ = {isa = PBXBuildFile; fileRef = EF6BCEDA1C80ADCE00713CC8 /* SCSecuredData.m */; };
+		EF6BCEDE1C81EACB00713CC8 /* ManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EF6BCEDD1C81EACB00713CC8 /* ManagerTests.m */; };
+		EF6BCEE11C832FB500713CC8 /* SCOnboardPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EF6BCEE01C832FB500713CC8 /* SCOnboardPasswordViewController.m */; };
+		EF6BCEE51C83476800713CC8 /* SCTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = EF6BCEE41C83476800713CC8 /* SCTextField.m */; };
+		EF6BCEE81C835F0D00713CC8 /* SCOnboardServerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EF6BCEE71C835F0D00713CC8 /* SCOnboardServerViewController.m */; };
+		EF6BCEEB1C8482A800713CC8 /* SCKeyboardCommonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EF6BCEEA1C8482A800713CC8 /* SCKeyboardCommonViewController.m */; };
+		EF6BCEF01C84892100713CC8 /* SCOnboardLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EF6BCEEF1C84892100713CC8 /* SCOnboardLoginViewController.m */; };
+		EF6BCEF31C848A1600713CC8 /* SCOnboardForgotPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EF6BCEF21C848A1600713CC8 /* SCOnboardForgotPasswordViewController.m */; };
+		EF6BCEF61C848B6A00713CC8 /* SCOnboardCreateUsernameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EF6BCEF51C848B6A00713CC8 /* SCOnboardCreateUsernameViewController.m */; };
+		EF6BCEFC1C848F8A00713CC8 /* SCOnboardFinishViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EF6BCEFB1C848F8A00713CC8 /* SCOnboardFinishViewController.m */; };
+		EF6BCEFF1C84916E00713CC8 /* ForgotPassword.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EF6BCEFD1C84916E00713CC8 /* ForgotPassword.storyboard */; };
+		EF6BCF021C8493EB00713CC8 /* Disconnect.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EF6BCF001C8493EB00713CC8 /* Disconnect.storyboard */; };
+		EF6BCF051C849FF400713CC8 /* ChangePassword.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EF6BCF031C849FF400713CC8 /* ChangePassword.storyboard */; };
+		EF6BCF081C84A51C00713CC8 /* ChangePasscode.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EF6BCF061C84A51C00713CC8 /* ChangePasscode.storyboard */; };
+		EF8946CD1CA2D1F500A8D816 /* SCMessageDeleteQueueItem.m in Sources */ = {isa = PBXBuildFile; fileRef = EF8946CC1CA2D1F500A8D816 /* SCMessageDeleteQueueItem.m */; };
+		EF8B4B7A1CA32E130073D41E /* SCForgotIntroViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EF8B4B791CA32E130073D41E /* SCForgotIntroViewController.m */; };
+		EF8B4B7D1CA330650073D41E /* SCForgotViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EF8B4B7C1CA330650073D41E /* SCForgotViewController.m */; };
+		EF8C72931C7E28830051DFA0 /* SCChecksum.c in Sources */ = {isa = PBXBuildFile; fileRef = EF8C72911C7E28830051DFA0 /* SCChecksum.c */; };
+		EF8C72941C7E28830051DFA0 /* SCChecksum.c in Sources */ = {isa = PBXBuildFile; fileRef = EF8C72911C7E28830051DFA0 /* SCChecksum.c */; };
+		EF8C72961C7E2B870051DFA0 /* ChecksumTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF8C72951C7E2B870051DFA0 /* ChecksumTests.mm */; };
+		EF8C729B1C7E318F0051DFA0 /* SCSHA256Context.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF8C72991C7E318F0051DFA0 /* SCSHA256Context.cpp */; };
+		EF8C729C1C7E318F0051DFA0 /* SCSHA256Context.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF8C72991C7E318F0051DFA0 /* SCSHA256Context.cpp */; };
+		EFC49ADC1CB3E02B00ABDF40 /* TestSecureNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = EFC49ADB1CB3E02B00ABDF40 /* TestSecureNetwork.m */; };
+		EFCBFA4E1C9DC43A00590E29 /* SCBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = EFCBFA4D1C9DC43A00590E29 /* SCBubbleView.m */; };
+		EFCBFA511C9DCBD900590E29 /* SCChatTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EFCBFA501C9DCBD900590E29 /* SCChatTableViewCell.m */; };
+		EFCBFA541C9E168100590E29 /* SCSenderTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EFCBFA531C9E168100590E29 /* SCSenderTableViewCell.m */; };
+		EFCBFA571C9E19B400590E29 /* SCChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EFCBFA561C9E19B400590E29 /* SCChatViewController.m */; };
+		EFCBFA5A1C9EFDD900590E29 /* SCChatSummaryView.m in Sources */ = {isa = PBXBuildFile; fileRef = EFCBFA591C9EFDD900590E29 /* SCChatSummaryView.m */; };
+		EFCBFA5D1C9F1D8500590E29 /* SCDecryptCache.m in Sources */ = {isa = PBXBuildFile; fileRef = EFCBFA5C1C9F1D8500590E29 /* SCDecryptCache.m */; };
+		EFCBFA601CA02E4900590E29 /* SCMessageDeleteQueue.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFCBFA5F1CA02E4900590E29 /* SCMessageDeleteQueue.mm */; };
+		EFDE9FF61C8D04480047CA2B /* SCNetworkResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = EFDE9FF51C8D04480047CA2B /* SCNetworkResponse.m */; };
+		EFDE9FF91C8D0D4A0047CA2B /* SCNetworkCredentials.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFDE9FF81C8D0D4A0047CA2B /* SCNetworkCredentials.mm */; };
+		EFDE9FFC1C8E55290047CA2B /* SCWait.m in Sources */ = {isa = PBXBuildFile; fileRef = EFDE9FFB1C8E55290047CA2B /* SCWait.m */; };
+		EFDEA0021C8F07780047CA2B /* LoginScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EFDEA0001C8F07780047CA2B /* LoginScreen.storyboard */; };
+		EFDEA0061C8F0D330047CA2B /* SCLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EFDEA0051C8F0D330047CA2B /* SCLoginViewController.m */; };
+		EFDEA00A1C8F31750047CA2B /* SCNetworkCookies.m in Sources */ = {isa = PBXBuildFile; fileRef = EFDEA0091C8F31750047CA2B /* SCNetworkCookies.m */; };
+		EFDEA00E1C9064900047CA2B /* SCMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EFDEA00D1C9064900047CA2B /* SCMainViewController.m */; };
+		EFDEA0111C9065DD0047CA2B /* SCPasscodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EFDEA0101C9065DD0047CA2B /* SCPasscodeViewController.m */; };
+		EFDEA0141C906BD90047CA2B /* SCSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EFDEA0131C906BD90047CA2B /* SCSettingsViewController.m */; };
+		EFDEA0181C906CBD0047CA2B /* SCChangePasscodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EFDEA0171C906CBD0047CA2B /* SCChangePasscodeViewController.m */; };
+		EFDEA01B1C90ADD90047CA2B /* SCSetupAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EFDEA01A1C90ADD90047CA2B /* SCSetupAccountViewController.m */; };
+		EFDEA01F1C90E99D0047CA2B /* SCChangePasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EFDEA01E1C90E99D0047CA2B /* SCChangePasswordViewController.m */; };
+		EFDEA0221C90EAC40047CA2B /* SCPasswordComplexity.m in Sources */ = {isa = PBXBuildFile; fileRef = EFDEA0211C90EAC40047CA2B /* SCPasswordComplexity.m */; };
+		EFDEA0261C91A84A0047CA2B /* SCMessageQueue.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFDEA0251C91A84A0047CA2B /* SCMessageQueue.mm */; };
+		EFDEA02A1C91AAFA0047CA2B /* SCDisconnectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EFDEA0291C91AAFA0047CA2B /* SCDisconnectViewController.m */; };
+		EFDEA02D1C91AB530047CA2B /* SCDisconnectFinishViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EFDEA02C1C91AB530047CA2B /* SCDisconnectFinishViewController.m */; };
+		EFDEA0331C921D930047CA2B /* SCOutputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = EFDEA0321C921D930047CA2B /* SCOutputStream.m */; };
+		EFDEA0361C925A990047CA2B /* SCInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = EFDEA0351C925A990047CA2B /* SCInputStream.m */; };
+		EFE64A7A1C98E8BB004FC201 /* SCDeviceCache.m in Sources */ = {isa = PBXBuildFile; fileRef = EFE64A791C98E8BB004FC201 /* SCDeviceCache.m */; };
+		EFE64A7D1C98E8CA004FC201 /* SCDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = EFE64A7C1C98E8CA004FC201 /* SCDevice.m */; };
+		EFE64A801C98E9FF004FC201 /* SCDeviceCacheEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = EFE64A7F1C98E9FF004FC201 /* SCDeviceCacheEntry.m */; };
+		EFE885EA1C94E8DD00A36A9A /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = EFE885E91C94E8DD00A36A9A /* libsqlite3.tbd */; };
+		EFE885ED1C95BD1700A36A9A /* SCMessageSender.m in Sources */ = {isa = PBXBuildFile; fileRef = EFE885EC1C95BD1700A36A9A /* SCMessageSender.m */; };
+		EFE885F01C95C2B600A36A9A /* SCDateUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = EFE885EF1C95C2B600A36A9A /* SCDateUtils.m */; };
+		EFE885F41C96E44300A36A9A /* SCMessageDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = EFE885F31C96E44300A36A9A /* SCMessageDatabase.m */; };
+		EFE885F51C96E44300A36A9A /* SCMessageDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = EFE885F31C96E44300A36A9A /* SCMessageDatabase.m */; };
+		EFE885F71C96F2CA00A36A9A /* SCDatabaseTest.m in Sources */ = {isa = PBXBuildFile; fileRef = EFE885F61C96F2CA00A36A9A /* SCDatabaseTest.m */; };
+		EFE885F91C96F41D00A36A9A /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = EFE885E91C94E8DD00A36A9A /* libsqlite3.tbd */; };
+		EFE885FA1C96F43E00A36A9A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFE8FDED1C76608B004A38AE /* Security.framework */; };
+		EFE885FD1C96FC0200A36A9A /* SCMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = EFE885FC1C96FC0200A36A9A /* SCMessage.m */; };
+		EFE885FE1C96FC0200A36A9A /* SCMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = EFE885FC1C96FC0200A36A9A /* SCMessage.m */; };
+		EFE885FF1C96FC0600A36A9A /* SCMessageSender.m in Sources */ = {isa = PBXBuildFile; fileRef = EFE885EC1C95BD1700A36A9A /* SCMessageSender.m */; };
+		EFE8FDBF1C755144004A38AE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EFE8FDBE1C755144004A38AE /* main.m */; };
+		EFE8FDC21C755144004A38AE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EFE8FDC11C755144004A38AE /* AppDelegate.m */; };
+		EFE8FDC81C755144004A38AE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EFE8FDC61C755144004A38AE /* Main.storyboard */; };
+		EFE8FDCA1C755144004A38AE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EFE8FDC91C755144004A38AE /* Assets.xcassets */; };
+		EFE8FDCD1C755144004A38AE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EFE8FDCB1C755144004A38AE /* LaunchScreen.storyboard */; };
+		EFE8FDD81C755144004A38AE /* SecureChatTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFE8FDD71C755144004A38AE /* SecureChatTests.mm */; };
+		EFE8FDE61C7552BC004A38AE /* SCBigInteger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE8FDE41C7552BC004A38AE /* SCBigInteger.cpp */; };
+		EFE8FDE71C7552BC004A38AE /* SCBigInteger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE8FDE41C7552BC004A38AE /* SCBigInteger.cpp */; };
+		EFE8FDEE1C76608B004A38AE /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFE8FDED1C76608B004A38AE /* Security.framework */; };
+		EFE8FDF81C7A82F7004A38AE /* SCRSAEncryption.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE8FDF61C7A82F7004A38AE /* SCRSAEncryption.cpp */; };
+		EFE8FDF91C7A82F7004A38AE /* SCRSAEncryption.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE8FDF61C7A82F7004A38AE /* SCRSAEncryption.cpp */; };
+		EFE8FDFB1C7A9698004A38AE /* SCRSAKey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE8FDFA1C7A9698004A38AE /* SCRSAKey.cpp */; };
+		EFE8FDFC1C7A9698004A38AE /* SCRSAKey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE8FDFA1C7A9698004A38AE /* SCRSAKey.cpp */; };
+		EFE8FDFE1C7CAD36004A38AE /* SCMontMath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE8FDFD1C7CAD36004A38AE /* SCMontMath.cpp */; };
+		EFE8FDFF1C7CAD36004A38AE /* SCMontMath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE8FDFD1C7CAD36004A38AE /* SCMontMath.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		EFE8FDD41C755144004A38AE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EFE8FDB21C755144004A38AE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EFE8FDB91C755144004A38AE;
+			remoteInfo = SecureChat;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		EF07E8A91C87B4AB00B87F83 /* SCNetwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCNetwork.h; path = Utilities/SCNetwork.h; sourceTree = "<group>"; };
+		EF07E8AA1C87B4AB00B87F83 /* SCNetwork.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCNetwork.m; path = Utilities/SCNetwork.m; sourceTree = "<group>"; };
+		EF07E8AC1C87B8AF00B87F83 /* SCNetworkRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCNetworkRequest.h; path = Utilities/SCNetworkRequest.h; sourceTree = "<group>"; };
+		EF07E8AD1C87B8AF00B87F83 /* SCNetworkRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCNetworkRequest.m; path = Utilities/SCNetworkRequest.m; sourceTree = "<group>"; };
+		EF0C4F351C7F3A580085A9ED /* SCRSAPadding.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SCRSAPadding.cpp; path = RSA/RSA/SCRSAPadding.cpp; sourceTree = "<group>"; };
+		EF0C4F391C7FD86E0085A9ED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Onboarding.storyboard; sourceTree = "<group>"; };
+		EF0C4F3C1C7FEB040085A9ED /* SCOnboardGenerateRSAViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCOnboardGenerateRSAViewController.h; path = "View Controllers/SCOnboardGenerateRSAViewController.h"; sourceTree = "<group>"; };
+		EF0C4F3D1C7FEB040085A9ED /* SCOnboardGenerateRSAViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCOnboardGenerateRSAViewController.m; path = "View Controllers/SCOnboardGenerateRSAViewController.m"; sourceTree = "<group>"; };
+		EF0C4F441C8086740085A9ED /* SCRSAManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCRSAManager.h; path = RSA/OC/SCRSAManager.h; sourceTree = "<group>"; };
+		EF0C4F451C8086740085A9ED /* SCRSAManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SCRSAManager.mm; path = RSA/OC/SCRSAManager.mm; sourceTree = "<group>"; };
+		EF0C4F491C808A780085A9ED /* SCBlowfish.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SCBlowfish.cpp; path = RSA/Blowfish/SCBlowfish.cpp; sourceTree = "<group>"; };
+		EF0C4F4A1C808A780085A9ED /* SCBlowfish.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCBlowfish.h; path = RSA/Blowfish/SCBlowfish.h; sourceTree = "<group>"; };
+		EF0C4F4D1C8099BD0085A9ED /* BlowfishTest.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = BlowfishTest.mm; sourceTree = "<group>"; };
+		EF6BCECB1C809E7400713CC8 /* SCUUIDGenerator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SCUUIDGenerator.cpp; path = UUID/SCUUIDGenerator.cpp; sourceTree = "<group>"; };
+		EF6BCECC1C809E7400713CC8 /* SCUUIDGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCUUIDGenerator.h; path = UUID/SCUUIDGenerator.h; sourceTree = "<group>"; };
+		EF6BCECF1C80A3F200713CC8 /* SCRSAEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCRSAEncoder.h; path = RSA/OC/SCRSAEncoder.h; sourceTree = "<group>"; };
+		EF6BCED01C80A3F200713CC8 /* SCRSAEncoder.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SCRSAEncoder.mm; path = RSA/OC/SCRSAEncoder.mm; sourceTree = "<group>"; };
+		EF6BCED31C80A50F00713CC8 /* SCKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCKeychain.h; path = RSA/OC/SCKeychain.h; sourceTree = "<group>"; };
+		EF6BCED41C80A50F00713CC8 /* SCKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCKeychain.m; path = RSA/OC/SCKeychain.m; sourceTree = "<group>"; };
+		EF6BCED71C80ABD000713CC8 /* KeychainTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainTests.m; sourceTree = "<group>"; };
+		EF6BCED91C80ADCE00713CC8 /* SCSecuredData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCSecuredData.h; path = RSA/OC/SCSecuredData.h; sourceTree = "<group>"; };
+		EF6BCEDA1C80ADCE00713CC8 /* SCSecuredData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCSecuredData.m; path = RSA/OC/SCSecuredData.m; sourceTree = "<group>"; };
+		EF6BCEDD1C81EACB00713CC8 /* ManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManagerTests.m; sourceTree = "<group>"; };
+		EF6BCEDF1C832FB500713CC8 /* SCOnboardPasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCOnboardPasswordViewController.h; path = "View Controllers/SCOnboardPasswordViewController.h"; sourceTree = "<group>"; };
+		EF6BCEE01C832FB500713CC8 /* SCOnboardPasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCOnboardPasswordViewController.m; path = "View Controllers/SCOnboardPasswordViewController.m"; sourceTree = "<group>"; };
+		EF6BCEE31C83476800713CC8 /* SCTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCTextField.h; path = Views/SCTextField.h; sourceTree = "<group>"; };
+		EF6BCEE41C83476800713CC8 /* SCTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCTextField.m; path = Views/SCTextField.m; sourceTree = "<group>"; };
+		EF6BCEE61C835F0D00713CC8 /* SCOnboardServerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCOnboardServerViewController.h; path = "View Controllers/SCOnboardServerViewController.h"; sourceTree = "<group>"; };
+		EF6BCEE71C835F0D00713CC8 /* SCOnboardServerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCOnboardServerViewController.m; path = "View Controllers/SCOnboardServerViewController.m"; sourceTree = "<group>"; };
+		EF6BCEE91C8482A800713CC8 /* SCKeyboardCommonViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCKeyboardCommonViewController.h; path = "View Controllers/SCKeyboardCommonViewController.h"; sourceTree = "<group>"; };
+		EF6BCEEA1C8482A800713CC8 /* SCKeyboardCommonViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCKeyboardCommonViewController.m; path = "View Controllers/SCKeyboardCommonViewController.m"; sourceTree = "<group>"; };
+		EF6BCEEE1C84892100713CC8 /* SCOnboardLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCOnboardLoginViewController.h; path = "View Controllers/SCOnboardLoginViewController.h"; sourceTree = "<group>"; };
+		EF6BCEEF1C84892100713CC8 /* SCOnboardLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCOnboardLoginViewController.m; path = "View Controllers/SCOnboardLoginViewController.m"; sourceTree = "<group>"; };
+		EF6BCEF11C848A1600713CC8 /* SCOnboardForgotPasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCOnboardForgotPasswordViewController.h; path = "View Controllers/SCOnboardForgotPasswordViewController.h"; sourceTree = "<group>"; };
+		EF6BCEF21C848A1600713CC8 /* SCOnboardForgotPasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCOnboardForgotPasswordViewController.m; path = "View Controllers/SCOnboardForgotPasswordViewController.m"; sourceTree = "<group>"; };
+		EF6BCEF41C848B6900713CC8 /* SCOnboardCreateUsernameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCOnboardCreateUsernameViewController.h; path = "View Controllers/SCOnboardCreateUsernameViewController.h"; sourceTree = "<group>"; };
+		EF6BCEF51C848B6A00713CC8 /* SCOnboardCreateUsernameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCOnboardCreateUsernameViewController.m; path = "View Controllers/SCOnboardCreateUsernameViewController.m"; sourceTree = "<group>"; };
+		EF6BCEFA1C848F8A00713CC8 /* SCOnboardFinishViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCOnboardFinishViewController.h; path = "View Controllers/SCOnboardFinishViewController.h"; sourceTree = "<group>"; };
+		EF6BCEFB1C848F8A00713CC8 /* SCOnboardFinishViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCOnboardFinishViewController.m; path = "View Controllers/SCOnboardFinishViewController.m"; sourceTree = "<group>"; };
+		EF6BCEFE1C84916E00713CC8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/ForgotPassword.storyboard; sourceTree = "<group>"; };
+		EF6BCF011C8493EB00713CC8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Disconnect.storyboard; sourceTree = "<group>"; };
+		EF6BCF041C849FF400713CC8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/ChangePassword.storyboard; sourceTree = "<group>"; };
+		EF6BCF071C84A51C00713CC8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/ChangePasscode.storyboard; sourceTree = "<group>"; };
+		EF8946CB1CA2D1F500A8D816 /* SCMessageDeleteQueueItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCMessageDeleteQueueItem.h; path = Messages/SCMessageDeleteQueueItem.h; sourceTree = "<group>"; };
+		EF8946CC1CA2D1F500A8D816 /* SCMessageDeleteQueueItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCMessageDeleteQueueItem.m; path = Messages/SCMessageDeleteQueueItem.m; sourceTree = "<group>"; };
+		EF8B4B781CA32E130073D41E /* SCForgotIntroViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCForgotIntroViewController.h; path = "View Controllers/SCForgotIntroViewController.h"; sourceTree = "<group>"; };
+		EF8B4B791CA32E130073D41E /* SCForgotIntroViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCForgotIntroViewController.m; path = "View Controllers/SCForgotIntroViewController.m"; sourceTree = "<group>"; };
+		EF8B4B7B1CA330650073D41E /* SCForgotViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCForgotViewController.h; path = "View Controllers/SCForgotViewController.h"; sourceTree = "<group>"; };
+		EF8B4B7C1CA330650073D41E /* SCForgotViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCForgotViewController.m; path = "View Controllers/SCForgotViewController.m"; sourceTree = "<group>"; };
+		EF8C72911C7E28830051DFA0 /* SCChecksum.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = SCChecksum.c; path = RSA/RSA/SCChecksum.c; sourceTree = "<group>"; };
+		EF8C72921C7E28830051DFA0 /* SCChecksum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCChecksum.h; path = RSA/RSA/SCChecksum.h; sourceTree = "<group>"; };
+		EF8C72951C7E2B870051DFA0 /* ChecksumTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ChecksumTests.mm; sourceTree = "<group>"; };
+		EF8C72991C7E318F0051DFA0 /* SCSHA256Context.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SCSHA256Context.cpp; path = RSA/RSA/SCSHA256Context.cpp; sourceTree = "<group>"; };
+		EF8C729A1C7E318F0051DFA0 /* SCSecureHash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCSecureHash.h; path = RSA/RSA/SCSecureHash.h; sourceTree = "<group>"; };
+		EFC49ADB1CB3E02B00ABDF40 /* TestSecureNetwork.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestSecureNetwork.m; sourceTree = "<group>"; };
+		EFCBFA4C1C9DC43A00590E29 /* SCBubbleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCBubbleView.h; path = Views/SCBubbleView.h; sourceTree = "<group>"; };
+		EFCBFA4D1C9DC43A00590E29 /* SCBubbleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCBubbleView.m; path = Views/SCBubbleView.m; sourceTree = "<group>"; };
+		EFCBFA4F1C9DCBD900590E29 /* SCChatTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCChatTableViewCell.h; path = Views/SCChatTableViewCell.h; sourceTree = "<group>"; };
+		EFCBFA501C9DCBD900590E29 /* SCChatTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCChatTableViewCell.m; path = Views/SCChatTableViewCell.m; sourceTree = "<group>"; };
+		EFCBFA521C9E168100590E29 /* SCSenderTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCSenderTableViewCell.h; path = Views/SCSenderTableViewCell.h; sourceTree = "<group>"; };
+		EFCBFA531C9E168100590E29 /* SCSenderTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCSenderTableViewCell.m; path = Views/SCSenderTableViewCell.m; sourceTree = "<group>"; };
+		EFCBFA551C9E19B400590E29 /* SCChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCChatViewController.h; path = "View Controllers/SCChatViewController.h"; sourceTree = "<group>"; };
+		EFCBFA561C9E19B400590E29 /* SCChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCChatViewController.m; path = "View Controllers/SCChatViewController.m"; sourceTree = "<group>"; };
+		EFCBFA581C9EFDD900590E29 /* SCChatSummaryView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCChatSummaryView.h; path = Views/SCChatSummaryView.h; sourceTree = "<group>"; };
+		EFCBFA591C9EFDD900590E29 /* SCChatSummaryView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCChatSummaryView.m; path = Views/SCChatSummaryView.m; sourceTree = "<group>"; };
+		EFCBFA5B1C9F1D8500590E29 /* SCDecryptCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCDecryptCache.h; path = Utilities/SCDecryptCache.h; sourceTree = "<group>"; };
+		EFCBFA5C1C9F1D8500590E29 /* SCDecryptCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCDecryptCache.m; path = Utilities/SCDecryptCache.m; sourceTree = "<group>"; };
+		EFCBFA5E1CA02E4900590E29 /* SCMessageDeleteQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCMessageDeleteQueue.h; path = Messages/SCMessageDeleteQueue.h; sourceTree = "<group>"; };
+		EFCBFA5F1CA02E4900590E29 /* SCMessageDeleteQueue.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SCMessageDeleteQueue.mm; path = Messages/SCMessageDeleteQueue.mm; sourceTree = "<group>"; };
+		EFDE9FF41C8D04480047CA2B /* SCNetworkResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCNetworkResponse.h; path = Utilities/SCNetworkResponse.h; sourceTree = "<group>"; };
+		EFDE9FF51C8D04480047CA2B /* SCNetworkResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCNetworkResponse.m; path = Utilities/SCNetworkResponse.m; sourceTree = "<group>"; };
+		EFDE9FF71C8D0D4A0047CA2B /* SCNetworkCredentials.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCNetworkCredentials.h; path = Utilities/SCNetworkCredentials.h; sourceTree = "<group>"; };
+		EFDE9FF81C8D0D4A0047CA2B /* SCNetworkCredentials.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SCNetworkCredentials.mm; path = Utilities/SCNetworkCredentials.mm; sourceTree = "<group>"; };
+		EFDE9FFA1C8E55290047CA2B /* SCWait.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCWait.h; path = Utilities/SCWait.h; sourceTree = "<group>"; };
+		EFDE9FFB1C8E55290047CA2B /* SCWait.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCWait.m; path = Utilities/SCWait.m; sourceTree = "<group>"; };
+		EFDEA0011C8F07780047CA2B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LoginScreen.storyboard; sourceTree = "<group>"; };
+		EFDEA0041C8F0D330047CA2B /* SCLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCLoginViewController.h; path = "View Controllers/SCLoginViewController.h"; sourceTree = "<group>"; };
+		EFDEA0051C8F0D330047CA2B /* SCLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCLoginViewController.m; path = "View Controllers/SCLoginViewController.m"; sourceTree = "<group>"; };
+		EFDEA0081C8F31750047CA2B /* SCNetworkCookies.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCNetworkCookies.h; path = Utilities/SCNetworkCookies.h; sourceTree = "<group>"; };
+		EFDEA0091C8F31750047CA2B /* SCNetworkCookies.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCNetworkCookies.m; path = Utilities/SCNetworkCookies.m; sourceTree = "<group>"; };
+		EFDEA00C1C9064900047CA2B /* SCMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCMainViewController.h; path = "View Controllers/SCMainViewController.h"; sourceTree = "<group>"; };
+		EFDEA00D1C9064900047CA2B /* SCMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCMainViewController.m; path = "View Controllers/SCMainViewController.m"; sourceTree = "<group>"; };
+		EFDEA00F1C9065DD0047CA2B /* SCPasscodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPasscodeViewController.h; path = "View Controllers/SCPasscodeViewController.h"; sourceTree = "<group>"; };
+		EFDEA0101C9065DD0047CA2B /* SCPasscodeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPasscodeViewController.m; path = "View Controllers/SCPasscodeViewController.m"; sourceTree = "<group>"; };
+		EFDEA0121C906BD90047CA2B /* SCSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCSettingsViewController.h; path = "View Controllers/SCSettingsViewController.h"; sourceTree = "<group>"; };
+		EFDEA0131C906BD90047CA2B /* SCSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCSettingsViewController.m; path = "View Controllers/SCSettingsViewController.m"; sourceTree = "<group>"; };
+		EFDEA0161C906CBD0047CA2B /* SCChangePasscodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCChangePasscodeViewController.h; path = "View Controllers/SCChangePasscodeViewController.h"; sourceTree = "<group>"; };
+		EFDEA0171C906CBD0047CA2B /* SCChangePasscodeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCChangePasscodeViewController.m; path = "View Controllers/SCChangePasscodeViewController.m"; sourceTree = "<group>"; };
+		EFDEA0191C90ADD90047CA2B /* SCSetupAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCSetupAccountViewController.h; path = "View Controllers/SCSetupAccountViewController.h"; sourceTree = "<group>"; };
+		EFDEA01A1C90ADD90047CA2B /* SCSetupAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCSetupAccountViewController.m; path = "View Controllers/SCSetupAccountViewController.m"; sourceTree = "<group>"; };
+		EFDEA01D1C90E99D0047CA2B /* SCChangePasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCChangePasswordViewController.h; path = "View Controllers/SCChangePasswordViewController.h"; sourceTree = "<group>"; };
+		EFDEA01E1C90E99D0047CA2B /* SCChangePasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCChangePasswordViewController.m; path = "View Controllers/SCChangePasswordViewController.m"; sourceTree = "<group>"; };
+		EFDEA0201C90EAC40047CA2B /* SCPasswordComplexity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPasswordComplexity.h; path = Utilities/SCPasswordComplexity.h; sourceTree = "<group>"; };
+		EFDEA0211C90EAC40047CA2B /* SCPasswordComplexity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPasswordComplexity.m; path = Utilities/SCPasswordComplexity.m; sourceTree = "<group>"; };
+		EFDEA0241C91A84A0047CA2B /* SCMessageQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCMessageQueue.h; path = Messages/SCMessageQueue.h; sourceTree = "<group>"; };
+		EFDEA0251C91A84A0047CA2B /* SCMessageQueue.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SCMessageQueue.mm; path = Messages/SCMessageQueue.mm; sourceTree = "<group>"; };
+		EFDEA0281C91AAFA0047CA2B /* SCDisconnectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCDisconnectViewController.h; path = "View Controllers/SCDisconnectViewController.h"; sourceTree = "<group>"; };
+		EFDEA0291C91AAFA0047CA2B /* SCDisconnectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCDisconnectViewController.m; path = "View Controllers/SCDisconnectViewController.m"; sourceTree = "<group>"; };
+		EFDEA02B1C91AB530047CA2B /* SCDisconnectFinishViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCDisconnectFinishViewController.h; path = "View Controllers/SCDisconnectFinishViewController.h"; sourceTree = "<group>"; };
+		EFDEA02C1C91AB530047CA2B /* SCDisconnectFinishViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCDisconnectFinishViewController.m; path = "View Controllers/SCDisconnectFinishViewController.m"; sourceTree = "<group>"; };
+		EFDEA0311C921D930047CA2B /* SCOutputStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCOutputStream.h; path = Messages/SCOutputStream.h; sourceTree = "<group>"; };
+		EFDEA0321C921D930047CA2B /* SCOutputStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCOutputStream.m; path = Messages/SCOutputStream.m; sourceTree = "<group>"; };
+		EFDEA0341C925A990047CA2B /* SCInputStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCInputStream.h; path = Messages/SCInputStream.h; sourceTree = "<group>"; };
+		EFDEA0351C925A990047CA2B /* SCInputStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCInputStream.m; path = Messages/SCInputStream.m; sourceTree = "<group>"; };
+		EFE64A781C98E8BB004FC201 /* SCDeviceCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCDeviceCache.h; path = Messages/SCDeviceCache.h; sourceTree = "<group>"; };
+		EFE64A791C98E8BB004FC201 /* SCDeviceCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCDeviceCache.m; path = Messages/SCDeviceCache.m; sourceTree = "<group>"; };
+		EFE64A7B1C98E8CA004FC201 /* SCDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCDevice.h; path = Messages/SCDevice.h; sourceTree = "<group>"; };
+		EFE64A7C1C98E8CA004FC201 /* SCDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCDevice.m; path = Messages/SCDevice.m; sourceTree = "<group>"; };
+		EFE64A7E1C98E9FF004FC201 /* SCDeviceCacheEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCDeviceCacheEntry.h; path = Messages/SCDeviceCacheEntry.h; sourceTree = "<group>"; };
+		EFE64A7F1C98E9FF004FC201 /* SCDeviceCacheEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCDeviceCacheEntry.m; path = Messages/SCDeviceCacheEntry.m; sourceTree = "<group>"; };
+		EFE885E91C94E8DD00A36A9A /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		EFE885EB1C95BD1700A36A9A /* SCMessageSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCMessageSender.h; path = Messages/SCMessageSender.h; sourceTree = "<group>"; };
+		EFE885EC1C95BD1700A36A9A /* SCMessageSender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCMessageSender.m; path = Messages/SCMessageSender.m; sourceTree = "<group>"; };
+		EFE885EE1C95C2B600A36A9A /* SCDateUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCDateUtils.h; path = Utilities/SCDateUtils.h; sourceTree = "<group>"; };
+		EFE885EF1C95C2B600A36A9A /* SCDateUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCDateUtils.m; path = Utilities/SCDateUtils.m; sourceTree = "<group>"; };
+		EFE885F21C96E44300A36A9A /* SCMessageDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCMessageDatabase.h; path = Messages/SCMessageDatabase.h; sourceTree = "<group>"; };
+		EFE885F31C96E44300A36A9A /* SCMessageDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCMessageDatabase.m; path = Messages/SCMessageDatabase.m; sourceTree = "<group>"; };
+		EFE885F61C96F2CA00A36A9A /* SCDatabaseTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCDatabaseTest.m; sourceTree = "<group>"; };
+		EFE885FB1C96FC0200A36A9A /* SCMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCMessage.h; path = Messages/SCMessage.h; sourceTree = "<group>"; };
+		EFE885FC1C96FC0200A36A9A /* SCMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCMessage.m; path = Messages/SCMessage.m; sourceTree = "<group>"; };
+		EFE8FDBA1C755144004A38AE /* SecureChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SecureChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EFE8FDBE1C755144004A38AE /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		EFE8FDC01C755144004A38AE /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		EFE8FDC11C755144004A38AE /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		EFE8FDC71C755144004A38AE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		EFE8FDC91C755144004A38AE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		EFE8FDCC1C755144004A38AE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		EFE8FDCE1C755144004A38AE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EFE8FDD31C755144004A38AE /* SecureChatTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SecureChatTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		EFE8FDD71C755144004A38AE /* SecureChatTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = SecureChatTests.mm; sourceTree = "<group>"; };
+		EFE8FDD91C755144004A38AE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EFE8FDE41C7552BC004A38AE /* SCBigInteger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SCBigInteger.cpp; path = RSA/BigInt/SCBigInteger.cpp; sourceTree = "<group>"; };
+		EFE8FDE51C7552BC004A38AE /* SCBigInteger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCBigInteger.h; path = RSA/BigInt/SCBigInteger.h; sourceTree = "<group>"; };
+		EFE8FDED1C76608B004A38AE /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		EFE8FDF61C7A82F7004A38AE /* SCRSAEncryption.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SCRSAEncryption.cpp; path = RSA/RSA/SCRSAEncryption.cpp; sourceTree = "<group>"; };
+		EFE8FDF71C7A82F7004A38AE /* SCRSAEncryption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCRSAEncryption.h; path = RSA/RSA/SCRSAEncryption.h; sourceTree = "<group>"; };
+		EFE8FDFA1C7A9698004A38AE /* SCRSAKey.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SCRSAKey.cpp; path = RSA/RSA/SCRSAKey.cpp; sourceTree = "<group>"; };
+		EFE8FDFD1C7CAD36004A38AE /* SCMontMath.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SCMontMath.cpp; path = RSA/BigInt/SCMontMath.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		EFE8FDB71C755144004A38AE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EFE885FA1C96F43E00A36A9A /* Security.framework in Frameworks */,
+				EFE885EA1C94E8DD00A36A9A /* libsqlite3.tbd in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EFE8FDD01C755144004A38AE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EFE885F91C96F41D00A36A9A /* libsqlite3.tbd in Frameworks */,
+				EFE8FDEE1C76608B004A38AE /* Security.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		EF0C4F3B1C7FE12E0085A9ED /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				EF8B4B771CA329EF0073D41E /* Forgot Password */,
+				EFDEA0271C91AAC80047CA2B /* Disconnect */,
+				EFDEA01C1C90E9810047CA2B /* Change Password */,
+				EFDEA0151C906CA50047CA2B /* Change Passcode */,
+				EFDEA00B1C90647C0047CA2B /* Main */,
+				EFDEA0031C8F0D040047CA2B /* Login */,
+				EF6BCEEC1C84850C00713CC8 /* Onboarding */,
+			);
+			name = "View Controllers";
+			sourceTree = "<group>";
+		};
+		EF0C4F3F1C7FEC040085A9ED /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				EF07E8AC1C87B8AF00B87F83 /* SCNetworkRequest.h */,
+				EF07E8AD1C87B8AF00B87F83 /* SCNetworkRequest.m */,
+				EFDE9FF41C8D04480047CA2B /* SCNetworkResponse.h */,
+				EFDE9FF51C8D04480047CA2B /* SCNetworkResponse.m */,
+				EFDE9FF71C8D0D4A0047CA2B /* SCNetworkCredentials.h */,
+				EFDE9FF81C8D0D4A0047CA2B /* SCNetworkCredentials.mm */,
+				EF07E8A91C87B4AB00B87F83 /* SCNetwork.h */,
+				EF07E8AA1C87B4AB00B87F83 /* SCNetwork.m */,
+				EFDE9FFA1C8E55290047CA2B /* SCWait.h */,
+				EFDE9FFB1C8E55290047CA2B /* SCWait.m */,
+				EFDEA0081C8F31750047CA2B /* SCNetworkCookies.h */,
+				EFDEA0091C8F31750047CA2B /* SCNetworkCookies.m */,
+				EFDEA0201C90EAC40047CA2B /* SCPasswordComplexity.h */,
+				EFDEA0211C90EAC40047CA2B /* SCPasswordComplexity.m */,
+				EFE885EE1C95C2B600A36A9A /* SCDateUtils.h */,
+				EFE885EF1C95C2B600A36A9A /* SCDateUtils.m */,
+			);
+			name = Utilities;
+			sourceTree = "<group>";
+		};
+		EF0C4F431C8086320085A9ED /* OC RSA Classes */ = {
+			isa = PBXGroup;
+			children = (
+				EF0C4F441C8086740085A9ED /* SCRSAManager.h */,
+				EF0C4F451C8086740085A9ED /* SCRSAManager.mm */,
+				EF6BCECF1C80A3F200713CC8 /* SCRSAEncoder.h */,
+				EF6BCED01C80A3F200713CC8 /* SCRSAEncoder.mm */,
+				EF6BCED31C80A50F00713CC8 /* SCKeychain.h */,
+				EF6BCED41C80A50F00713CC8 /* SCKeychain.m */,
+				EF6BCED91C80ADCE00713CC8 /* SCSecuredData.h */,
+				EF6BCEDA1C80ADCE00713CC8 /* SCSecuredData.m */,
+			);
+			name = "OC RSA Classes";
+			sourceTree = "<group>";
+		};
+		EF0C4F481C8089F30085A9ED /* Blowfish */ = {
+			isa = PBXGroup;
+			children = (
+				EF0C4F4A1C808A780085A9ED /* SCBlowfish.h */,
+				EF0C4F491C808A780085A9ED /* SCBlowfish.cpp */,
+			);
+			name = Blowfish;
+			sourceTree = "<group>";
+		};
+		EF6BCECA1C809E5100713CC8 /* UUID */ = {
+			isa = PBXGroup;
+			children = (
+				EF6BCECB1C809E7400713CC8 /* SCUUIDGenerator.cpp */,
+				EF6BCECC1C809E7400713CC8 /* SCUUIDGenerator.h */,
+			);
+			name = UUID;
+			sourceTree = "<group>";
+		};
+		EF6BCEE21C83473B00713CC8 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				EF6BCEE31C83476800713CC8 /* SCTextField.h */,
+				EF6BCEE41C83476800713CC8 /* SCTextField.m */,
+				EFCBFA4C1C9DC43A00590E29 /* SCBubbleView.h */,
+				EFCBFA4D1C9DC43A00590E29 /* SCBubbleView.m */,
+				EFCBFA4F1C9DCBD900590E29 /* SCChatTableViewCell.h */,
+				EFCBFA501C9DCBD900590E29 /* SCChatTableViewCell.m */,
+				EFCBFA521C9E168100590E29 /* SCSenderTableViewCell.h */,
+				EFCBFA531C9E168100590E29 /* SCSenderTableViewCell.m */,
+				EFCBFA581C9EFDD900590E29 /* SCChatSummaryView.h */,
+				EFCBFA591C9EFDD900590E29 /* SCChatSummaryView.m */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		EF6BCEEC1C84850C00713CC8 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				EF6BCEE91C8482A800713CC8 /* SCKeyboardCommonViewController.h */,
+				EF6BCEEA1C8482A800713CC8 /* SCKeyboardCommonViewController.m */,
+				EF0C4F3C1C7FEB040085A9ED /* SCOnboardGenerateRSAViewController.h */,
+				EF0C4F3D1C7FEB040085A9ED /* SCOnboardGenerateRSAViewController.m */,
+				EF6BCEDF1C832FB500713CC8 /* SCOnboardPasswordViewController.h */,
+				EF6BCEE01C832FB500713CC8 /* SCOnboardPasswordViewController.m */,
+				EF6BCEE61C835F0D00713CC8 /* SCOnboardServerViewController.h */,
+				EF6BCEE71C835F0D00713CC8 /* SCOnboardServerViewController.m */,
+				EF6BCEEE1C84892100713CC8 /* SCOnboardLoginViewController.h */,
+				EF6BCEEF1C84892100713CC8 /* SCOnboardLoginViewController.m */,
+				EF6BCEF11C848A1600713CC8 /* SCOnboardForgotPasswordViewController.h */,
+				EF6BCEF21C848A1600713CC8 /* SCOnboardForgotPasswordViewController.m */,
+				EF6BCEF41C848B6900713CC8 /* SCOnboardCreateUsernameViewController.h */,
+				EF6BCEF51C848B6A00713CC8 /* SCOnboardCreateUsernameViewController.m */,
+				EF6BCEFA1C848F8A00713CC8 /* SCOnboardFinishViewController.h */,
+				EF6BCEFB1C848F8A00713CC8 /* SCOnboardFinishViewController.m */,
+			);
+			name = Onboarding;
+			sourceTree = "<group>";
+		};
+		EF8B4B771CA329EF0073D41E /* Forgot Password */ = {
+			isa = PBXGroup;
+			children = (
+				EF8B4B781CA32E130073D41E /* SCForgotIntroViewController.h */,
+				EF8B4B791CA32E130073D41E /* SCForgotIntroViewController.m */,
+				EF8B4B7B1CA330650073D41E /* SCForgotViewController.h */,
+				EF8B4B7C1CA330650073D41E /* SCForgotViewController.m */,
+			);
+			name = "Forgot Password";
+			sourceTree = "<group>";
+		};
+		EFDEA0031C8F0D040047CA2B /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				EFDEA0041C8F0D330047CA2B /* SCLoginViewController.h */,
+				EFDEA0051C8F0D330047CA2B /* SCLoginViewController.m */,
+				EFDEA0191C90ADD90047CA2B /* SCSetupAccountViewController.h */,
+				EFDEA01A1C90ADD90047CA2B /* SCSetupAccountViewController.m */,
+			);
+			name = Login;
+			sourceTree = "<group>";
+		};
+		EFDEA00B1C90647C0047CA2B /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				EFDEA00C1C9064900047CA2B /* SCMainViewController.h */,
+				EFDEA00D1C9064900047CA2B /* SCMainViewController.m */,
+				EFDEA00F1C9065DD0047CA2B /* SCPasscodeViewController.h */,
+				EFDEA0101C9065DD0047CA2B /* SCPasscodeViewController.m */,
+				EFDEA0121C906BD90047CA2B /* SCSettingsViewController.h */,
+				EFDEA0131C906BD90047CA2B /* SCSettingsViewController.m */,
+				EFCBFA551C9E19B400590E29 /* SCChatViewController.h */,
+				EFCBFA561C9E19B400590E29 /* SCChatViewController.m */,
+			);
+			name = Main;
+			sourceTree = "<group>";
+		};
+		EFDEA0151C906CA50047CA2B /* Change Passcode */ = {
+			isa = PBXGroup;
+			children = (
+				EFDEA0161C906CBD0047CA2B /* SCChangePasscodeViewController.h */,
+				EFDEA0171C906CBD0047CA2B /* SCChangePasscodeViewController.m */,
+			);
+			name = "Change Passcode";
+			sourceTree = "<group>";
+		};
+		EFDEA01C1C90E9810047CA2B /* Change Password */ = {
+			isa = PBXGroup;
+			children = (
+				EFDEA01D1C90E99D0047CA2B /* SCChangePasswordViewController.h */,
+				EFDEA01E1C90E99D0047CA2B /* SCChangePasswordViewController.m */,
+			);
+			name = "Change Password";
+			sourceTree = "<group>";
+		};
+		EFDEA0231C91A8200047CA2B /* Messages */ = {
+			isa = PBXGroup;
+			children = (
+				EFDEA0241C91A84A0047CA2B /* SCMessageQueue.h */,
+				EFDEA0251C91A84A0047CA2B /* SCMessageQueue.mm */,
+				EFDEA0311C921D930047CA2B /* SCOutputStream.h */,
+				EFDEA0321C921D930047CA2B /* SCOutputStream.m */,
+				EFDEA0341C925A990047CA2B /* SCInputStream.h */,
+				EFDEA0351C925A990047CA2B /* SCInputStream.m */,
+				EFE885EB1C95BD1700A36A9A /* SCMessageSender.h */,
+				EFE885EC1C95BD1700A36A9A /* SCMessageSender.m */,
+				EFE885F21C96E44300A36A9A /* SCMessageDatabase.h */,
+				EFE885F31C96E44300A36A9A /* SCMessageDatabase.m */,
+				EFE885FB1C96FC0200A36A9A /* SCMessage.h */,
+				EFE885FC1C96FC0200A36A9A /* SCMessage.m */,
+				EFE64A781C98E8BB004FC201 /* SCDeviceCache.h */,
+				EFE64A791C98E8BB004FC201 /* SCDeviceCache.m */,
+				EFE64A7B1C98E8CA004FC201 /* SCDevice.h */,
+				EFE64A7C1C98E8CA004FC201 /* SCDevice.m */,
+				EFE64A7E1C98E9FF004FC201 /* SCDeviceCacheEntry.h */,
+				EFE64A7F1C98E9FF004FC201 /* SCDeviceCacheEntry.m */,
+				EFCBFA5B1C9F1D8500590E29 /* SCDecryptCache.h */,
+				EFCBFA5C1C9F1D8500590E29 /* SCDecryptCache.m */,
+				EFCBFA5E1CA02E4900590E29 /* SCMessageDeleteQueue.h */,
+				EFCBFA5F1CA02E4900590E29 /* SCMessageDeleteQueue.mm */,
+				EF8946CB1CA2D1F500A8D816 /* SCMessageDeleteQueueItem.h */,
+				EF8946CC1CA2D1F500A8D816 /* SCMessageDeleteQueueItem.m */,
+			);
+			name = Messages;
+			sourceTree = "<group>";
+		};
+		EFDEA0271C91AAC80047CA2B /* Disconnect */ = {
+			isa = PBXGroup;
+			children = (
+				EFDEA0281C91AAFA0047CA2B /* SCDisconnectViewController.h */,
+				EFDEA0291C91AAFA0047CA2B /* SCDisconnectViewController.m */,
+				EFDEA02B1C91AB530047CA2B /* SCDisconnectFinishViewController.h */,
+				EFDEA02C1C91AB530047CA2B /* SCDisconnectFinishViewController.m */,
+			);
+			name = Disconnect;
+			sourceTree = "<group>";
+		};
+		EFE8FDB11C755144004A38AE = {
+			isa = PBXGroup;
+			children = (
+				EFE8FDE21C755153004A38AE /* RSA */,
+				EFE8FDBC1C755144004A38AE /* SecureChat */,
+				EFE8FDD61C755144004A38AE /* SecureChatTests */,
+				EFE8FDBB1C755144004A38AE /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		EFE8FDBB1C755144004A38AE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EFE8FDBA1C755144004A38AE /* SecureChat.app */,
+				EFE8FDD31C755144004A38AE /* SecureChatTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		EFE8FDBC1C755144004A38AE /* SecureChat */ = {
+			isa = PBXGroup;
+			children = (
+				EFDEA0231C91A8200047CA2B /* Messages */,
+				EF6BCEE21C83473B00713CC8 /* Views */,
+				EF0C4F3F1C7FEC040085A9ED /* Utilities */,
+				EF0C4F3B1C7FE12E0085A9ED /* View Controllers */,
+				EFE8FDC01C755144004A38AE /* AppDelegate.h */,
+				EFE8FDC11C755144004A38AE /* AppDelegate.m */,
+				EFE8FDC61C755144004A38AE /* Main.storyboard */,
+				EF0C4F381C7FD86E0085A9ED /* Onboarding.storyboard */,
+				EF6BCEFD1C84916E00713CC8 /* ForgotPassword.storyboard */,
+				EF6BCF001C8493EB00713CC8 /* Disconnect.storyboard */,
+				EF6BCF031C849FF400713CC8 /* ChangePassword.storyboard */,
+				EF6BCF061C84A51C00713CC8 /* ChangePasscode.storyboard */,
+				EFDEA0001C8F07780047CA2B /* LoginScreen.storyboard */,
+				EFE8FDCB1C755144004A38AE /* LaunchScreen.storyboard */,
+				EFE8FDC91C755144004A38AE /* Assets.xcassets */,
+				EFE8FDCE1C755144004A38AE /* Info.plist */,
+				EFE8FDBD1C755144004A38AE /* Supporting Files */,
+			);
+			path = SecureChat;
+			sourceTree = "<group>";
+		};
+		EFE8FDBD1C755144004A38AE /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				EFE8FDBE1C755144004A38AE /* main.m */,
+				EFE885E91C94E8DD00A36A9A /* libsqlite3.tbd */,
+				EFE8FDED1C76608B004A38AE /* Security.framework */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		EFE8FDD61C755144004A38AE /* SecureChatTests */ = {
+			isa = PBXGroup;
+			children = (
+				EFE8FDD71C755144004A38AE /* SecureChatTests.mm */,
+				EF8C72951C7E2B870051DFA0 /* ChecksumTests.mm */,
+				EF0C4F4D1C8099BD0085A9ED /* BlowfishTest.mm */,
+				EFE8FDD91C755144004A38AE /* Info.plist */,
+				EF6BCED71C80ABD000713CC8 /* KeychainTests.m */,
+				EF6BCEDD1C81EACB00713CC8 /* ManagerTests.m */,
+				EFE885F61C96F2CA00A36A9A /* SCDatabaseTest.m */,
+				EFC49ADB1CB3E02B00ABDF40 /* TestSecureNetwork.m */,
+			);
+			path = SecureChatTests;
+			sourceTree = "<group>";
+		};
+		EFE8FDE21C755153004A38AE /* RSA */ = {
+			isa = PBXGroup;
+			children = (
+				EF6BCECA1C809E5100713CC8 /* UUID */,
+				EF0C4F481C8089F30085A9ED /* Blowfish */,
+				EF0C4F431C8086320085A9ED /* OC RSA Classes */,
+				EFE8FDF51C7A82AD004A38AE /* RSA */,
+				EFE8FDE31C755159004A38AE /* BigInt */,
+			);
+			name = RSA;
+			sourceTree = "<group>";
+		};
+		EFE8FDE31C755159004A38AE /* BigInt */ = {
+			isa = PBXGroup;
+			children = (
+				EFE8FDE41C7552BC004A38AE /* SCBigInteger.cpp */,
+				EFE8FDE51C7552BC004A38AE /* SCBigInteger.h */,
+				EFE8FDFD1C7CAD36004A38AE /* SCMontMath.cpp */,
+			);
+			name = BigInt;
+			sourceTree = "<group>";
+		};
+		EFE8FDF51C7A82AD004A38AE /* RSA */ = {
+			isa = PBXGroup;
+			children = (
+				EFE8FDF71C7A82F7004A38AE /* SCRSAEncryption.h */,
+				EFE8FDF61C7A82F7004A38AE /* SCRSAEncryption.cpp */,
+				EFE8FDFA1C7A9698004A38AE /* SCRSAKey.cpp */,
+				EF0C4F351C7F3A580085A9ED /* SCRSAPadding.cpp */,
+				EF8C72921C7E28830051DFA0 /* SCChecksum.h */,
+				EF8C72911C7E28830051DFA0 /* SCChecksum.c */,
+				EF8C729A1C7E318F0051DFA0 /* SCSecureHash.h */,
+				EF8C72991C7E318F0051DFA0 /* SCSHA256Context.cpp */,
+			);
+			name = RSA;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		EFE8FDB91C755144004A38AE /* SecureChat */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EFE8FDDC1C755144004A38AE /* Build configuration list for PBXNativeTarget "SecureChat" */;
+			buildPhases = (
+				EFE8FDB61C755144004A38AE /* Sources */,
+				EFE8FDB71C755144004A38AE /* Frameworks */,
+				EFE8FDB81C755144004A38AE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SecureChat;
+			productName = SecureChat;
+			productReference = EFE8FDBA1C755144004A38AE /* SecureChat.app */;
+			productType = "com.apple.product-type.application";
+		};
+		EFE8FDD21C755144004A38AE /* SecureChatTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EFE8FDDF1C755144004A38AE /* Build configuration list for PBXNativeTarget "SecureChatTests" */;
+			buildPhases = (
+				EFE8FDCF1C755144004A38AE /* Sources */,
+				EFE8FDD01C755144004A38AE /* Frameworks */,
+				EFE8FDD11C755144004A38AE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EFE8FDD51C755144004A38AE /* PBXTargetDependency */,
+			);
+			name = SecureChatTests;
+			productName = SecureChatTests;
+			productReference = EFE8FDD31C755144004A38AE /* SecureChatTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		EFE8FDB21C755144004A38AE /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = SC;
+				LastUpgradeCheck = 0720;
+				ORGANIZATIONNAME = "William Edward Woody";
+				TargetAttributes = {
+					EFE8FDB91C755144004A38AE = {
+						CreatedOnToolsVersion = 7.2.1;
+					};
+					EFE8FDD21C755144004A38AE = {
+						CreatedOnToolsVersion = 7.2.1;
+					};
+				};
+			};
+			buildConfigurationList = EFE8FDB51C755144004A38AE /* Build configuration list for PBXProject "SecureChat" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = EFE8FDB11C755144004A38AE;
+			productRefGroup = EFE8FDBB1C755144004A38AE /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				EFE8FDB91C755144004A38AE /* SecureChat */,
+				EFE8FDD21C755144004A38AE /* SecureChatTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		EFE8FDB81C755144004A38AE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF6BCF081C84A51C00713CC8 /* ChangePasscode.storyboard in Resources */,
+				EFE8FDCD1C755144004A38AE /* LaunchScreen.storyboard in Resources */,
+				EFE8FDCA1C755144004A38AE /* Assets.xcassets in Resources */,
+				EF6BCEFF1C84916E00713CC8 /* ForgotPassword.storyboard in Resources */,
+				EFE8FDC81C755144004A38AE /* Main.storyboard in Resources */,
+				EF6BCF021C8493EB00713CC8 /* Disconnect.storyboard in Resources */,
+				EF0C4F3A1C7FD86E0085A9ED /* Onboarding.storyboard in Resources */,
+				EFDEA0021C8F07780047CA2B /* LoginScreen.storyboard in Resources */,
+				EF6BCF051C849FF400713CC8 /* ChangePassword.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EFE8FDD11C755144004A38AE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		EFE8FDB61C755144004A38AE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EFCBFA571C9E19B400590E29 /* SCChatViewController.m in Sources */,
+				EF8C72931C7E28830051DFA0 /* SCChecksum.c in Sources */,
+				EFE8FDFB1C7A9698004A38AE /* SCRSAKey.cpp in Sources */,
+				EF8946CD1CA2D1F500A8D816 /* SCMessageDeleteQueueItem.m in Sources */,
+				EF0C4F3E1C7FEB040085A9ED /* SCOnboardGenerateRSAViewController.m in Sources */,
+				EFE885F01C95C2B600A36A9A /* SCDateUtils.m in Sources */,
+				EF6BCEE11C832FB500713CC8 /* SCOnboardPasswordViewController.m in Sources */,
+				EFCBFA601CA02E4900590E29 /* SCMessageDeleteQueue.mm in Sources */,
+				EFCBFA511C9DCBD900590E29 /* SCChatTableViewCell.m in Sources */,
+				EF07E8AE1C87B8AF00B87F83 /* SCNetworkRequest.m in Sources */,
+				EFDEA0111C9065DD0047CA2B /* SCPasscodeViewController.m in Sources */,
+				EF6BCEF31C848A1600713CC8 /* SCOnboardForgotPasswordViewController.m in Sources */,
+				EFDEA01F1C90E99D0047CA2B /* SCChangePasswordViewController.m in Sources */,
+				EF6BCEFC1C848F8A00713CC8 /* SCOnboardFinishViewController.m in Sources */,
+				EF6BCED11C80A3F200713CC8 /* SCRSAEncoder.mm in Sources */,
+				EFDEA0061C8F0D330047CA2B /* SCLoginViewController.m in Sources */,
+				EFE8FDC21C755144004A38AE /* AppDelegate.m in Sources */,
+				EF6BCEDB1C80ADCE00713CC8 /* SCSecuredData.m in Sources */,
+				EFCBFA5D1C9F1D8500590E29 /* SCDecryptCache.m in Sources */,
+				EFDEA00E1C9064900047CA2B /* SCMainViewController.m in Sources */,
+				EFDEA00A1C8F31750047CA2B /* SCNetworkCookies.m in Sources */,
+				EF6BCEF01C84892100713CC8 /* SCOnboardLoginViewController.m in Sources */,
+				EFDE9FFC1C8E55290047CA2B /* SCWait.m in Sources */,
+				EFDEA01B1C90ADD90047CA2B /* SCSetupAccountViewController.m in Sources */,
+				EFDEA0331C921D930047CA2B /* SCOutputStream.m in Sources */,
+				EF6BCEE81C835F0D00713CC8 /* SCOnboardServerViewController.m in Sources */,
+				EFE885FD1C96FC0200A36A9A /* SCMessage.m in Sources */,
+				EFCBFA4E1C9DC43A00590E29 /* SCBubbleView.m in Sources */,
+				EFE8FDFE1C7CAD36004A38AE /* SCMontMath.cpp in Sources */,
+				EFE64A7D1C98E8CA004FC201 /* SCDevice.m in Sources */,
+				EF8B4B7A1CA32E130073D41E /* SCForgotIntroViewController.m in Sources */,
+				EFE885F41C96E44300A36A9A /* SCMessageDatabase.m in Sources */,
+				EFE8FDBF1C755144004A38AE /* main.m in Sources */,
+				EFDE9FF61C8D04480047CA2B /* SCNetworkResponse.m in Sources */,
+				EFDEA0181C906CBD0047CA2B /* SCChangePasscodeViewController.m in Sources */,
+				EFDE9FF91C8D0D4A0047CA2B /* SCNetworkCredentials.mm in Sources */,
+				EFE8FDF81C7A82F7004A38AE /* SCRSAEncryption.cpp in Sources */,
+				EFE8FDE61C7552BC004A38AE /* SCBigInteger.cpp in Sources */,
+				EFDEA0261C91A84A0047CA2B /* SCMessageQueue.mm in Sources */,
+				EFE885ED1C95BD1700A36A9A /* SCMessageSender.m in Sources */,
+				EFDEA0221C90EAC40047CA2B /* SCPasswordComplexity.m in Sources */,
+				EF07E8AB1C87B4AB00B87F83 /* SCNetwork.m in Sources */,
+				EF6BCEF61C848B6A00713CC8 /* SCOnboardCreateUsernameViewController.m in Sources */,
+				EF6BCEEB1C8482A800713CC8 /* SCKeyboardCommonViewController.m in Sources */,
+				EFCBFA541C9E168100590E29 /* SCSenderTableViewCell.m in Sources */,
+				EFE64A7A1C98E8BB004FC201 /* SCDeviceCache.m in Sources */,
+				EF0C4F361C7F3A580085A9ED /* SCRSAPadding.cpp in Sources */,
+				EF8C729B1C7E318F0051DFA0 /* SCSHA256Context.cpp in Sources */,
+				EF0C4F461C8086740085A9ED /* SCRSAManager.mm in Sources */,
+				EFDEA0141C906BD90047CA2B /* SCSettingsViewController.m in Sources */,
+				EFDEA0361C925A990047CA2B /* SCInputStream.m in Sources */,
+				EF6BCED51C80A50F00713CC8 /* SCKeychain.m in Sources */,
+				EF6BCEE51C83476800713CC8 /* SCTextField.m in Sources */,
+				EF6BCECD1C809E7400713CC8 /* SCUUIDGenerator.cpp in Sources */,
+				EFDEA02A1C91AAFA0047CA2B /* SCDisconnectViewController.m in Sources */,
+				EFE64A801C98E9FF004FC201 /* SCDeviceCacheEntry.m in Sources */,
+				EFCBFA5A1C9EFDD900590E29 /* SCChatSummaryView.m in Sources */,
+				EF8B4B7D1CA330650073D41E /* SCForgotViewController.m in Sources */,
+				EF0C4F4B1C808A780085A9ED /* SCBlowfish.cpp in Sources */,
+				EFDEA02D1C91AB530047CA2B /* SCDisconnectFinishViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EFE8FDCF1C755144004A38AE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EFE8FDD81C755144004A38AE /* SecureChatTests.mm in Sources */,
+				EFE8FDFF1C7CAD36004A38AE /* SCMontMath.cpp in Sources */,
+				EFE885F71C96F2CA00A36A9A /* SCDatabaseTest.m in Sources */,
+				EF0C4F4C1C808A780085A9ED /* SCBlowfish.cpp in Sources */,
+				EFC49ADC1CB3E02B00ABDF40 /* TestSecureNetwork.m in Sources */,
+				EF6BCED21C80A3F200713CC8 /* SCRSAEncoder.mm in Sources */,
+				EF0C4F4E1C8099BD0085A9ED /* BlowfishTest.mm in Sources */,
+				EFE885FF1C96FC0600A36A9A /* SCMessageSender.m in Sources */,
+				EF0C4F371C7F3A580085A9ED /* SCRSAPadding.cpp in Sources */,
+				EF8C729C1C7E318F0051DFA0 /* SCSHA256Context.cpp in Sources */,
+				EF8C72941C7E28830051DFA0 /* SCChecksum.c in Sources */,
+				EFE885F51C96E44300A36A9A /* SCMessageDatabase.m in Sources */,
+				EF0C4F471C8086740085A9ED /* SCRSAManager.mm in Sources */,
+				EF6BCED81C80ABD000713CC8 /* KeychainTests.m in Sources */,
+				EFE885FE1C96FC0200A36A9A /* SCMessage.m in Sources */,
+				EFE8FDE71C7552BC004A38AE /* SCBigInteger.cpp in Sources */,
+				EFE8FDFC1C7A9698004A38AE /* SCRSAKey.cpp in Sources */,
+				EF8C72961C7E2B870051DFA0 /* ChecksumTests.mm in Sources */,
+				EF6BCEDE1C81EACB00713CC8 /* ManagerTests.m in Sources */,
+				EF6BCED61C80A50F00713CC8 /* SCKeychain.m in Sources */,
+				EF6BCEDC1C80ADCE00713CC8 /* SCSecuredData.m in Sources */,
+				EF6BCECE1C809E7400713CC8 /* SCUUIDGenerator.cpp in Sources */,
+				EFE8FDF91C7A82F7004A38AE /* SCRSAEncryption.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		EFE8FDD51C755144004A38AE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EFE8FDB91C755144004A38AE /* SecureChat */;
+			targetProxy = EFE8FDD41C755144004A38AE /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		EF0C4F381C7FD86E0085A9ED /* Onboarding.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EF0C4F391C7FD86E0085A9ED /* Base */,
+			);
+			name = Onboarding.storyboard;
+			sourceTree = "<group>";
+		};
+		EF6BCEFD1C84916E00713CC8 /* ForgotPassword.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EF6BCEFE1C84916E00713CC8 /* Base */,
+			);
+			name = ForgotPassword.storyboard;
+			sourceTree = "<group>";
+		};
+		EF6BCF001C8493EB00713CC8 /* Disconnect.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EF6BCF011C8493EB00713CC8 /* Base */,
+			);
+			name = Disconnect.storyboard;
+			sourceTree = "<group>";
+		};
+		EF6BCF031C849FF400713CC8 /* ChangePassword.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EF6BCF041C849FF400713CC8 /* Base */,
+			);
+			name = ChangePassword.storyboard;
+			sourceTree = "<group>";
+		};
+		EF6BCF061C84A51C00713CC8 /* ChangePasscode.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EF6BCF071C84A51C00713CC8 /* Base */,
+			);
+			name = ChangePasscode.storyboard;
+			sourceTree = "<group>";
+		};
+		EFDEA0001C8F07780047CA2B /* LoginScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EFDEA0011C8F07780047CA2B /* Base */,
+			);
+			name = LoginScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		EFE8FDC61C755144004A38AE /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EFE8FDC71C755144004A38AE /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		EFE8FDCB1C755144004A38AE /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EFE8FDCC1C755144004A38AE /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		EFE8FDDA1C755144004A38AE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		EFE8FDDB1C755144004A38AE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		EFE8FDDD1C755144004A38AE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = SecureChat/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.chaosinmotion.SecureChat;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		EFE8FDDE1C755144004A38AE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = SecureChat/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.chaosinmotion.SecureChat;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		EFE8FDE01C755144004A38AE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = SecureChatTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.chaosinmotion.SecureChatTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		EFE8FDE11C755144004A38AE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = SecureChatTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.chaosinmotion.SecureChatTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		EFE8FDB51C755144004A38AE /* Build configuration list for PBXProject "SecureChat" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EFE8FDDA1C755144004A38AE /* Debug */,
+				EFE8FDDB1C755144004A38AE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EFE8FDDC1C755144004A38AE /* Build configuration list for PBXNativeTarget "SecureChat" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EFE8FDDD1C755144004A38AE /* Debug */,
+				EFE8FDDE1C755144004A38AE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EFE8FDDF1C755144004A38AE /* Build configuration list for PBXNativeTarget "SecureChatTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EFE8FDE01C755144004A38AE /* Debug */,
+				EFE8FDE11C755144004A38AE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = EFE8FDB21C755144004A38AE /* Project object */;
+}

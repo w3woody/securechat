@@ -1,0 +1,149 @@
+<html>
+	<head>
+		<title>SecureChat Client</title>
+		<link type="text/css" rel="stylesheet" href="SecureChat.css"> 
+	</head>
+	<body>
+		<h1>Client Overview</h1>
+		<p>This document gives an overview of the SecureChat iOS client's source kit.</p>
+		<h2>Design Goals</h2>
+		<p>The fundamental design goal of SecureChat was to have all messages encrypted using
+			RSA public/private key encryption entirely end-to-end. This means that at no time,
+			except when a sender is composing a message, and when the receiver is displaying
+			the message, do messages exist except in encrypted form using RSA encryption.</p>
+		<p>By doing this, it is assumed that it would be impossible for an attacker or a third
+			party agency from decrypting the messages or reconstructing a conversation without
+			having access to a device-specific private key.</p>
+		<p>To achieve this goal of security, a lot of weight is placed on the client's ability
+			to generate and use a secure RSA public/private key architecture, relying on the
+			server only to obtain public keys for destination devices, and for obtaining stored
+			messages.</p>
+		<p>To achieve this goal:</p>
+		<ul><li>The client is responsible for generating its own public/private RSA key, which
+			lives with the device.</li>
+			<li>The RSA key (as well as other parameters necessary to contact the server) are
+			encrypted using Blowfish, using an encryption key generated from a passcode 
+			entered by the user.</li>
+			<li>In order to reduce the risk of a brute force attack to find the encoded RSA
+			key, the checksum used to validate if the data was correctly decrypted is
+			deliberately weak; by using a CRC-8 checksum there is a 1 in 256 chance of a
+			false positive, meaning for a 4 digit password an attacker is 39 times more
+			likely to enter the wrong passcode, which results in destructively overwriting
+			the RSA private key for the device.</li>
+			<li>All messages stored on the device are stored in their encrypted format. To
+			see the messages on the device, the correct passcode must be supplied for the RSA
+			private key to be revealed, so that messages can then be decrypted. Decrypted messages
+			are only held in RAM.</li></ul>
+		<p>For the purposes of this application, we also make a few assumptions about the 
+			Apple iOS operating system which are presently not true, but which are threatened
+			by the current Apple v FBI squabble:</p>
+		<ul><li>The <a href="https://developer.apple.com/library/ios/documentation/Security/Reference/keychainservices/index.html">Apple Keychain</a> API will be compromised by a
+			subsequent ruling by the U.S. government or by another agency. We do use the
+			iOS Keychain for secure storage of our keys, but we further encrypt the data
+			we store there as described above.</li>
+			<li>The Apple API call <a href="https://developer.apple.com/library/ios/documentation/Security/Reference/certifkeytrustservices/index.html#//apple_ref/c/func/SecKeyGeneratePair">SecKeyGeneratePair</a> 
+			will be compromised to generate weak public/private RSA keys or to transmit those
+			keys via a side channel. This is why we <a href="rsa.html">roll our own RSA
+			implementation.</a>.</li></ul>
+		<h2>Important Note</h2>
+		<p><b><u>Please note:</u></b> I have <b><i>absolutely no reason</i></b> to believe that
+			any of these API calls have been compromised, and I am of the very strong opinion
+			that Apple has best security practices in mind, as well as the consumer in mind,
+			as they designed these calls. The fact, for example, that on iOS it seems (as of
+			this writing) to be impossible to extract the private RSA key from a keychain,
+			suggests to me Apple's interest in insuring best security practices.</p>
+			<p>The purpose of this exercise is to assume <u><i>what if?</i></u>, and to provide a
+			demonstration that it is possible for an individual, only equipped with a couple
+			of books and some Wikipedia articles, to implement a secure chat system, and that
+			this level of security is not the province of large corporations or nation-states.</p>
+			
+		<h2>SecureChat Client Source Overview</h2>
+		<p>There are several modules which comprise our SecureChat client.</p>
+		<h3>RSA Implementation</h3>
+		<p>The custom implementation of the RSA encryption system is <a href="rsa.html">
+		documented elsewhere in this document.</a></p>
+		<p>To summarize, the classes and functions they provide are listed below:</p>
+		<ul><li><b>SCUUIDGenerator</b> provides a generator for generating entirely random
+			(version 4) 
+			<a href="https://en.wikipedia.org/wiki/Universally_unique_identifier">UUID keys</a>
+			for identifying devices with the server.</li>
+			<li><b>SCBlowfish</b> provides a 
+			<a href="https://en.wikipedia.org/wiki/Blowfish_(cipher)">Blowfish encryption</a>
+			class, and is used to encrypt and decrypt the keystore data for a device.</li>
+			<li><b>SCRSAEncryption</b> provides the implementation of the RSA public/private
+			key generator. The header also defines the <b>SCRSAKey</b> class for manipulating
+			public and private RSA keys, and <b>SCRSAPadding</b> for encoding and decoding
+			message blocks using an 
+			<a href="https://en.wikipedia.org/wiki/Optimal_asymmetric_encryption_padding">OAEP-style</a>
+			padding scheme.</li>
+			<li><b>SCChecksum</b> provides an implementation of the CRC-8 checksum algorithm.</li>
+			<li><b>SCSecureHash</b> provides an implementation of the SHA-256 hash 
+			algorithm.</li>
+			<li><b>SCBigInteger</b> and <b>SCMontMath</b> provide big integer math routines used
+			by the RSA algorithm.</li></ul>
+		<p>In addition, the following classes assemble these into a more useful form:</p>
+		<ul><li><b>SCRSAManager</b> provides the entry points for generating, managing and using
+			the public and private key for this device, as well as storing credentials for 
+			accessing the SecureChat server.</li>
+			<li><b>SCRSAEncoder</b> provides a mechanism for encoding messages using a public
+			key (supplied in <b>SCRSAKey</b>) using the padding scheme implemented in 
+			<b>SCRSAPadding</b>.</li>
+			<li><b>SCKeychain</b> provides a simple interface for reading and writing data
+			into and out of the <a href="https://developer.apple.com/library/ios/documentation/Security/Reference/keychainservices/index.html">iOS Keychain</a>.</li>
+			<li><b>SCSecuredData</b> provides a class to serialize and deserialize data stored
+			by <b>SCRSAManager</b> into the keychain.</li></ul>
+		
+		<h3>Network Connection</h3>
+		<p>The principle class used to make requests and get responses from the HTTP API used
+			by the SecureChat server is <b>SCNetwork.</b> This class provides a series of
+			standardized request interfaces for building and sending a JSON request, and
+			for providing a callback when a response is received.</p>
+		<p>The SCNetwork class takes a delegate (defined as <b>SCNetworkDelegate</b>) which
+			is implemented by the <b>AppDelegate</b> for notifying when a network request is in 
+			progress, for showing server errors, and for requesting connection credentials in 
+			the event the network connection's authentication expires. The callback even 
+			allows for a login screen to be displayed in the event the stored password is 
+			incorrect. (All this is handled in the <b>AppDelegate</b> class.)</p>
+		<p>The typical function call made to the back end looks like the code below, which 
+			is taken from the code which handles a forgotten password:</p>
+		<pre class="samplecode">NSDictionary *d = @{ @"token": self.token,
+                     @"password": newPassword };
+
+[[SCNetwork shared] request:@"login/updateforgotpassword" 
+             withParameters:d 
+                     caller:self 
+                   response:^(SCNetworkResponse *response) {
+    if (response.success) {
+        /* Do something good */
+    }
+}];</pre>
+		<h3>Message Queue</h3>
+		<p>The message queue code and related classes handles messages that were sent and
+			received from the SecureChat server.</p>
+		<p>The principle class is <b>SCMessageQueue</b>. This class handles a background
+			thread or timer mechanism to listen for incoming messages, to obtain the messages
+			received from local storage, and to send messages to a remote receiver.</p>
+		<p>Note that the message queue is not started until the passcode is unlocked and
+			the credentials and remote server address correctly decoded. The message queue
+			is also paused when the application goes inactive. The <b>SCMessageQueue</b>
+			class also handles notifications received from the server, and polls if 
+			notifications could not be set up.</p>
+		<p>Storage of the messages is handled by the <b>SCMessageDatabase</b> class, which
+			wraps <a href="http://sqlite.org">SQLite</a> for storage. Messages are stored as
+			raw encoded bytes; they are decrypted (and cached in memory) using the 
+			<b>SCDecryptCache</b> class, which maintains a temporary in-memory cache of
+			decrypted messages.</p>
+		<p>When a message is sent, one of the first things that needs to be done is to resolve
+			all the devices associated with both the sender and the receiver of the message.
+			This is handled by <b>SCDeviceCache,</b> which provides a cache of the devices
+			associated with a user. Entries in this cache expire every 5 minutes. One
+			implication of this design is that an existing user adding a new device to the
+			list of his devices may have to wait five minutes before messages are received
+			on this device, as other clients expire their device cache.</p>
+
+		<p>Received messages are removed from the server after they are decrypted. This is
+			handled by the <b>SCMessageDeleteQueue</b> call. Messages are identified by their
+			<i>messageID</i>; duplicate messages are detected and removed without showing
+			up as duplicates in the local chat database or display.</p>
+	</body>
+</html>

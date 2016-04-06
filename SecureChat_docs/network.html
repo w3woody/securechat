@@ -1,0 +1,497 @@
+<html>
+	<head>
+		<title>SecureChat Network Protocol</title>
+		<link type="text/css" rel="stylesheet" href="SecureChat.css"> 
+	</head>
+	<body>
+		<h1>Network Protocol</h1>
+		<h2>Assumptions</h2>
+		<p>The basic networking protocol between the client and server is implemented using
+			JSON over HTTP; this is for ease of implementation and ease of installation on
+			a given network. Some assumptions were made about how the server would be
+			installed.</p>
+		<ul><li>The server would be installed using HTTPS rather than HTTP. This is to prevent
+			casual sniffing of the packets being sent and received.</li>
+			<li>Despite this, we assume that a 'man in the middle' attack has been successfully
+			made, so steps were taken during the design of the protocol to prevent sensitive
+			information (such as passwords or messages) are sent "in the clear" and to prevent
+			replay attacks from being carried out.</li></ul>
+		<h3>Base URL</h3>
+		<p>When the server is installed, the verify page (to verify operation of the server) 
+			will present a URL for clients to use when setting up their chat clients. This
+			URL is the base URL for all requests. For example, if the base URL given is
+			<b>https://mychatserver.com</b>, then the base URL for all API requests are
+			given as <b>https://mychatserver.com/ss/api/1</b>; this indicates the SecureChat
+			server API, using version 1 of the protocol. (Future updates can change the URL
+			by changing the appended URL to <b>ss/api/2</b>, etc.)</p>
+		<p>Requests then append the appropriate command to the URL. For example, the request
+			to determine if the server is operational would be the path 
+			<b>https://mychatserver.com/ss/api/1/login/status</b>.</p>
+		<p>For the rest of this document, we will only show the URL component that is added to
+			the base URL.</p>
+		<h3>JSON over HTTP</h3>
+		<p>Requests are sent as POST commands over HTTP regardless of the nature of the request,
+			and any parameters are sent as JSON in the body of the POST request. Responses are
+			received as JSON using a standard format described below.</p>
+		<p>The rational goes to the heart of the HTTP protocol design. Fundamentally 'GET'
+			requests are requests to get a specific resource uniquely identified by the
+			URI of the request, and 'PUT' requests are requests to save a specific resource.
+			In a sense, you can think of these commands as being akin to a file system: 'GET'
+			reads a file named in the URI, and 'PUT' saves a file named in the URI.</p>
+		<p>These semantics have ramifications on how the protocol works, especially in light
+			of HTTP proxy servers that may be inserted into the network flow between the
+			client and server. Specifically if you make two 'GET' requests in a row for the
+			same URI, a proxy server is not required to forward the second request to the
+			back-end server. Further, if a 'PUT' request is followed by a 'GET' request for the 
+			same resource, a proxy server may return the body of the 'PUT' request in the
+			subsequent 'GET' request without ever communicating with the back-end server.</p>
+		<p>Fundamentally 'POST' means "execute the command given by the URI", and is
+			equivalent to running the executable program at the URI, taking the body of the
+			'POST' command as the program's input, and returning the program's output as the
+			result. (Early web servers in fact did just that: a POST command would resolve
+			the file that would be served using GET, and run the command at that file
+			location.)</p>
+		<p>Proxy servers are required to pass POST commands through and return the results
+			without caching. After all, a POST command may have side effects on the server
+			that by implication GET and PUT do not.</p>
+		<p>So our design fundamentally assumes that HTTP is a conduit which carries the
+			command to the back-end server, and HTTP errors allude to problems with
+			communicating with the back-end. Requests are then processed and the results
+			are returned through this conduit. As an aside, this implies that errors with
+			those commands would result in a success (200) code being sent: for example, if
+			a command is sent that the user is not authorized to execute, the HTTP result
+			would be 200, but the payload would return an error code indicating the user is
+			not authorized. (Compare to other designs which would return 403: User not
+			authorized as the HTTP result.)</p>
+		<h3>JSON Responses</h3>
+		<p>All responses from the server come as a JSON object. Every object is guaranteed
+			to have at least one key/value pair: the <b>"success"</b> key, which is set to
+			the boolean value of <i>true</i> if the call was successful, and <i>false</i> if
+			it failed.</p>
+		<h4>Successful returns</h4>
+		<p>A successful return result from the server looks like:</p>
+		<pre class="samplecode">{ 
+    "success": true,
+    "data": {
+        <i>return data, documented below</i>
+    }
+}</pre>
+		<p>Note that the data field is optional; if a request does not return data, the
+			data field may be missing. Also note that the data field is always a JSON
+			object.</p>
+		<h4>Failure returns</h4>
+		<p>If there is an error, an error code and error message is returned, along with
+			an optional stack trace (for debugging purposes). (A stack trace should never
+			normally be returned.)</p>
+		<pre class="samplecode">{
+    "success": false,
+    "error": <i>error code as integer, below</i>
+    "message": <i>human readable error, only used for debugging</i>
+    "exception": [ 
+	    <i>string, exception stack</i>
+    ]
+}</pre>
+		<p>The error code is an integer indicating the error. Both the message field and the
+			optional exception field are used strictly for diagnostic purposes; always use
+			the integer returned in the error code for presenting an error message to the
+			user. (The message should never be parsed or compared to a list of strings.)</p>
+		<p>The error codes that can be returned by the server are located in 
+			<i>Errors.java</i>:</p>
+		<table class="ftable">
+			<tr class="fheader"><td>Error</td><td>Meaning</td></tr>
+			<tr><td>1</td>
+				<td>Returned if there was an exception on the back-end server. This
+				will be accompanied with an exception stack frame for debugging.</td></tr>
+			<tr><td>2</td>
+				<td>Username/password pair could not be validated.</td></tr>
+			<tr><td>3</td>
+				<td>An unexpected problem, such as a duplicate device ID found during
+					account creation.</td></tr>
+			<tr><td>4</td>
+				<td>The user is not currently authenticated. This can happen if the server
+					expires the credentials (and requires the user to re-authenticate).</td></tr>
+			<tr><td>5</td>
+				<td>Unable to create a new account because the username is in use.</td></tr>
+			<tr><td>6</td>
+				<td>The device ID could not be found.</td></tr>
+			<tr><td>7</td>
+				<td>The notification service is not running, and the client should switch to
+					polling instead.</td></tr>
+			<tr><td>8</td>
+				<td>The username was not found.</td></tr>
+		</table>
+		
+		<h3>Public Key Format</h3>
+		<p>The protocol requires that we pass a public key around. We use a non-standard
+			method for communicating public keys associated with a device.</p>
+		<p>Keep in mind an <a href="rsa.html">RSA key</a> consists of two integers E and N;
+			messages are encoded using a public key by converting the message to a series
+			of integers M, and calculating M = M<sup>E</sup> mod N. This means that for 
+			us to represent a public key we need to know the values E, N and the number of
+			bits S.</p>
+		<p>Public keys are sent and received as a comma-delimited string 
+			<b>E</b>,<b>S</b>,<b>N</b>, where E is a decimal (base-10) representation of the
+			public key E, S the number of bits (in decimal base-10), and N the modulus
+			(again, decimal base-10). For example, if we were to calculate a public RSA
+			key with the values E=7 and N=33 (with S=6, the number of bits necessary to
+			represent N), our public key string would be</p>
+		<pre class="samplecode">7,6,33</pre>
+		
+		<h3>Password Hashing</h3>
+		<p><a href="server.html">The back-end server</a> stores passwords hashed using the 
+			SHA-256 protocol. We further use hashing in a two-step protocol during login.
+			This implies that the password is hashed twice; this is by design. The implication
+			of performing a two-step login process is that replay attacks are harder; a
+			third party cannot determine the user's password either by sniffing packets or
+			by examining the contents of the client or the server's database. A third party
+			cannot even log in by examining the hash sent during the login process.</p>
+		<img class="diagram" src="images/networklogin.png">
+		<ul><li>The original password P is hashed: P' = SHA256(P + "PwdSalt134"). <i>(The + 
+			operator denotes string concatenation.)</i></li>
+			<li>The hashed password P' is hashed <i>again</i> using the supplied token T:
+			P" = SHA256(P' + "PEnSalt194" + T).</li></ul>
+
+		<h2>Protocol Description</h2>
+		<h3>Account Management</h3>
+		<p>The following commands do not require authentication.</p>
+		<h4>login/status</h4>
+		<p>Checks the status of the server. Used to determine if the client URL was correctly
+			entered. This only returns a success result.</p>
+		<p class="jsonheader">Calling arguments:</p>
+		<p class="jsonpayload">None</p>
+		<p class="jsonheader">Return results:</p>
+		<p class="jsonpayload">Success as documented above</p>
+		
+		<h4>login/token</h4>
+		<p>Returns a token that is used when salting the password hash for logging in.</p>
+		<p class="jsonheader">Calling arguments:</p>
+		<p class="jsonpayload">None</p>
+		<p class="jsonheader">Return results:</p>
+		<p class="jsonpayload">"token": <i>returned token for logging in</i></p>
+		
+		<h4>login/login</h4>
+		<p>Attempts to log the user in. The password must be hashed using the token returned
+			by a previous call to the login/token endpoint. The password is hashed using
+			the following algorithm:</p>
+		<ul><li>The original password P is hashed: P' = SHA256(P + "PwdSalt134"). <i>(The + 
+			operator denotes string concatenation.)</i></li>
+			<li>The hashed password P' is hashed <i>again</i> using the supplied token T:
+			P" = SHA256(P' + "PEnSalt194" + T).</li></ul>
+		<p>The reason for "double-hashing" is so that we can store the password on the client
+			and on the server using the hashed value P' instead of the original value P.</p>
+		<p class="jsonheader">Calling arguments:</p>
+		<p class="jsonpayload">"username": <i>Username</i><br>
+			"password": <i>P", hashed using method above.</i></p>
+		<p class="jsonheader">Return results:</p>
+		<p class="jsonpayload">Success or error code as documented above</p>
+		
+		<h4>login/forgotpassword</h4>
+		<p>Sent when a client indicates he forgot his password during account setup. This
+			triggers a message to any device that is currently registered to the user to
+			reset his password; this then continues the reset password flow with the second
+			command below.</p>
+		<p>Note that this API does not return failure. This is to prevent someone from
+			querying the API to determine which users exist on the server without 
+			logging in first.</p>
+		<p>Note that the reset flow works as documented below:</p>
+		<img class="diagram" src="images/forgotpasswordflow.png">
+		<p class="jsonheader">Calling arguments:</p>
+		<p class="jsonpayload">"username": <i>Username</i></p>
+		<p class="jsonheader">Return results:</p>
+		<p class="jsonpayload">Success as documented above</p>
+		
+		<h4>login/createaccount</h4>
+		<p>Creates a new account on the server. This creates a new password and associates
+			a device with the account.</p>
+		<p class="jsonheader">Calling arguments:</p>
+		<p class="jsonpayload">"username": <i>Username</i><br>
+			"password": <i>Hashed password P' (see login/login above)</i><br>
+			"deviceid": <i>The UUID identifying the device</i><br>
+			"pubkey": <i>The public key for this device</i>
+		</p>
+		<p class="jsonheader">Return results:</p>
+		<p class="jsonpayload">Success or error code as documented above</p>
+		
+		<h3>Account Management</h3>
+		<p>The following commands require account authentication. If given when the user
+			is not authenticated, the command is refused.</p>
+		
+		<h4>login/updateforgotpassword</h4>
+		<p>Updates the forgotten password. This requires a token which was sent as the payload
+			of a reset password message sent to this device. (See the documentation on
+			getting messages for more information.)</p>
+		<p><b>Security note:</b> A user who has access to your device while your device is
+			logged in represents a security risk; a bad guy with possession of your unlocked
+			device can reset your password.</p>
+		<p class="jsonheader">Calling arguments:</p>
+		<p class="jsonpayload">"token": <i>Reset password token received from back end</i><br>
+			"password": <i>Hashed password P' (see login/login above)</i>
+		</p>
+		<p class="jsonheader">Return results:</p>
+		<p class="jsonpayload">Success or error code as documented above</p>
+		
+		
+		<h4>login/changepassword</h4>
+		<p>Allows a user to change their password. Requires the old password. This also
+			requires a token generated by the <b>login/token</b> endpoint above.</p>
+		<p>Passwords are encrypted as described above in the <b>login/login</b> endpoint.</p>
+		<p class="jsonheader">Calling arguments:</p>
+		<p class="jsonpayload">"oldpassword": <i>P", the old password</i><br>
+			"newpassword": <i>New password P'</i>
+		</p>
+		<p class="jsonheader">Return results:</p>
+		<p class="jsonpayload">Success or error code as documented above</p>
+		
+		
+		<h3>Device Management</h3>
+		<p>All commands below require authentication.</p>
+		<h4>device/devices</h4>
+		<p>Return a list of all the devices registered to the specified user. This is used
+			to determine the device public keys for encrypting sent messages.</p>
+		<p class="jsonheader">Calling arguments:</p>
+		<p class="jsonpayload">"username": <i>The username of the user to query</i></p>
+		<p class="jsonheader">Return results:</p>
+		<p class="jsonpayload">"userid": <i>The integer user ID for this user</i><br>
+			"devices": <i>array of devices, as JSON objects.</i></br>
+			Each device in the device array contains the keys:
+			"deviceid": <i>The UUID of the device,</i>
+			"publickey": <i>The public key for that device.</i>
+		</p>
+		<p>Example return result:</p>
+		<pre class="samplecode">{
+    "userid": 5,
+    "devices": [
+        { 
+            "deviceid": "11111111-2222-3333-4444-555555555555",
+            "publickey": "5,6,33"
+        },
+        {
+            "deviceid": "66666666-7777-8888-9999-000000000000",
+            "publickey": "7,6,33"
+        }
+    ]
+}</pre>
+		
+		<h4>device/adddevice</h4>
+		<p>Adds a new device to the logged in account.</p>
+		<p class="jsonheader">Calling arguments:</p>
+		<p class="jsonpayload">"deviceid": <i>the device ID for the device being added</i><br>
+			"pubkey": <i>The device public key</i>
+		</p>
+		<p class="jsonheader">Return results:</p>
+		<p class="jsonpayload">Success or error code as documented above</p>
+
+		<h4>device/removedevice</h4>
+		<p>Removes a device from the logged in account. If the device is not registered
+			to the current account, nothing will happen.</p>
+		<p class="jsonheader">Calling arguments:</p>
+		<p class="jsonpayload">"deviceid": <i>the device ID for the device being added</i></p>
+		<p class="jsonheader">Return results:</p>
+		<p class="jsonpayload">Success or error code as documented above</p>
+
+		<h3>Messages</h3>
+		<p>All commands below require authentication.</p>
+		<p>Messages all have the following format:</p>
+		<table class="ftable">
+			<tr><td>messageID</td>
+				<td>A monotonically increasing value uniquely identifying each message in the
+					system. This identifier should be used to sort messages in proper order as 
+					well as for identifying messages for removal from the back-end server</td></tr>
+			<tr><td>senderID</td>
+				<td>The sender this message is associated with.</td></tr>
+			<tr><td>senderName</td>
+				<td>The username of the sender</td></tr>
+			<tr><td>toflag</td>
+				<td>This is set to false if the sender sent the message, and true if the
+					sender received the message. Used to reconstruct the full conversation
+					on a user's device, when messages are sent from another device.</td></tr>
+			<tr><td>received</td>
+			<td>The timestamp when the message was received.</td></tr>
+			<tr><td>message</td>
+			<td>The encrypted message, encoded using Base-64 encoding.</td></tr>
+		</table>
+		<p>Admin messages (such as the request to reset a password) are sent with the
+			senderID = 0, and the body of the message (when decrypted) is a JSON object
+			payload. At present the only request is to reset the password; the format of
+			the message sent is:</p>
+		<pre class="samplecode">{
+    "cmd": "forgotpassword",
+    "token": <i>Reset password token</i>
+}</pre>
+
+		<h4>messages/notification</h4>
+		<p>Obtains the notification hostname and port for receiving notifications. A server
+			is not required to provide this port, and this can return an error.</p>
+		<p class="jsonheader">Calling arguments:</p>
+		<p class="jsonpayload">None.</p>
+		<p class="jsonheader">Return results:</p>
+		<p class="jsonpayload">"host": <i>Host name of notification port</i><br>
+			"port": <i>Port (index) of the notification port</i></p>
+
+		<h4>messages/getmessages</h4>
+		<p>Obtains all messages that are currently backlogged for the user.</p>
+		<p class="jsonheader">Calling arguments:</p>
+		<p class="jsonpayload">None.</p>
+		<p class="jsonheader">Return results:</p>
+		<p class="jsonpayload">"messages": <i>An array of message objects as described
+			above</i></p>
+
+		<h4>messages/sendmessages</h4>
+		<p>Send messages to the list of devices. Typically when a sender sends a message,
+			they send the message to a list of devices by device ID, both for the sender
+			the message is sent to, and to the list of devices owned by the sender. This
+			allows other devices to have a full record of the conversation.</p>
+		<p>Note that the ID returned is the message ID of the last message in the array of
+			messages sent. This is used by the client to discover the message ID for the
+			message being sent: a sending client sends the message to itself on the server,
+			so that it may obtain a message ID for sorting purposes and to determine the
+			received date from the server. <i>Yes, this is a bit of a kludge.</i></p>
+		<p class="jsonheader">Calling arguments:</p>
+		<p class="jsonpayload">"messages": <i>An array of message objects, described below.</i></p>
+		<p class="jsonheader">Return results:</p>
+		<p class="jsonpayload">"messageid": <i>The ID of the last message uploaded.</i></p>
+		<p>The array of messages sent is described below:</p>
+
+		<table class="ftable">
+			<tr><td>deviceid</td>
+			<td>The device identifier the message is being sent to.</td></tr>
+			<tr><td>message</td>
+			<td>The encrypted message, encrypted with the device public key.</td></tr>
+			<tr><td>checksum</td>
+			<td>An SHA-256 checksum of the sent message before it is encrypted. This is used
+				by the messages/dropmessages API to determine if the client has
+				successfully decrypted the message prior to deleting it. The checksum is
+				calculated as C = SHA-256(message + "PmsgzhD")</td></tr>
+			<tr><td>destuser</td>
+			<td>Optional field. Set if the deviceid belongs to the logged in user, in order
+				to mark the message as being sent to the specified user. This is used when
+				uploading sent messages to reconstruct the conversation on devices shared
+				by the logged in user.</td></tr>
+		</table>
+
+		<h4>messages/dropmessages</h4>
+		<p>Removes the received message from the server.</p>
+		<p>Note that sending messages and dropping messages are used hand-in-hand in order
+			to send messages to end-devices and remove them from the server when successfully
+			received. Messages that are not successfully removed will be repeatedly sent
+			via the messages/getmessages API call</p>
+		<p class="jsonheader">Calling arguments:</p>
+		<p class="jsonpayload">"messages": An array of messages to be deleted. The format of
+			each object is given below..</p>
+		<p class="jsonheader">Return results:</p>
+		<p class="jsonpayload">Success or failure as described above</i></p>
+		<p>Each entry in the array of messages is described below:</p>
+		
+		<table class="ftable">
+			<tr><td>messageid</td>
+			<td>The ID of the message to remove from the back end.</td></tr>
+			<tr><td>checksum</td>
+			<td>The checksum of the message to delete. This checksum is calculated as
+				described in the messages/sendmessages API above. Because the checksum
+				is not sent to the device, the only way a device can calculate this
+				checksum is by successfully decrypting the message.</td></tr>
+		</table>
+		
+		<h2>Notification Protocol</h2>
+		<p>In order to receive messages in near-real time, the SecureChat server may open
+			a TCP/IP port which can be used to receive notifications. This works by the
+			client connecting to the port, logging in using the protocol below, and if
+			successful, listening for messages sent by the back-end.</p>
+		<p>If the port cannot be successfully opened, the client must poll the 
+			messages/getmessages API endpoint instead.</p>
+		<p>When connecting, the following exchange takes place:</p>
+		
+		<img class="diagram" src="images/notification.png">
+		
+		<h3>Notification Message Packets</h3>
+		<p>All messages sent or received through the notification channel are sent as a byte
+			array, with escaped bytes. Messages are always separated by byte $00. If the message
+			contains byte $00, it is escaped as $01 $01. Byte pattern $01 in the original
+			message is escaped as $01 $02. All other bytes are sent without modification.</p>
+		
+		<h3>Notification login handshake</h3>
+		<h4>Request token</h4>
+		<p>The first step is to request a token. This is the equivalent of calling
+			login/token. The packet sent to the back end is:</p>
+		<pre class="samplecode">{ "cmd": "token" }</pre>
+		<p>The received message is:</p>
+		<pre class="samplecode">$21 [token]</pre>
+		<p>That is, the received packet starts with the byte $21, and the rest is a UTF-8
+			encoded string representing the token to use when encoding the password.</p>
+			
+		<h4>Login</h4>
+		<p>The next step is to provide the user credentials. This is similar to the login/login
+			API call above (using the same hashing algorithms), except that the device ID of
+			the device requesting notifications is also added to the request:</p>
+		<pre class="samplecode">{
+    "cmd": "login",
+    "username": <i>Username</i>,
+    "password": <i>P" hashed password</i>
+    "deviceid": <i>Device identifier of the device requesting notifications</i>
+}</pre>
+		<p>If the request failed, the one-byte message below is sent, and the connection 
+			closed:</p>
+		<pre class="samplecode">$22</pre>
+		<h3>Notifications</h3>
+		<p>If the request succeeded, messages (starting with the ones queued by the
+			server) are sent one at a time in the following format. (See the description of
+			the message fields in the discussion above for more information.)</p>
+		<table class="ftable">
+			<tr class="fheader">
+				<td>offset</td>
+				<td>length</td>
+				<td>description</td>
+			</tr>
+			<tr>
+				<td>$00</td>
+				<td>1</td>
+				<td>$20, the byte used to indicate the type of message</td>
+			</tr>
+			<tr>
+				<td>$01</td>
+				<td>1</td>
+				<td>toflag field; 1 if true, 0 if false</td>
+			</tr>
+			<tr>
+				<td>$02</td>
+				<td>4</td>
+				<td>messageId, as a 4 byte integer in network encoding order</td>
+			</tr>
+			<tr>
+				<td>$06</td>
+				<td>4</td>
+				<td>senderId, as a 4 byte integer in network encoding order</td>
+			</tr>
+			<tr>
+				<td>$0A</td>
+				<td>var</td>
+				<td>received timestamp, encoded as a UTF-8 string, preceeded by a 2 byte
+					length (as the number of bytes in the string, encoded as a 2 byte
+					integer in network encoding order)
+				</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td>var</td>
+				<td>sender name, encoded as a UTF-8 string, preceeded by a 2 byte
+					length (as the number of bytes in the string, encoded as a 2 byte
+					integer in network encoding order)
+				</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td>4</td>
+				<td>Length of the message to follow</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td>var</td>
+				<td>The message as an array of bytes</td>
+			</tr>
+		</table>
+		<p>When a message is received, the receiver is expected to call the devices/dropmessages
+			API call for each message received. When complete, the receiver can close the
+			network connection.</p>	
+
+	</body>
+</html>

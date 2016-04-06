@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="dWS-hu-N8Q">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+    </dependencies>
+    <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="ykK-oB-bog">
+            <objects>
+                <navigationController id="dWS-hu-N8Q" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="kcl-8j-hz1">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="sk8-AV-uyV" kind="relationship" relationship="rootViewController" id="frG-YW-K3P"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="L0N-7q-OQd" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="247" y="508"/>
+        </scene>
+        <!--Disconnect-->
+        <scene sceneID="opo-At-lzs">
+            <objects>
+                <viewController id="sk8-AV-uyV" customClass="SCDisconnectViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="kCK-NT-R8a"/>
+                        <viewControllerLayoutGuide type="bottom" id="O4h-Pr-o8l"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="aRw-p1-zfY">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bmd-Ca-qC5">
+                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6Vk-gz-jvb">
+                                        <rect key="frame" x="140" y="108" width="320" height="320"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="280" placeholderIntrinsicHeight="244" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Ue-Ai-6bx">
+                                                <rect key="frame" x="20" y="0.0" width="280" height="244"/>
+                                                <string key="text">By disconnecting this device from your account, you will lose all messages on this device and you will no longer receive messages from the remote server.
+
+Because messages are not stored on the remote server, lost messages may not be recovered.
+
+This operation cannot be undone.</string>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="18"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r3I-eP-D07">
+                                                <rect key="frame" x="20" y="256" width="280" height="44"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="44" id="nVq-md-Sbm"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="18"/>
+                                                <state key="normal" title="Disconnect From Account"/>
+                                                <connections>
+                                                    <action selector="doDisconnect:" destination="sk8-AV-uyV" eventType="touchUpInside" id="Jc2-0R-EXB"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="r3I-eP-D07" secondAttribute="trailing" constant="20" id="4pP-US-mCJ"/>
+                                            <constraint firstItem="r3I-eP-D07" firstAttribute="top" secondItem="6Ue-Ai-6bx" secondAttribute="bottom" constant="12" id="FgT-0w-3It"/>
+                                            <constraint firstAttribute="height" constant="320" id="LPj-ag-Ks8"/>
+                                            <constraint firstItem="6Ue-Ai-6bx" firstAttribute="top" secondItem="6Vk-gz-jvb" secondAttribute="top" id="PGY-4h-bWX"/>
+                                            <constraint firstAttribute="width" constant="320" id="QDg-Bt-EmI"/>
+                                            <constraint firstAttribute="trailing" secondItem="6Ue-Ai-6bx" secondAttribute="trailing" constant="20" id="RCi-I9-ryY"/>
+                                            <constraint firstItem="r3I-eP-D07" firstAttribute="leading" secondItem="6Vk-gz-jvb" secondAttribute="leading" constant="20" id="XCC-Fv-l3b"/>
+                                            <constraint firstItem="6Ue-Ai-6bx" firstAttribute="leading" secondItem="6Vk-gz-jvb" secondAttribute="leading" constant="20" id="gGT-XI-oKz"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" red="0.97480702399999997" green="0.97474038600000001" blue="0.97477924819999995" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstItem="6Vk-gz-jvb" firstAttribute="centerY" secondItem="Bmd-Ca-qC5" secondAttribute="centerY" id="DmA-4H-3DB"/>
+                                    <constraint firstItem="6Vk-gz-jvb" firstAttribute="centerX" secondItem="Bmd-Ca-qC5" secondAttribute="centerX" id="dlA-ge-zdH"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Bmd-Ca-qC5" firstAttribute="leading" secondItem="aRw-p1-zfY" secondAttribute="leading" id="DRw-Z4-W1A"/>
+                            <constraint firstItem="Bmd-Ca-qC5" firstAttribute="top" secondItem="kCK-NT-R8a" secondAttribute="bottom" id="S4u-Qf-k5x"/>
+                            <constraint firstItem="O4h-Pr-o8l" firstAttribute="top" secondItem="Bmd-Ca-qC5" secondAttribute="bottom" id="XmK-Gr-yWe"/>
+                            <constraint firstAttribute="trailing" secondItem="Bmd-Ca-qC5" secondAttribute="trailing" id="fwj-Eb-Qdp"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Disconnect" id="Rjv-TE-Jie">
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="Ahr-JM-mvX"/>
+                    </navigationItem>
+                    <connections>
+                        <segue destination="r3y-2r-A21" kind="show" identifier="NextPage" id="Gca-iE-arA"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qXI-7Q-nor" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="948" y="507"/>
+        </scene>
+        <!--Finish-->
+        <scene sceneID="ZPK-ml-JSc">
+            <objects>
+                <viewController id="r3y-2r-A21" customClass="SCDisconnectFinishViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="FE3-0u-dVg"/>
+                        <viewControllerLayoutGuide type="bottom" id="7sb-5m-vW4"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="eGl-J5-LZJ">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hID-Tx-BAM">
+                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="17x-vY-ei8">
+                                        <rect key="frame" x="140" y="108" width="320" height="320"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="280" placeholderIntrinsicHeight="156" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ciX-wb-fnv">
+                                                <rect key="frame" x="20" y="0.0" width="280" height="156"/>
+                                                <string key="text">This device has been disconnected from your account, and all messages have been erased from this device. RSA tokens have been cleared, and you will now be asked to set up a new account.</string>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="18"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstItem="ciX-wb-fnv" firstAttribute="top" secondItem="17x-vY-ei8" secondAttribute="top" id="0Nk-3P-6jW"/>
+                                            <constraint firstAttribute="trailing" secondItem="ciX-wb-fnv" secondAttribute="trailing" constant="20" id="QJZ-fJ-skg"/>
+                                            <constraint firstAttribute="width" constant="320" id="Xxs-Tu-I0n"/>
+                                            <constraint firstAttribute="height" constant="320" id="ezU-QG-An5"/>
+                                            <constraint firstItem="ciX-wb-fnv" firstAttribute="leading" secondItem="17x-vY-ei8" secondAttribute="leading" constant="20" id="yVT-9a-hUb"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" red="0.97480702399999997" green="0.97474038600000001" blue="0.97477924819999995" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstItem="17x-vY-ei8" firstAttribute="centerX" secondItem="hID-Tx-BAM" secondAttribute="centerX" id="XYO-iN-EAS"/>
+                                    <constraint firstItem="17x-vY-ei8" firstAttribute="centerY" secondItem="hID-Tx-BAM" secondAttribute="centerY" id="gVp-T4-gxP"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="hID-Tx-BAM" firstAttribute="leading" secondItem="eGl-J5-LZJ" secondAttribute="leading" id="DT8-zO-5GJ"/>
+                            <constraint firstItem="hID-Tx-BAM" firstAttribute="top" secondItem="FE3-0u-dVg" secondAttribute="bottom" id="HeB-DH-EDm"/>
+                            <constraint firstItem="7sb-5m-vW4" firstAttribute="top" secondItem="hID-Tx-BAM" secondAttribute="bottom" id="dhU-Ps-MAW"/>
+                            <constraint firstAttribute="trailing" secondItem="hID-Tx-BAM" secondAttribute="trailing" id="q5g-E5-8L8"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Finish" id="rOx-4J-yqB">
+                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="9BJ-Qh-fr2">
+                            <connections>
+                                <action selector="doDone:" destination="r3y-2r-A21" id="0Zk-DL-7h1"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Z06-rB-jKx" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1676" y="508"/>
+        </scene>
+    </scenes>
+</document>
