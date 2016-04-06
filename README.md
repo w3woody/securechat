@@ -63,8 +63,6 @@ Sorry, no.
 
 First, encryption is no longer the province of wealthy corporations and nation-states. Books such as [Applied Cryptography](https://www.schneier.com/books/applied_cryptography/) and Handbook of [Applied Cryptography](http://cacr.uwaterloo.ca/hac/) (the two reference books I used to implement the public key algorithm used here), along with articles on Wikipedia make it easy for any reasonably competent software developer with a little experience to assemble a system such as this.
 
-_(That many cannot speaks more to the state of our industry than it does to the difficulty of the task.)_
-
 Second, encryption is not a pixie dust which is sprinkled over an application to make it more secure. It is a way of thinking about the design of a system from end to end which makes it more secure. Encryption, in other words, is a way to think about the design of an application.
 
 Think of your system as the plumbing of a house: pipes running throughout carrying water to a series of sinks and toilets and showers and household appliances. Encryption is not like tape which can be wrapped around a leak to keep it from leaking. Security is a way to think about the entire plumbing, to make sure that all of the joints are tight and well installed, that certain pipes slant downhill (so sewer lines don't clog), that the right piping materials are used so you don't create future problems (such as tying in copper with steel without an insulating buffer). In that light, encryption is a tool, like plumber's tape, that helps with the overall design.
