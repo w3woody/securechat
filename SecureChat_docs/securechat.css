@@ -128,3 +128,20 @@ li {
 	font-family: Helvetica, Verdana, Arial, sans-serif;
 	font-size: 12px;
 }
+
+
+.tocheader {
+	background-color: #ededed;
+	padding: 4px;
+	margin: 0px;
+	border-width: 0px;
+	text-align: right;
+	font-size: 12px;
+	font-family: Helvetica, Verdana, Arial, sans-serif;
+	width: 100%;
+}
+
+.tocheader a {
+	color: #406080;
+}
+
