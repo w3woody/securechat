@@ -38,6 +38,10 @@ import java.security.SecureRandom;
  */
 public class SCUUIDGenerator
 {
+	/**
+	 * Generate a UUID as a text string.
+	 * @return
+	 */
 	public static String generateUUID()
 	{
 		// TODO: Should we have a single shared SecureRandom class, as all this

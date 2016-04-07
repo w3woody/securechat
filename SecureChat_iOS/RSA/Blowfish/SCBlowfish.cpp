@@ -343,7 +343,7 @@ SCBlowfish::SCBlowfish(uint16_t len, uint8_t *key)
 	 */
 	j = 0;
 	for (i = 0; i < N+2; ++i) {
-		int data = 0;
+		uint32_t data = 0;
 		for (k = 0; k < 4; ++k) {
 			data = (data << 8) | key[j];	// key is unsigned
 			++j;
