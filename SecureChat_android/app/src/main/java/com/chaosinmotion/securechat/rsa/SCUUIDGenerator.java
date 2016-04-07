@@ -21,7 +21,7 @@ package com.chaosinmotion.securechat.rsa;
 import java.security.SecureRandom;
 
 /**
- * UUIDGenerator provides a mechanism for generating a type 4 (random) UUID for internal
+ * SCUUIDGenerator provides a mechanism for generating a type 4 (random) UUID for internal
  * use. We defer to creating our own UUIDs rather than using system generated UUIDs because
  * they may contain device identifying information.
  *
@@ -33,7 +33,7 @@ import java.security.SecureRandom;
  *
  * Created by woody on 4/7/16.
  */
-public class UUIDGenerator
+public class SCUUIDGenerator
 {
 	public static String generateUUID()
 	{
