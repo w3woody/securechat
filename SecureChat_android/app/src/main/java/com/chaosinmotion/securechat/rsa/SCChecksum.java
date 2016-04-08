@@ -59,6 +59,25 @@ public class SCChecksum
 	}
 
 	/**
+	 * Calculate the checksum of the byte, calculating the subset
+	 * of the array provided.
+	 * @param crc
+	 * @param buf
+	 * @param off
+	 * @param len
+	 * @return
+	 */
+	public byte calcCRC8(byte crc, byte[] buf, int off, int len)
+	{
+		for (int i = 0; i < len; ++i) {
+			byte b = buf[off + i];
+			crc = crc8Table[0xFF & (crc ^ b)];
+		}
+		return crc;
+	}
+
+
+	/**
 	 * Calculate the CRC8 checksum. Note that this takes a starting CRC
 	 * value; that can be used to chain checksum values across multiple
 	 * buffers.

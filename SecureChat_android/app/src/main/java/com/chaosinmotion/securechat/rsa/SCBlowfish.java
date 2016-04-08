@@ -19,10 +19,10 @@
 package com.chaosinmotion.securechat.rsa;
 
 /**
- *  A block cipher documented here:
- *
- *	https://www.schneier.com/cryptography/archives/1994/09/description_of_a_new.html
- *
+ * A block cipher documented here:
+ * <p/>
+ * https://www.schneier.com/cryptography/archives/1994/09/description_of_a_new.html
+ * <p/>
  * Created by woody on 4/7/16.
  */
 public class SCBlowfish
@@ -310,17 +310,18 @@ public class SCBlowfish
 	/**
 	 * Construct the Blwofish encryption/decryption class using the
 	 * key provided.
+	 *
 	 * @param key
 	 */
 	public SCBlowfish(byte[] key)
 	{
-		int i,j,k;
+		int i, j, k;
 
 		/*
 		 * Initialize the various buffers
 		 */
 
-		for (i = 0; i < N+2; ++i) p[i] = PINIT[i];
+		for (i = 0; i < N + 2; ++i) p[i] = PINIT[i];
 		for (i = 0; i < 4; ++i) {
 			for (j = 0; j < 256; ++j) {
 				s[i][j] = SINIT[i][j];
@@ -331,10 +332,10 @@ public class SCBlowfish
 		 * Now roll in the encryption key int P
 		 */
 		j = 0;
-		for (i = 0; i < N+2; ++i) {
+		for (i = 0; i < N + 2; ++i) {
 			int data = 0;
 			for (k = 0; k < 4; ++k) {
-				data = (data << 8) | (0x00FF & key[j]);	// key is unsigned
+				data = (data << 8) | (0x00FF & key[j]);    // key is unsigned
 				++j;
 				if (j >= key.length) j = 0;
 			}
@@ -345,10 +346,10 @@ public class SCBlowfish
 
 		block[0] = 0;
 		block[1] = 0;
-		for (i = 0; i < N+2; i += 2) {
+		for (i = 0; i < N + 2; i += 2) {
 			encryptBlock(block);
 			p[i] = block[0];
-			p[i+1] = block[1];
+			p[i + 1] = block[1];
 		}
 
 	/*
@@ -358,19 +359,20 @@ public class SCBlowfish
 			for (j = 0; j < 256; j += 2) {
 				encryptBlock(block);
 				s[i][j] = block[0];
-				s[i][j+1] = block[1];
+				s[i][j + 1] = block[1];
 			}
 		}
 	}
 
 	/**
 	 * Scramble function
+	 *
 	 * @param x
 	 */
 
 	private int f(int x)
 	{
-		int a,b,c,d;
+		int a, b, c, d;
 		int y;
 
 		d = 0x00FF & x;
@@ -387,12 +389,13 @@ public class SCBlowfish
 
 	/**
 	 * Encrypt block
+	 *
 	 * @param x Two integers as an array
 	 */
 
 	public void encryptBlock(int[] x)
 	{
-		int l,r;
+		int l, r;
 
 		l = x[0];
 		r = x[1];
@@ -422,12 +425,13 @@ public class SCBlowfish
 
 	/**
 	 * Decrypt block
+	 *
 	 * @param x Two integers as an array
 	 */
 
 	public void decryptBlock(int[] x)
 	{
-		int l,r;
+		int l, r;
 
 		r = x[0];
 		l = x[1];
@@ -453,5 +457,63 @@ public class SCBlowfish
 
 		x[0] = l;
 		x[1] = r;
+	}
+
+	/************************************************************************/
+	/*																		*/
+	/*	Data encryption/decryption											*/
+	/*																		*/
+	/************************************************************************/
+
+	/**
+	 * Encrypt a block of data. The data must be an even number of integers,
+	 * representing a whole number of 8 byte blocks.
+	 */
+
+	public void encryptData(int[] data)
+	{
+		int[] xormask = new int[2];
+		int i;
+
+		xormask[0] = 0;
+		xormask[1] = 0;
+		for (i = 0; i < data.length; i += 2) {
+			/* Encrypt block */
+			xormask[0] ^= data[i];
+			xormask[1] ^= data[i + 1];
+			encryptBlock(xormask);
+			data[i] = xormask[0];
+			data[i + 1] = xormask[1];
+		}
+	}
+
+	/**
+	 * Reverse the above. The data must be an even number of integers,
+	 * representing a whole number of 8 byte blocks.
+	 */
+
+	public void decryptData(int[] data)
+	{
+		int[] xormask = new int[2];
+		int[] tmp = new int[2];
+		int i;
+
+		xormask[0] = 0;
+		xormask[1] = 0;
+		for (i = 0; i < data.length; i += 2) {
+			/* Decrypt block */
+			tmp[0] = data[i];
+			tmp[1] = data[i + 1];
+
+			decryptBlock(tmp);
+			tmp[i] ^= xormask[0];
+			tmp[i + 1] ^= xormask[1];
+
+			xormask[0] = data[i];
+			xormask[1] = data[i + 1];    // save previous encrypted block for XOR
+
+			data[i] = tmp[0];
+			data[i + 1] = tmp[1];
+		}
 	}
 }
