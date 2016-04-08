@@ -40,7 +40,7 @@ public class ChecksumUnitTest
 		assertTrue(0x06 == SCChecksum.get().calcCRC8((byte)0,bytes));
 
 		for (int i = 0; i < 32; ++i) bytes[i] = (byte)(31-i);
-		assertTrue(0xf6 == SCChecksum.get().calcCRC8((byte)0,bytes));
+		assertTrue(0xf6 == (0x0FF & SCChecksum.get().calcCRC8((byte)0,bytes)));
 
 		for (int i = 0; i < 32; ++i) bytes[i] = (byte)0xFF;
 		assertTrue(0x09 == SCChecksum.get().calcCRC8((byte)0,bytes));
