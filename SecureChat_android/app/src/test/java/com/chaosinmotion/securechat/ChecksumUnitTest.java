@@ -19,8 +19,12 @@
 package com.chaosinmotion.securechat;
 
 import com.chaosinmotion.securechat.rsa.SCChecksum;
+import com.chaosinmotion.securechat.rsa.SCRSAPadding;
 
 import org.junit.Test;
+
+import java.util.Arrays;
+
 import static org.junit.Assert.*;
 
 /**
@@ -44,5 +48,48 @@ public class ChecksumUnitTest
 
 		for (int i = 0; i < 32; ++i) bytes[i] = (byte)0xFF;
 		assertTrue(0x09 == SCChecksum.get().calcCRC8((byte)0,bytes));
+	}
+
+	@Test
+	public void testPadding()
+	{
+		SCRSAPadding padding = new SCRSAPadding(256);			// 256 bits == 32 bytes, r = 3 bytes
+
+		assertTrue(padding.getEncodeSize() == 32);
+		assertTrue(padding.getMessageSize() == 28);
+
+		byte[] enc = new byte[32];
+		byte[] msg = new byte[28];
+		byte[] out = new byte[28];
+
+		Arrays.fill(enc, (byte)0);
+		padding.encode(msg, enc);
+		padding.decode(enc, out);
+		assertTrue(Arrays.equals(out, msg));
+
+		for (int i = 0; i < 28; ++i) msg[i] = (byte)i;
+		padding.encode(msg, enc);
+		padding.decode(enc, out);
+		assertTrue(Arrays.equals(out, msg));
+
+		// Large buffer
+		SCRSAPadding padding2 = new SCRSAPadding(4096);		// 256 bits == 32 bytes, r = 3 bytes
+
+		assertTrue(padding2.getEncodeSize() == 512);
+		assertTrue(padding2.getMessageSize() == 448);
+
+		byte[] enc2 = new byte[512];
+		byte[] msg2 = new byte[448];
+		byte[] out2 = new byte[448];
+
+		Arrays.fill(msg2, (byte)0);
+		padding2.encode(msg2, enc2);
+		padding2.decode(enc2, out2);
+		assertTrue(Arrays.equals(out2, msg2));
+
+		for (int i = 0; i < 448; ++i) msg2[i] = (byte)i;
+		padding2.encode(msg2, enc2);
+		padding2.decode(enc2, out2);
+		assertTrue(Arrays.equals(out2, msg2));
 	}
 }

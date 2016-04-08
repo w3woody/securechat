@@ -58,7 +58,7 @@ public class SCRSAPadding
 	 * @throws NoSuchAlgorithmException 
 	 */
 	
-	boolean encode(byte[] msg, byte[] enc) throws NoSuchAlgorithmException
+	public boolean encode(byte[] msg, byte[] enc)
 	{
 		if (msg.length != msgSize) throw new RuntimeException();
 		if (enc.length != encSize) throw new RuntimeException();
@@ -91,9 +91,13 @@ public class SCRSAPadding
 		/*
 		 * Calculate G(r)
 		 */
-		
-        MessageDigest d = MessageDigest.getInstance("SHA-256");
-        d.update(enc, 0, msgOffset-1);
+
+		MessageDigest d = null;
+		try {
+			d = MessageDigest.getInstance("SHA-256");
+		} catch (NoSuchAlgorithmException e) {
+		}
+		d.update(enc, 0, msgOffset-1);
         byte[] gMask = d.digest();
         d.reset();
         
@@ -134,7 +138,7 @@ public class SCRSAPadding
 	 * @return
 	 * @throws NoSuchAlgorithmException
 	 */
-	boolean decode(byte[] enc, byte[] msg) throws NoSuchAlgorithmException
+	public boolean decode(byte[] enc, byte[] msg)
 	{
 		if (msg.length != msgSize) throw new RuntimeException();
 		if (enc.length != encSize) throw new RuntimeException();
@@ -145,8 +149,12 @@ public class SCRSAPadding
 		/*
 		 * Calculate H(m'). Note CRC is part of the message
 		 */
-        MessageDigest d = MessageDigest.getInstance("SHA-256");
-        d.update(enc, msgOffset-1, msgSize+1);
+		MessageDigest d = null;
+		try {
+			d = MessageDigest.getInstance("SHA-256");
+		} catch (NoSuchAlgorithmException e) {
+		}
+		d.update(enc, msgOffset-1, msgSize+1);
         byte[] hMask = d.digest();
         byte[] scratch = new byte[hMask.length];
         

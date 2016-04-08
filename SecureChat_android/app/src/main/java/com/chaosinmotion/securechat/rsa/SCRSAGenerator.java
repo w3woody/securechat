@@ -34,6 +34,28 @@ import java.security.SecureRandom;
  */
 public class SCRSAGenerator
 {
+	public static class Pair
+	{
+		private SCRSAKey publicKey;
+		private SCRSAKey privateKey;
+
+		private Pair(SCRSAKey pub, SCRSAKey priv)
+		{
+			publicKey = pub;
+			privateKey = priv;
+		}
+
+		public SCRSAKey getPublicKey()
+		{
+			return publicKey;
+		}
+
+		public SCRSAKey getPrivateKey()
+		{
+			return privateKey;
+		}
+	}
+
 	/**
 	 * Generates a key pair. If successful returns a 2 item array
 	 * of keys; the first in the array is the public key, the second
@@ -41,7 +63,7 @@ public class SCRSAGenerator
 	 * @param nbits
 	 * @return
 	 */
-	public static SCRSAKey[] generateKeyPair(int nbits)
+	public static Pair generateKeyPair(int nbits)
 	{
 		SecureRandom random = new SecureRandom();
 
@@ -105,9 +127,8 @@ public class SCRSAGenerator
 		} while (!success);
 
 		// Copy the resulting keys e,n and d,n
-		SCRSAKey[] retval = new SCRSAKey[2];
-		retval[0] = new SCRSAKey(nbits,e,n);
-		retval[1] = new SCRSAKey(nbits,d,n);
-		return retval;
+		SCRSAKey pubKey = new SCRSAKey(nbits,e,n);
+		SCRSAKey privKey = new SCRSAKey(nbits,d,n);
+		return new Pair(pubKey,privKey);
 	}
 }
