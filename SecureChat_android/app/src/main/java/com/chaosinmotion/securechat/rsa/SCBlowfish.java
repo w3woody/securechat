@@ -309,7 +309,8 @@ public class SCBlowfish
 
 	/**
 	 * Construct the Blwofish encryption/decryption class using the
-	 * key provided.
+	 * key provided. Note only the first 72 bytes of the key are used;
+	 * if the key is shorter it is wrapped
 	 *
 	 * @param key
 	 */
@@ -465,25 +466,42 @@ public class SCBlowfish
 	/*																		*/
 	/************************************************************************/
 
+	private static int toInt(byte[] data, int offset)
+	{
+		int n = 0;
+		for (int i = 0; i < 4; ++i) {
+			n = (n << 8) | (0x00FF & data[i+offset]);
+		}
+		return n;
+	}
+
+	private static void toByte(byte[] data, int offset, int word)
+	{
+		data[offset] = (byte)(word >> 24);
+		data[offset+1] = (byte)(word >> 16);
+		data[offset+2] = (byte)(word >> 8);
+		data[offset+3] = (byte)(word);
+	}
+
 	/**
 	 * Encrypt a block of data. The data must be an even number of integers,
 	 * representing a whole number of 8 byte blocks.
 	 */
 
-	public void encryptData(int[] data)
+	public void encryptData(byte[] data)
 	{
 		int[] xormask = new int[2];
 		int i;
 
 		xormask[0] = 0;
 		xormask[1] = 0;
-		for (i = 0; i < data.length; i += 2) {
+		for (i = 0; i < data.length; i += 8) {
 			/* Encrypt block */
-			xormask[0] ^= data[i];
-			xormask[1] ^= data[i + 1];
+			xormask[0] ^= toInt(data,i);
+			xormask[1] ^= toInt(data,i+4);
 			encryptBlock(xormask);
-			data[i] = xormask[0];
-			data[i + 1] = xormask[1];
+			toByte(data,i,xormask[0]);
+			toByte(data,i+4,xormask[1]);
 		}
 	}
 
@@ -492,7 +510,7 @@ public class SCBlowfish
 	 * representing a whole number of 8 byte blocks.
 	 */
 
-	public void decryptData(int[] data)
+	public void decryptData(byte[] data)
 	{
 		int[] xormask = new int[2];
 		int[] tmp = new int[2];
@@ -500,20 +518,20 @@ public class SCBlowfish
 
 		xormask[0] = 0;
 		xormask[1] = 0;
-		for (i = 0; i < data.length; i += 2) {
+		for (i = 0; i < data.length; i += 8) {
 			/* Decrypt block */
-			tmp[0] = data[i];
-			tmp[1] = data[i + 1];
+			int lw = tmp[0] = toInt(data,i);
+			int hw = tmp[1] = toInt(data,i+4);
 
 			decryptBlock(tmp);
-			tmp[i] ^= xormask[0];
-			tmp[i + 1] ^= xormask[1];
+			tmp[0] ^= xormask[0];
+			tmp[1] ^= xormask[1];
 
-			xormask[0] = data[i];
-			xormask[1] = data[i + 1];    // save previous encrypted block for XOR
+			xormask[0] = lw;
+			xormask[1] = hw;    // save previous encrypted block for XOR
 
-			data[i] = tmp[0];
-			data[i + 1] = tmp[1];
+			toByte(data,i,tmp[0]);
+			toByte(data,i+4,tmp[1]);
 		}
 	}
 }

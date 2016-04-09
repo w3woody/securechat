@@ -60,8 +60,15 @@ public class SCSecureData
 		writeString(dos,username);
 		writeString(dos,password);
 		writeString(dos,serverURL);
-
 		dos.flush();
+
+		// pad to 8 byte alignment
+		int len = baos.size() + 1;
+		if (0 != (len % 8)) {
+			len = 8 - len % 8;
+			for (int i = 0; i < len; ++i) baos.write(0);
+		}
+
 		byte[] array = baos.toByteArray();
 		baos.write(0x00FF & SCChecksum.get().calcCRC8((byte)0,array));
 		return baos.toByteArray();

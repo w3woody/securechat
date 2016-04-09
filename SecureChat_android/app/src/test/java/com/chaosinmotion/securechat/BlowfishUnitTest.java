@@ -22,6 +22,8 @@ import com.chaosinmotion.securechat.rsa.SCBlowfish;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import static junit.framework.TestCase.assertTrue;
 
 /**
@@ -132,5 +134,19 @@ public class BlowfishUnitTest
 			assertTrue(scratch[0] == clear[0]);
 			assertTrue(scratch[1] == clear[1]);
 		}
+	}
+
+	@Test
+	public void testEncryptionData() throws Exception
+	{
+		String testString = "The quick brown fox jumps over..";
+		byte[] buffer = testString.getBytes("UTF-8");
+		assertTrue(buffer.length % 8 == 0);    // verify size must be multiple of 8
+
+		SCBlowfish b = new SCBlowfish("EncryptionKey".getBytes("UTF-8"));
+		b.encryptData(buffer);
+		b.decryptData(buffer);
+
+		assertTrue(Arrays.equals(buffer,testString.getBytes("UTF-8")));
 	}
 }

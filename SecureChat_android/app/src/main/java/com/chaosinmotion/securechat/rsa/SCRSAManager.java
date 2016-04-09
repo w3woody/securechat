@@ -155,6 +155,12 @@ public class SCRSAManager
 			 */
 			FileInputStream fis = ctx.openFileInput(SECUREFILE);
 			byte[] buffer = loadData(fis);
+			fis.close();
+
+			if ((buffer.length % 8) != 0) {
+				ctx.deleteFile(SECUREFILE);
+				return true;        // zero out
+			}
 
 			SCBlowfish bf = new SCBlowfish(passHash);
 
