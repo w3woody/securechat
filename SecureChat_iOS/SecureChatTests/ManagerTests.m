@@ -59,14 +59,7 @@
 	// should have been cleared in the setup.
 	XCTAssert([[SCRSAManager shared] setPasscode:@"1234"]);
 
-	XCTestExpectation *e = [self expectationWithDescription:@"Test RSA Generator"];
-
-	[[SCRSAManager shared] generateRSAKeyWithSize:1024 callback:^(BOOL success) {
-		XCTAssert(success);
-		[e fulfill];
-	}];
-	[self waitForExpectationsWithTimeout:3600 handler:nil];
-
+	XCTAssert([[SCRSAManager shared] generateRSAKeyWithSize:1024]);
 	[[SCRSAManager shared] encodeSecureData];
 
 	// At this point the RSA manager should be set up. Validate

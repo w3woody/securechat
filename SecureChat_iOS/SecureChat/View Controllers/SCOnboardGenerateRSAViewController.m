@@ -158,25 +158,28 @@
 	[self.generateKeySpinner setHidden:NO];
 	[self.generateKeySpinner startAnimating];
 
-	// Do some long operation (test)
+	// This is a long operation. Kick off in the background
+	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+		BOOL success = [[SCRSAManager shared] generateRSAKeyWithSize:keyLen];
 
-	[[SCRSAManager shared] generateRSAKeyWithSize:keyLen callback:^(BOOL success) {
-		[self.generateKeyButton setHidden:NO];
-		[self.generateKeySpinner setHidden:YES];
-		[self.generateKeySpinner stopAnimating];
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[self.generateKeyButton setHidden:NO];
+			[self.generateKeySpinner setHidden:YES];
+			[self.generateKeySpinner stopAnimating];
 
-		if (success) {
-			[self.generateKeyButton setTitle:NSLocalizedString(@"Regenerate Key", @"Verb") forState:UIControlStateNormal];
-			if (callbackCopy) callbackCopy();
+			if (success) {
+				[self.generateKeyButton setTitle:NSLocalizedString(@"Regenerate Key", @"Verb") forState:UIControlStateNormal];
+				if (callbackCopy) callbackCopy();
 
-		} else {
-			UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"RSA Generator Error", @"Error Title") message:@"An unexpected problem occured while generating your RSA key." preferredStyle:UIAlertControllerStyleAlert];
-			UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"Button") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-			}];
-			[alert addAction:defaultAction];
-			[self presentViewController:alert animated:YES completion:nil];
-		}
-	}];
+			} else {
+				UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"RSA Generator Error", @"Error Title") message:@"An unexpected problem occured while generating your RSA key." preferredStyle:UIAlertControllerStyleAlert];
+				UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"Button") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+				}];
+				[alert addAction:defaultAction];
+				[self presentViewController:alert animated:YES completion:nil];
+			}
+		});
+	});
 }
 
 

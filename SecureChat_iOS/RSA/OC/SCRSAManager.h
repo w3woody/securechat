@@ -116,17 +116,13 @@
 - (void)setServerUrl:(NSString *)server;
 
 /*
- *	Generates an RSA key. This is done on a background thread, and when
- *	complete, a callback function is called. Note that this will then
- *	save the RSA key to our keychain, encrpted using the passcode
- *	encryption given above.
- *
- *	The callback is done on the main thread.
+ *	Generates an RSA key. This should be done on a background thread as this
+ *	is computationally expensive.
  *
  *	We also generate a device UUID for device identification.
  */
 
-- (void)generateRSAKeyWithSize:(uint32_t)size callback:(void (^)(BOOL success))callback;
+- (BOOL)generateRSAKeyWithSize:(uint32_t)size;
 
 /*
  *	Present public key for encryption. Returns nil if there was a problem,

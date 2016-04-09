@@ -406,44 +406,37 @@
  *	Generate a new RSA Key. Done asynchronously
  */
 
-- (void)generateRSAKeyWithSize:(uint32_t)size callback:(void (^)(BOOL success))callback
+- (BOOL)generateRSAKeyWithSize:(uint32_t)size
 {
-	void (^copyCallback)(BOOL success) = [callback copy];
-
 	uint8_t zero[32];
 	memset(zero,0,sizeof(zero));
 	if (!memcmp(passHash, zero, sizeof(passHash))) {
-		[NSException raise:@"SCRSAManager" format:@"Passcode not set"];
+		return NO;
 	}
 
-	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-		/*
-		 *	Generate the RSA Keys
-		 */
+	/*
+	 *	Generate the RSA Keys
+	 */
 
-		SCRSAKey pub;
-		SCRSAKey priv;
+	SCRSAKey pub;
+	SCRSAKey priv;
 
-		SCRSAKeyGeneratePair(size, pub, priv);
+	SCRSAKeyGeneratePair(size, pub, priv);
 
-		/*
-		 *	Generate UUID
-		 */
+	/*
+	 *	Generate UUID
+	 */
 
-		std::string uuid = SCUUIDGenerator();
+	std::string uuid = SCUUIDGenerator();
 
-		/*
-		 *	Initialize internal state
-		 */
+	/*
+	 *	Initialize internal state
+	 */
 
-		self.publicRSAKey = [NSString stringWithUTF8String:pub.ToString().c_str()];
-		privateRSAKey = new SCRSAKey(priv);
-		self.deviceIdentifier = [NSString stringWithUTF8String:uuid.c_str()];
-
-		dispatch_async(dispatch_get_main_queue(), ^{
-			copyCallback(YES);
-		});
-	});
+	self.publicRSAKey = [NSString stringWithUTF8String:pub.ToString().c_str()];
+	privateRSAKey = new SCRSAKey(priv);
+	self.deviceIdentifier = [NSString stringWithUTF8String:uuid.c_str()];
+	return YES;
 }
 
 /*
