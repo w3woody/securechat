@@ -100,7 +100,7 @@
 	XCTAssert([sender[0].senderName isEqualToString:@"sender"]);
 	XCTAssert(sender[0].senderID == 1);
 	XCTAssert(sender[0].messageID == 4);
-	XCTAssert(sender[0].receiveFlag == NO);
+	XCTAssert(sender[0].receiveFlag == YES);
 }
 
 

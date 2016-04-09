@@ -332,6 +332,7 @@
 			s.lastMessage = message;
 			s.messageID = messageID;
 			s.lastSent = timestamp;
+			s.receiveFlag = receiveFlag;
 
 			// Move to top of list. Keep in mind we're assuming the
 			// number of senders here is small.

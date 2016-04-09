@@ -153,7 +153,7 @@ public class SCMessageDatabase
 	 * @param ctx Context for file operations
 	 * @return File location of database
 	 */
-	private static File databaseFileLocation(Context ctx)
+	public static File databaseFileLocation(Context ctx)
 	{
 		File f = ctx.getFilesDir();
 		f = new File(f,MESSAGEFILE);
@@ -198,11 +198,11 @@ public class SCMessageDatabase
 				"ON messages ( messageid )";
 		db.execSQL(index1);
 
-		String index2 = "CREATE UNIQUE INDEX IF NOT EXISTS messageix2 " +
+		String index2 = "CREATE INDEX IF NOT EXISTS messageix2 " +
 				"ON messages ( senderid )";
 		db.execSQL(index2);
 
-		String index3 = "CREATE UNIQUE INDEX IF NOT EXISTS messageix3 " +
+		String index3 = "CREATE INDEX IF NOT EXISTS messageix3 " +
 				"ON messages ( timestamp )";
 		db.execSQL(index3);
 	}
@@ -319,27 +319,30 @@ public class SCMessageDatabase
 		 *	the senders call requeries the database.
 		 */
 
-		int i,len = cachedSenders.size();
-		for (i = 0; i < len; ++i) {
-			Sender s = cachedSenders.get(i);
-			if (s.senderID == sender) break;
-		}
-
-		if (i < len) {
-			Sender s = cachedSenders.get(i);
-			if (messageID > s.messageID) {
-				s.lastMessage = message;
-				s.messageID = messageID;
-				s.lastSent = timestamp;
-
-				// Move to top of list. Keep in mind we're assuming the
-				// number of senders here is small.
-
-				cachedSenders.remove(i);
-				cachedSenders.add(0, s);
+		if (cachedSenders != null) {
+			int i, len = cachedSenders.size();
+			for (i = 0; i < len; ++i) {
+				Sender s = cachedSenders.get(i);
+				if (s.senderID == sender) break;
 			}
-		} else {
-			cachedSenders = null;
+
+			if (i < len) {
+				Sender s = cachedSenders.get(i);
+				if (messageID > s.messageID) {
+					s.lastMessage = message;
+					s.messageID = messageID;
+					s.lastSent = timestamp;
+					s.receivedFlag = receiveFlag;
+
+					// Move to top of list. Keep in mind we're assuming the
+					// number of senders here is small.
+
+					cachedSenders.remove(i);
+					cachedSenders.add(0, s);
+				}
+			} else {
+				cachedSenders = null;
+			}
 		}
 
 		return true;
