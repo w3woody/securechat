@@ -117,7 +117,7 @@
 	 */
 
 	const char *version = "CREATE TABLE IF NOT EXISTS version ( "
-						  "  versionid INTEGER )";
+						  "  versionid INTEGER UNIQUE ON CONFLICT IGNORE )";
 
 	err = sqlite3_exec(db, version, NULL, NULL, &errMsg);
 	if (err != SQLITE_OK) {
