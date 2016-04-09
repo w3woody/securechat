@@ -49,29 +49,36 @@ public class SCSecureData
 		dos.writeUTF(str);
 	}
 
-	public byte[] serializeData() throws IOException
+	public byte[] serializeData()
 	{
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		DataOutputStream dos = new DataOutputStream(baos);
+		try {
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			DataOutputStream dos = new DataOutputStream(baos);
 
-		writeString(dos,uuid);
-		writeString(dos,publicKey);
-		writeString(dos,privateKey);
-		writeString(dos,username);
-		writeString(dos,password);
-		writeString(dos,serverURL);
-		dos.flush();
+			writeString(dos, uuid);
+			writeString(dos, publicKey);
+			writeString(dos, privateKey);
+			writeString(dos, username);
+			writeString(dos, password);
+			writeString(dos, serverURL);
+			dos.flush();
 
-		// pad to 8 byte alignment
-		int len = baos.size() + 1;
-		if (0 != (len % 8)) {
-			len = 8 - len % 8;
-			for (int i = 0; i < len; ++i) baos.write(0);
+			// pad to 8 byte alignment
+			int len = baos.size() + 1;
+			if (0 != (len % 8)) {
+				len = 8 - len % 8;
+				for (int i = 0; i < len; ++i) baos.write(0);
+			}
+
+			byte[] array = baos.toByteArray();
+			baos.write(0x00FF & SCChecksum.get().calcCRC8((byte) 0, array));
+			return baos.toByteArray();
 		}
-
-		byte[] array = baos.toByteArray();
-		baos.write(0x00FF & SCChecksum.get().calcCRC8((byte)0,array));
-		return baos.toByteArray();
+		catch (IOException ex) {
+			// Because all our i/o is taking place in in-memory objects,
+			// this should never be called.
+			return null;
+		}
 	}
 
 	/**

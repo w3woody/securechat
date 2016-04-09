@@ -275,20 +275,9 @@
 
 /************************************************************************/
 /*																		*/
-/*	Key Generation														*/
+/*	Decryption Support													*/
 /*																		*/
 /************************************************************************/
-
-- (void)setUsername:(NSString *)uname passwordHash:(NSString *)passwordHash
-{
-	self.username = uname;
-	self.passwordHash = passwordHash;
-}
-
-- (void)setServerUrl:(NSString *)s
-{
-	self.server = s;
-}
 
 /*
  *	Decode data
@@ -400,6 +389,23 @@
 	free(decode);
 
 	return ret;
+}
+
+/************************************************************************/
+/*																		*/
+/*	Key Generation														*/
+/*																		*/
+/************************************************************************/
+
+- (void)setUsername:(NSString *)uname passwordHash:(NSString *)passwordHash
+{
+	self.username = uname;
+	self.passwordHash = passwordHash;
+}
+
+- (void)setServerUrl:(NSString *)s
+{
+	self.server = s;
 }
 
 /*

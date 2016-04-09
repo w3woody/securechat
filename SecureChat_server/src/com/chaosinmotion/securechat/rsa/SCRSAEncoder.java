@@ -93,7 +93,7 @@ public class SCRSAEncoder
 				/*
 				 * 	Convert to an integer and transform
 				 */
-				BigInteger bi = new BigInteger(encBuffer);
+				BigInteger bi = new BigInteger(1,encBuffer);
 				BigInteger ei = publicRSAKey.transform(bi);
 				byte[] enc = ei.toByteArray();
 				Arrays.fill(encBuffer, (byte)0);
@@ -113,7 +113,7 @@ public class SCRSAEncoder
 
 			padding.encode(msgBuffer, encBuffer);
 
-			BigInteger bi = new BigInteger(encBuffer);
+			BigInteger bi = new BigInteger(1,encBuffer);
 			BigInteger ei = publicRSAKey.transform(bi);
 			byte[] enc = ei.toByteArray();
 			Arrays.fill(encBuffer, (byte)0);
