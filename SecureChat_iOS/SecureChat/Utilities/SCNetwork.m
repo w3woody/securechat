@@ -373,7 +373,7 @@
 - (void)showError:(SCNetworkResponse *)response
 {
 	// If this is a network error, present this only once.
-	if (response.serverCode != 200) {
+	if ([response isServerError]) {
 		if (self.networkError) return;
 		self.networkError = NO;
 	}
@@ -496,7 +496,7 @@
 	request.params = params;
 	request.backgroundFlag = backgroundFlag;
 	request.skipErrors = skipErrors;
-	request.callback = callback;
+	request.caller = caller;
 	request.enqueueTime = [NSDate timeIntervalSinceReferenceDate];
 	request.callback = callback;
 
