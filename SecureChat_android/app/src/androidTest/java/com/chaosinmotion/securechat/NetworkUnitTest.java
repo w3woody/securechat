@@ -71,6 +71,7 @@ public class NetworkUnitTest extends AndroidTestCase
 			@Override
 			public void requestLoginDialog(SCNetwork.LoginResponse response)
 			{
+				response.didLogin(false);
 			}
 		});
 
