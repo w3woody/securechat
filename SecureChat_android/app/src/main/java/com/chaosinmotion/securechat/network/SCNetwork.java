@@ -187,7 +187,7 @@ public class SCNetwork
 	 */
 	public static synchronized SCNetwork get()
 	{
-		if (shared != null) shared = new SCNetwork();
+		if (shared == null) shared = new SCNetwork();
 		return shared;
 	}
 
@@ -408,7 +408,7 @@ public class SCNetwork
 
 	private HttpURLConnection requestWith(Request req) throws IOException
 	{
-		String path = server + req;
+		String path = server + req.requestURI;
 		URL url = new URL(path);
 
 		HttpURLConnection conn = (HttpURLConnection)url.openConnection();

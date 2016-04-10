@@ -60,7 +60,7 @@ public class ThreadPool
 			@Override
 			public Thread newThread(Runnable r)
 			{
-				Thread thread = new Thread("Pool " + (++index));
+				Thread thread = new Thread(r,"Pool " + (++index));
 				thread.setDaemon(true);
 				return thread;
 			}
