@@ -119,7 +119,7 @@ public class SCDeviceCache
 					}
 
 					DeviceCacheEntry entry = new DeviceCacheEntry();
-					entry.expires = System.currentTimeMillis() + 300;
+					entry.expires = System.currentTimeMillis() + 300000; // 5 minutes
 					entry.devices = devices;
 					entry.userid = response.getData().optInt("userid");
 
