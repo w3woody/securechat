@@ -137,6 +137,7 @@ public class SCRSAManager
 		/*
 		 * Encode passcode to hash
 		 */
+
 		try {
 			MessageDigest d = MessageDigest.getInstance("SHA-256");
 			byte[] data = passcode.getBytes("UTF-8");

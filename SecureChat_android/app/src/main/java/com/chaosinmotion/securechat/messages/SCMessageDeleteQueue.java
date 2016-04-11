@@ -20,6 +20,7 @@ package com.chaosinmotion.securechat.messages;
 
 import com.chaosinmotion.securechat.network.SCNetwork;
 import com.chaosinmotion.securechat.rsa.SCRSAManager;
+import com.chaosinmotion.securechat.rsa.SCSHA256;
 import com.chaosinmotion.securechat.utils.ThreadPool;
 
 import org.json.JSONArray;
@@ -87,26 +88,6 @@ public class SCMessageDeleteQueue
 			decodeQueue.notifyAll();
 		}
 	}
-
-	/*
-	 *  SHA256 checksum
-	 */
-	private static String sha256(byte[] data)
-	{
-		try {
-			MessageDigest d = MessageDigest.getInstance("SHA-256");
-			StringBuffer buf = new StringBuffer();
-			for (byte b: d.digest(data)) {
-				buf.append(String.format("%02x", 0xFF & b));
-			}
-			return buf.toString();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			return "";  // never happens
-		}
-	}
-
 	/*
 	 *	decode: the method to handle decoding. Runs in a separate thread. This
 	 *	basically runs looking for messages added to our queue, then
@@ -142,7 +123,7 @@ public class SCMessageDeleteQueue
 			 */
 
 			byte[] cdata = SCRSAManager.shared().decodeData(item.message);
-			item.checksum = sha256(cdata);
+			item.checksum = SCSHA256.sha256(cdata);
 			item.message = null;
 
 			/*

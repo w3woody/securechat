@@ -89,7 +89,7 @@ public class SCDeviceCache
 		store = new HashMap<String,DeviceCacheEntry>();
 	}
 
-	public void devicesForSender(final String sender, final DeviceCallback callback) throws JSONException
+	public void devicesForSender(final String sender, final DeviceCallback callback)
 	{
 		long t = System.currentTimeMillis();
 		DeviceCacheEntry e = store.get(sender);
@@ -98,7 +98,12 @@ public class SCDeviceCache
 		}
 
 		JSONObject d = new JSONObject();
-		d.put("username",sender);
+		try {
+			d.put("username",sender);
+		}
+		catch (JSONException ex) {
+			// Should never happen.
+		}
 		SCNetwork.get().request("device/devices", d, true, false, this, new SCNetwork.ResponseInterface()
 		{
 			@Override

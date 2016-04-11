@@ -18,6 +18,8 @@
 
 package com.chaosinmotion.securechat.network;
 
+import com.chaosinmotion.securechat.rsa.SCSHA256;
+
 import java.security.MessageDigest;
 
 /**
@@ -27,22 +29,6 @@ public class SCNetworkCredentials
 {
 	private String username;
 	private String password;
-
-	private static String sha256(String str)
-	{
-		try {
-			MessageDigest d = MessageDigest.getInstance("SHA-256");
-			StringBuffer buf = new StringBuffer();
-			for (byte b: d.digest(str.getBytes("UTF-8"))) {
-				buf.append(String.format("%02x", 0xFF & b));
-			}
-			return buf.toString();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			return "";  // never happens
-		}
-	}
 
 	public SCNetworkCredentials()
 	{
@@ -89,7 +75,7 @@ public class SCNetworkCredentials
 	public void setPasswordFromClearText(String text)
 	{
 		String p = text + "PwdSalt134";
-		password = sha256(p);
+		password = SCSHA256.sha256String(p);
 	}
 
 	/**
@@ -101,6 +87,6 @@ public class SCNetworkCredentials
 	public String hashPasswordWithToken(String token)
 	{
 		String p = password + "PEnSalt194" + token;
-		return sha256(p);
+		return SCSHA256.sha256String(p);
 	}
 }

@@ -131,7 +131,8 @@
 	 *	0x02 to represent 1. 0x00 represents the end of a packet.
 	 */
 
-	size_t nsize = 2;		// eom + checksum
+	size_t nsize = 1;		// eom
+	nsize += (checksum < 2) ? 2 : 1;		// deal with checksum == 0 or 1
 	for (size_t i = 0; i < size; ++i) {
 		if (buf[i] < 2) nsize += 2;
 		else nsize++;
@@ -149,7 +150,12 @@
 			dst[ptr++] = buf[i];
 		}
 	}
-	dst[ptr++] = checksum;
+	if (checksum < 2) {
+		dst[ptr++] = 1;
+		dst[ptr++] = checksum + 1;
+	} else {
+		dst[ptr++] = checksum;
+	}
 	dst[ptr++] = 0;
 
 	/*

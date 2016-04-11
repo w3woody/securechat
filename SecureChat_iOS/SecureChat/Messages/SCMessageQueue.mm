@@ -70,8 +70,6 @@
 // SQLite database of messages
 @property (strong) SCMessageDatabase *database;
 
-// Cached senders
-@property (strong) NSArray<SCMessageSender *> *cachedSenders;
 @end
 
 @implementation SCMessageQueue
@@ -149,6 +147,8 @@ static NSString *StringAtOffset(const uint8_t *bytes, int *offset)
 	 */
 
 	if (sender != 0) {
+		if (self.database == nil) return;
+
 		/*
 		 *	Step 1: insert into database
 		 */
@@ -156,7 +156,7 @@ static NSString *StringAtOffset(const uint8_t *bytes, int *offset)
 		[self.database insertMessageFromSenderID:sender name:name received:receiveFlag withMessageID:messageID timestamp:timestamp message:message];
 
 		/*
-		 *	Step 2: enqueue into delete queue for removal
+		 *	Step 2: enqueue into delete queue for removal from server
 		 */
 
 		[[SCMessageDeleteQueue shared] deleteMessage:messageID withData:message];
@@ -165,7 +165,6 @@ static NSString *StringAtOffset(const uint8_t *bytes, int *offset)
 		 *	Step 3: notify the powers that be that we have an update.
 		 */
 
-		self.cachedSenders = nil;
 		NSDictionary *d = @{ @"userid": @( sender ),
 							 @"username": name };
 
@@ -246,6 +245,12 @@ static NSString *StringAtOffset(const uint8_t *bytes, int *offset)
 	NSLog(@"Unable to connect to notifications; polling instead. (Reason: %@)",reason);
 	self.timer = [NSTimer scheduledTimerWithTimeInterval:POLLRATE target:self selector:@selector(pollForMessages:) userInfo:nil repeats:YES];
 }
+
+/************************************************************************/
+/*																		*/
+/*	Notification Stream													*/
+/*																		*/
+/************************************************************************/
 
 /*
  *	Notification stream login phase two: this is sent in response to a
@@ -578,10 +583,7 @@ static NSString *StringAtOffset(const uint8_t *bytes, int *offset)
 
 - (NSArray<SCMessageSender *> *)senders
 {
-	if (self.cachedSenders) return self.cachedSenders;
-
-	self.cachedSenders = self.database.senders;
-	return self.cachedSenders;
+	return self.database.senders;
 }
 
 - (NSInteger)messagesForSender:(NSInteger)senderID
