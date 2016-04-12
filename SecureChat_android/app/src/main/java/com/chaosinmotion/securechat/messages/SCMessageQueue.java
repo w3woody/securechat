@@ -41,13 +41,24 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
+import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 /**
  *	This is the manager which handles all of the messages that are read
@@ -406,11 +417,97 @@ public class SCMessageQueue
 	 * asynchronous networking. Attempt to open a connection.
 	 */
 
-	private void openConnection(String host, int port, boolean ssl)
+	private void openConnection(String host, int port, boolean ssl) throws NoSuchAlgorithmException, KeyManagementException, IOException, JSONException
 	{
-		// TODO: Finish.
-		// For now: Fail
-		startPolling("Unfinished open request");
+		if (ssl) {
+			TrustManager acceptAllTrustManager = new X509TrustManager() {
+				@Override
+				public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException
+				{
+				}
+
+				@Override
+				public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException
+				{
+				}
+
+				@Override
+				public X509Certificate[] getAcceptedIssuers()
+				{
+					return new X509Certificate[0];
+				}
+			};
+			TrustManager[] tm = new TrustManager[] { acceptAllTrustManager };
+			SSLContext context = SSLContext.getInstance("TLS");
+			context.init(new KeyManager[0],tm,new SecureRandom());
+
+			SSLSocketFactory factory = context.getSocketFactory();
+
+			socket = factory.createSocket(host,port);
+		} else {
+			socket = new Socket(host,port);
+		}
+
+		/*
+		 *  Kick off an output stream
+		 */
+		output = new SCOutputStream(socket.getOutputStream());
+
+		/*
+		 *  Kick off a thread to process the input stream
+		 */
+
+		Thread thread = new Thread() {
+			@Override
+			public void run()
+			{
+				try {
+					input = new SCInputStream(socket.getInputStream())
+					{
+						@Override
+						public void processPacket(byte[] data)
+						{
+							processDataPacket(data);
+						}
+					};
+					input.processStream();
+					input.close();
+
+					/*
+					 *  When the input closes, we simply quit the thread.
+					 *  TODO: I'm not sure if that's the correct answer.
+					 */
+				}
+				catch (final Exception ex) {
+					ThreadPool.get().enqueueMain(new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							startPolling("Unknown exception " + ex.getMessage());
+							Log.d("SecureChat","Exception while opening socket",ex);
+						}
+					});
+				}
+			}
+		};
+		thread.start();
+
+		/*
+		 *	Now the first packet we need to send to the writer (and our
+		 *	output stream will cache this) is a JSON request to log in.
+		 *
+		 *	On the off chance logging in fails, the back end will simply
+		 *	close the connection.
+		 *
+		 *	Because there is no one-to-one (in theory) of data sent and
+		 *	received, we drive this through a state machine.
+		 */
+
+		JSONObject obj = new JSONObject();
+		obj.put("cmd","token");
+		byte[] data = obj.toString().getBytes("UTF-8");
+		output.writeData(data);
 	}
 
 	/**
@@ -439,7 +536,13 @@ public class SCMessageQueue
 					int port = response.getData().optInt("port");
 					boolean ssl = response.getData().optBoolean("ssl");
 
-					openConnection(host,port,ssl);
+					try {
+						openConnection(host, port, ssl);
+					}
+					catch (final Exception ex) {
+						startPolling("Unknown exception " + ex.getMessage());
+						Log.d("SecureChat","Exception while opening socket",ex);
+					}
 				} else {
 					startPolling("Server responsed unavailable");
 				}
