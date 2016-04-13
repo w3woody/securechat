@@ -21,6 +21,7 @@ package com.chaosinmotion.securechat.rsa;
 import android.content.Context;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -120,6 +121,12 @@ public class SCRSAManager
 	public boolean canStartServices()
 	{
 		return server != null;
+	}
+
+	public boolean hasSecureData(Context ctx)
+	{
+		File f = ctx.getFileStreamPath(SECUREFILE);
+		return f.exists();
 	}
 
 	/**

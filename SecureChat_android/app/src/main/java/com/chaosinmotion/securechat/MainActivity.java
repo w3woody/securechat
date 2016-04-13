@@ -1,5 +1,6 @@
 package com.chaosinmotion.securechat;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -15,6 +16,9 @@ import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.chaosinmotion.securechat.activities.OnboardingActivity;
+import com.chaosinmotion.securechat.rsa.SCRSAManager;
 
 import java.util.List;
 
@@ -61,6 +65,22 @@ public class MainActivity extends AppCompatActivity
 		senderListAdapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, new String[]{ "Hi."} );
 		senderList.setAdapter(senderListAdapter);
+	}
+
+	@Override
+	protected void onResume()
+	{
+		super.onResume();
+
+		/*
+		 *  Verify if we need to onboard.
+		 */
+
+		if (!SCRSAManager.shared().hasSecureData(getApplication())) {
+			// Load onboarding intent
+			Intent intent = new Intent(this, OnboardingActivity.class);
+			startActivity(intent);
+		}
 	}
 
 	@Override
