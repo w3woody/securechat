@@ -58,6 +58,35 @@
 	creds.username = self.usernameField.text;
 	[creds setPasswordFromClearText:self.passwordField.text];
 
+	/*
+	 *	Here's the trick: we do not allow the user to log in with a
+	 *	separate account. We don't have the mechanism in place to switch
+	 *	devices to a new account, since our model has a device per
+	 *	account. So instead, we locally match to make sure our login
+	 *	username matches what we have stored; if it doesn't we bail
+	 *	after a short delay. The delay is so as not to give away the
+	 *	fact that the user picked the wrong username.
+	 */
+
+	if ([creds.username isEqualToString:[[SCRSAManager shared] username]]) {
+		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.75 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+			NSString *title = NSLocalizedString(@"Login Error", @"title");
+			NSString *message = NSLocalizedString(@"The username or password provided do not match", @"message");
+
+			UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+			UIAlertAction *action = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"OK") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+			}];
+			[alert addAction:action];
+			[self presentViewController:alert animated:YES completion:nil];
+		});
+		return;
+	}
+
+	/*
+	 *	If we have the correct username, we now go to the back end to verify
+	 *	the password. 
+	 */
+
 	[[SCNetwork shared] doLogin:creds withCallback:^(SCLoginError err) {
 		if (err == LOGIN_SUCCESS) {
 			/*
