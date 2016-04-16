@@ -73,13 +73,16 @@ public class MainActivity extends AppCompatActivity
 		super.onResume();
 
 		/*
-		 *  Verify if we need to onboard.
+		 *  Verify if we need to onboard. If we do, dump myself and launch
+		 *  the onboarding activity in my stead. It will then run me back
+		 *  when the user is connected.
 		 */
 
 		if (!SCRSAManager.shared().hasSecureData(getApplication())) {
 			// Load onboarding intent
 			Intent intent = new Intent(this, OnboardingActivity.class);
 			startActivity(intent);
+			finish();
 		}
 	}
 

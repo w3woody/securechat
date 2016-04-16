@@ -1,9 +1,53 @@
 <resources>
     <string name="app_name">SecureChat</string>
     <string name="action_settings">Settings</string>
+    <string name="action_next">Next</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
 
+    <!-- Simple stuff -->
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Onboarding Strings -->
+    <string name="onboarding_instructions">You currently do not have an account
+        associated with this device.\n\nThe next few screens will allow you to
+        create an RSA public/private key, and to set up a new account or connect
+        this device to an existing account.</string>
+    <string name="onboarding_select_password_instructions">Please select a
+        password.\n\nThis passcode will be used to encrypt the data on your
+        device. There is no way to recover this passcode; if you lose it the
+        data in this application will be lost.</string>
+    <string name="onboarding_select_rsa_key">Now, please select an RSA
+        key size. The smaller the key, the faster the encryption, but the less
+        secure mssages will be. A 1024 bit key may take several seconds to
+        generate, a 2048 key can take a few minutes, and a 4096 key several
+        minutes to generate. This is done only once.</string>
+    <string name="onboarding_passcode">Passcode</string>
+    <string name="onboarding_generate_key">Generate Key</string>
+    <string name="onboarding_regenerate_key">Regenerate Key</string>
+
+    <!-- Alert errors -->
+    <string name="passcode_short_title">Passcode too short</string>
+    <string name="passcode_short_message">The passcode you selected is too
+        short. It needs to be at least 4 digits.</string>
+
+    <string name="generate_key_title">RSA Key Generated</string>
+    <string name="generate_key_message">Your RSA Key has been generated.</string>
+
+    <string name="regenerate_key_title">Regenerate Key?</string>
+    <string name="regenerate_key_message">Are you sure you wish to regenerate
+        your RSA key? Doing so will make it impossible to read stored messages,
+        and should only be done if you suspect your private key on this
+        device has been compromised.</string>
+    <string name="regenerate_key_prompt">Regenerate</string>
+    <string name="long_key_title">Generate Key?</string>
+    <string name="long_key_message">The larger the RSA key, the longer this
+        will take. A long RSA key can take over a minute to generate, and
+        cannot be canceled. This operation only needs to be done once.
+        Continue?</string>
+    <string name="long_key_prompt">Generate</string>
 </resources>
