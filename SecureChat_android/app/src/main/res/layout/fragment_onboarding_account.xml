@@ -16,22 +16,51 @@
   ~
   -->
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context=".fragments.OnboardingSetupFragment">
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.OnboardingSetPasscode"
+    android:id="@+id/scrollView">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Set up account"
-        android:gravity="top"
-        android:layout_gravity="center"
-        android:textSize="20sp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="30sp"
         android:paddingLeft="20sp"
         android:paddingRight="20sp"
-        android:paddingTop="30sp"/>
+        android:paddingBottom="30sp">
 
-</FrameLayout>
+        <!-- TODO: Update blank fragment layout -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/onboarding_account"
+            android:gravity="top"
+            android:textSize="20sp"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/create_account"
+            android:id="@+id/loginAccount"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20sp"
+            style="@style/OnboardButton"
+            android:allowUndo="false"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_account"
+            android:id="@+id/createAccount"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20sp"
+            style="@style/OnboardButton"
+            android:allowUndo="false"/>
+
+    </LinearLayout>
+
+</ScrollView>

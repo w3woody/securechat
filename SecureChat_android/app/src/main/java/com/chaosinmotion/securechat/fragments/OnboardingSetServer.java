@@ -22,6 +22,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -39,10 +40,11 @@ import com.chaosinmotion.securechat.rsa.SCRSAManager;
 /**
  * Set the passcode fragment
  */
-public class OnboardingSetServer extends Fragment implements WizardFragment
+public class OnboardingSetServer extends Fragment implements WizardFragment, SCNetwork.WaitSpinner
 {
 	private WizardInterface wizardInterface;
 	private EditText server;
+	private ProgressDialog progressDialog;
 
 	public OnboardingSetServer()
 	{
@@ -155,7 +157,7 @@ public class OnboardingSetServer extends Fragment implements WizardFragment
 			 */
 
 			SCNetwork.get().setServerPrefix(serverURL);
-			SCNetwork.get().request("login/status", null, false, true, this, new SCNetwork.ResponseInterface()
+			SCNetwork.get().request("login/status", null, true, this, new SCNetwork.ResponseInterface()
 			{
 				@Override
 				public void responseResult(SCNetwork.Response response)
@@ -169,5 +171,28 @@ public class OnboardingSetServer extends Fragment implements WizardFragment
 				}
 			});
 		}
+	}
+
+	@Override
+	public void startWaitSpinner()
+	{
+		if (progressDialog != null) return;
+
+		String str = getActivity().getResources().getString(R.string.network_wait);
+
+		progressDialog = new ProgressDialog(getActivity());
+		progressDialog.setMessage(str);
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progressDialog.setCancelable(false);
+		progressDialog.show();
+	}
+
+	@Override
+	public void stopWaitSpinner()
+	{
+		if (progressDialog == null) return;
+
+		progressDialog.hide();;
+		progressDialog = null;
 	}
 }

@@ -243,7 +243,7 @@ public class SCMessageQueue
 		catch (JSONException e) {
 			// Should never happen
 		}
-		SCNetwork.get().request("messages/getmessages", obj, true, false, this, new SCNetwork.ResponseInterface()
+		SCNetwork.get().request("messages/getmessages", obj, false, this, new SCNetwork.ResponseInterface()
 		{
 			@Override
 			public void responseResult(SCNetwork.Response response)
@@ -516,7 +516,7 @@ public class SCMessageQueue
 	 */
 	private void startNetworkQueue()
 	{
-		SCNetwork.get().request("messages/notifications", null, true, false, this, new SCNetwork.ResponseInterface()
+		SCNetwork.get().request("messages/notifications", null, false, this, new SCNetwork.ResponseInterface()
 		{
 			@Override
 			public void responseResult(SCNetwork.Response response)
@@ -742,7 +742,7 @@ public class SCMessageQueue
 		}
 
 		final byte[] encodedData = encoded;
-		SCNetwork.get().request("messages/sendmessages", params, true, false, this, new SCNetwork.ResponseInterface()
+		SCNetwork.get().request("messages/sendmessages", params, false, this, new SCNetwork.ResponseInterface()
 		{
 			@Override
 			public void responseResult(SCNetwork.Response response)

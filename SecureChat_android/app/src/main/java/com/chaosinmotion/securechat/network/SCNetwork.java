@@ -78,11 +78,15 @@ public class SCNetwork
 
 	public interface Delegate
 	{
-		void startWaitSpinner();
-		void stopWaitSpinner();
 		void showServerError(Response response);
 		SCNetworkCredentials credentials();
 		void requestLoginDialog(LoginResponse response);
+	}
+
+	public interface WaitSpinner
+	{
+		void startWaitSpinner();
+		void stopWaitSpinner();
 	}
 
 	/**
@@ -98,7 +102,6 @@ public class SCNetwork
 		String requestURI;
 		JSONObject params;
 		boolean skipErrors;
-		boolean backgroundFlag;
 		Object caller;
 		long enqueueTime;
 		ResponseInterface callback;
@@ -359,8 +362,8 @@ public class SCNetwork
 				}
 				remove.add(req);
 
-				if (req.waitFlag) {
-					delegate.stopWaitSpinner();
+				if (req.waitFlag && ((req.caller instanceof WaitSpinner))) {
+					((WaitSpinner)req.caller).stopWaitSpinner();
 					req.waitFlag = false;
 				}
 			}
@@ -375,8 +378,8 @@ public class SCNetwork
 				}
 				remove.add(req);
 
-				if (req.waitFlag) {
-					delegate.stopWaitSpinner();
+				if (req.waitFlag && ((req.caller instanceof WaitSpinner))) {
+					((WaitSpinner)req.caller).stopWaitSpinner();
 					req.waitFlag = false;
 				}
 			}
@@ -465,8 +468,8 @@ public class SCNetwork
 		callQueue.add(request);
 
 		// If not in background, spin the spinner
-		if (!request.backgroundFlag) {
-			delegate.startWaitSpinner();
+		if (request.caller instanceof WaitSpinner) {
+			((WaitSpinner)request.caller).startWaitSpinner();
 			request.waitFlag = true;
 		}
 
@@ -506,8 +509,8 @@ public class SCNetwork
 						@Override
 						public void run()
 						{
-							if (request.waitFlag) {
-								delegate.stopWaitSpinner();
+							if (request.waitFlag && ((request.caller instanceof WaitSpinner))) {
+								((WaitSpinner)request.caller).stopWaitSpinner();
 								request.waitFlag = false;
 							}
 							callQueue.remove(request);
@@ -524,8 +527,8 @@ public class SCNetwork
 						@Override
 						public void run()
 						{
-							if (request.waitFlag) {
-								delegate.stopWaitSpinner();
+							if (request.waitFlag && ((request.caller instanceof WaitSpinner))) {
+								((WaitSpinner)request.caller).stopWaitSpinner();
 								request.waitFlag = false;
 							}
 							callQueue.remove(request);
@@ -628,18 +631,17 @@ public class SCNetwork
 	public void request(String requestUri, JSONObject params, Object caller,
 	                    ResponseInterface callback)
 	{
-		request(requestUri,params,false,false,caller,callback);
+		request(requestUri,params,false,caller,callback);
 	}
 
 	public void request(String requestUri, JSONObject params,
-	                    boolean inBackground, boolean skipErrors,
-	                    Object caller, ResponseInterface callback)
+	                    boolean skipErrors, Object caller,
+	                    ResponseInterface callback)
 	{
 		Request request = new Request();
 
 		request.requestURI = requestUri;
 		request.params = params;
-		request.backgroundFlag = inBackground;
 		request.skipErrors = skipErrors;
 		request.caller = caller;
 		request.callback = callback;

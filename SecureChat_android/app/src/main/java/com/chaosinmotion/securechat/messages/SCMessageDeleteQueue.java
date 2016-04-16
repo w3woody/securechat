@@ -166,7 +166,7 @@ public class SCMessageDeleteQueue
 			deleteQueue.clear();
 			deleteRunning = true;
 
-			SCNetwork.get().request("messages/dropmessages", params, true, false, this, new SCNetwork.ResponseInterface()
+			SCNetwork.get().request("messages/dropmessages", params, true, this, new SCNetwork.ResponseInterface()
 			{
 				@Override
 				public void responseResult(SCNetwork.Response response)

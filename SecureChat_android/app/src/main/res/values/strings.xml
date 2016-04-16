@@ -9,6 +9,8 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
 
+    <string name="network_wait">Connecting to server</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
@@ -60,4 +62,10 @@
     <string name="error_server_message">The server you provided is unavailable
         or incorrect.</string>
     <string name="long_key_prompt">Generate</string>
+
+    <string name="onboarding_account">Now select a user account. If you have
+        an account you can associate this device to that account. You can
+        also create a new account.</string>
+    <string name="create_account">Create New Account</string>
+    <string name="login_account">Log Into Existing Account</string>
 </resources>

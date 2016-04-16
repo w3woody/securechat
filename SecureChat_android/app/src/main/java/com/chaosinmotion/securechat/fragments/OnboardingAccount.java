@@ -26,6 +26,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.chaosinmotion.securechat.R;
 import com.chaosinmotion.securechat.activities.WizardFragment;
@@ -37,6 +39,8 @@ import com.chaosinmotion.securechat.activities.WizardInterface;
 public class OnboardingAccount extends Fragment implements WizardFragment
 {
 	private WizardInterface wizardInterface;
+	private Button login;
+	private Button create;
 
 	public OnboardingAccount()
 	{
@@ -52,6 +56,31 @@ public class OnboardingAccount extends Fragment implements WizardFragment
 			// TODO: Load arguments
 		}
 	}
+	@Override
+	public void onActivityCreated(Bundle bundle)
+	{
+		super.onActivityCreated(bundle);
+
+		create = (Button)getView().findViewById(R.id.createAccount);
+		create.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				doNext();
+			}
+		});
+
+		login = (Button)getView().findViewById(R.id.loginAccount);
+		login.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				doLogin();
+			}
+		});
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,6 +94,11 @@ public class OnboardingAccount extends Fragment implements WizardFragment
 	public void doNext()
 	{
 //		wizardInterface.transitionToFragment(new OnboardingSetPasscode());
+	}
+
+	private void doLogin()
+	{
+
 	}
 
 	/*

@@ -19,6 +19,7 @@
 package com.chaosinmotion.securechat;
 
 import android.app.Application;
+import android.app.ProgressDialog;
 
 import com.chaosinmotion.securechat.network.SCNetwork;
 import com.chaosinmotion.securechat.network.SCNetworkCredentials;
@@ -28,24 +29,15 @@ import com.chaosinmotion.securechat.network.SCNetworkCredentials;
  */
 public class MainApplication extends Application implements SCNetwork.Delegate
 {
+	private int waitCount;
+	private ProgressDialog progressDialog;
+
 	@Override
 	public void onCreate()
 	{
 		super.onCreate();
 
 		SCNetwork.get().setNetworkDelegate(this);
-	}
-
-	@Override
-	public void startWaitSpinner()
-	{
-
-	}
-
-	@Override
-	public void stopWaitSpinner()
-	{
-
 	}
 
 	@Override

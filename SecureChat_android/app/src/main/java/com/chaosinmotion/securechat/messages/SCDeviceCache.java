@@ -104,7 +104,7 @@ public class SCDeviceCache
 		catch (JSONException ex) {
 			// Should never happen.
 		}
-		SCNetwork.get().request("device/devices", d, true, false, this, new SCNetwork.ResponseInterface()
+		SCNetwork.get().request("device/devices", d, false, this, new SCNetwork.ResponseInterface()
 		{
 			@Override
 			public void responseResult(SCNetwork.Response response)

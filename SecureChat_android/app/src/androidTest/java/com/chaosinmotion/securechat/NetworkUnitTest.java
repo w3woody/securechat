@@ -48,16 +48,6 @@ public class NetworkUnitTest extends AndroidTestCase
 		SCNetwork.get().setServerPrefix("http://192.168.1.214:8080/securechat");
 		SCNetwork.get().setNetworkDelegate(new SCNetwork.Delegate() {
 			@Override
-			public void startWaitSpinner()
-			{
-			}
-
-			@Override
-			public void stopWaitSpinner()
-			{
-			}
-
-			@Override
 			public void showServerError(SCNetwork.Response response)
 			{
 			}
