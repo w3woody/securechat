@@ -19,6 +19,7 @@
 package com.chaosinmotion.securechat.network;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.chaosinmotion.securechat.utils.ThreadPool;
 
@@ -515,7 +516,22 @@ public class SCNetwork
 					});
 				}
 				catch (Exception ex) {
-					handleIOError(request);
+					/*
+					 *  This happens if there is a connection error.
+					 */
+					ThreadPool.get().enqueueMain(new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							if (request.waitFlag) {
+								delegate.stopWaitSpinner();
+								request.waitFlag = false;
+							}
+							callQueue.remove(request);
+							handleIOError(request);
+						}
+					});
 				}
 			}
 		});

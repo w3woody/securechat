@@ -26,7 +26,11 @@
         secure mssages will be. A 1024 bit key may take several seconds to
         generate, a 2048 key can take a few minutes, and a 4096 key several
         minutes to generate. This is done only once.</string>
+    <string name="onboarding_select_server">Now you need to enter a
+        SecureChat server URL. This is the Java Tomcat server that was set
+        up to chat between clients.</string>
     <string name="onboarding_passcode">Passcode</string>
+    <string name="onboarding_server">Server URL</string>
     <string name="onboarding_generate_key">Generate Key</string>
     <string name="onboarding_regenerate_key">Regenerate Key</string>
 
@@ -49,5 +53,11 @@
         will take. A long RSA key can take over a minute to generate, and
         cannot be canceled. This operation only needs to be done once.
         Continue?</string>
+    <string name="enter_server_title">Please enter URL</string>
+    <string name="enter_server_message">Please enter the URL of a sever
+        that is hosting the SecureChat server URL.</string>
+    <string name="error_server_title">Server Error</string>
+    <string name="error_server_message">The server you provided is unavailable
+        or incorrect.</string>
     <string name="long_key_prompt">Generate</string>
 </resources>

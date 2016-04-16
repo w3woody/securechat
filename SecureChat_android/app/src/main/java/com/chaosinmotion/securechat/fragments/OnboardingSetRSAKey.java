@@ -256,7 +256,7 @@ public class OnboardingSetRSAKey extends Fragment implements WizardFragment
 
 	private void gotoNextPage()
 	{
-		// TODO: Insert transition to next page
+		wizardInterface.transitionToFragment(new OnboardingSetServer());
 	}
 
 	@Override

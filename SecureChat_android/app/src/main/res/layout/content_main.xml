@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:id="@+id/main_list"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.chaosinmotion.securechat.MainActivity"
+    tools:context=".activities.MainActivity"
     tools:showIn="@layout/activity_main">
 
 </ListView>
