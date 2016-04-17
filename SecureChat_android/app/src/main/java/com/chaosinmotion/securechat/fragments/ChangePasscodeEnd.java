@@ -20,25 +20,33 @@ package com.chaosinmotion.securechat.fragments;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.chaosinmotion.securechat.MainApplication;
 import com.chaosinmotion.securechat.R;
+import com.chaosinmotion.securechat.activities.OnboardingActivity;
 import com.chaosinmotion.securechat.activities.WizardFragment;
 import com.chaosinmotion.securechat.activities.WizardInterface;
+import com.chaosinmotion.securechat.messages.SCMessageQueue;
+import com.chaosinmotion.securechat.rsa.SCRSAManager;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class OnboardingFinished extends Fragment implements WizardFragment
+public class ChangePasscodeEnd extends Fragment implements WizardFragment
 {
 	private WizardInterface wizardInterface;
 
-	public OnboardingFinished()
+	public ChangePasscodeEnd()
 	{
 		// Required empty public constructor
 	}
@@ -81,7 +89,7 @@ public class OnboardingFinished extends Fragment implements WizardFragment
 	@Override
 	public boolean showNext()
 	{
-		return false;
+		return true;
 	}
 
 	/*

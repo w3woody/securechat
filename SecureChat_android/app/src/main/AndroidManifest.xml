@@ -33,6 +33,14 @@
                   android:windowSoftInputMode="adjustResize"
                   android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <activity android:name=".activities.ChangePasscodeActivity"
+                  android:windowSoftInputMode="adjustResize"
+                  android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity android:name=".activities.ChangePasswordActivity"
+                  android:windowSoftInputMode="adjustResize"
+                  android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

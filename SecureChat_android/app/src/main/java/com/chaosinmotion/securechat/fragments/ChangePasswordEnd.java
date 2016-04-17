@@ -34,11 +34,11 @@ import com.chaosinmotion.securechat.activities.WizardInterface;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class OnboardingFinished extends Fragment implements WizardFragment
+public class ChangePasswordEnd extends Fragment implements WizardFragment
 {
 	private WizardInterface wizardInterface;
 
-	public OnboardingFinished()
+	public ChangePasswordEnd()
 	{
 		// Required empty public constructor
 	}
@@ -63,7 +63,7 @@ public class OnboardingFinished extends Fragment implements WizardFragment
 	                         Bundle savedInstanceState)
 	{
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_change_passcode_end, container, false);
+		return inflater.inflate(R.layout.fragment_change_password_end, container, false);
 	}
 
 	@Override
@@ -81,7 +81,7 @@ public class OnboardingFinished extends Fragment implements WizardFragment
 	@Override
 	public boolean showNext()
 	{
-		return false;
+		return true;
 	}
 
 	/*

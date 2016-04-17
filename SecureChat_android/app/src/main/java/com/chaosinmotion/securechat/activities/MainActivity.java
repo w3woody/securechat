@@ -150,10 +150,16 @@ public class MainActivity extends AppCompatActivity
 			startActivity(intent);
 			return;
 		}
-
-		FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-		Snackbar.make(fab, "Boo!", Snackbar.LENGTH_LONG)
-				.setAction("Action", null).show();
+		if (position == 1) {
+			Intent intent = new Intent(this,ChangePasscodeActivity.class);
+			startActivity(intent);
+			return;
+		}
+		if (position == 0) {
+			Intent intent = new Intent(this,ChangePasswordActivity.class);
+			startActivity(intent);
+			return;
+		}
 	}
 
 	private void setupDrawer()

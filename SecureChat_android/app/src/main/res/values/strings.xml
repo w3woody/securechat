@@ -87,6 +87,39 @@
         device. RSA tokens have been cleared, and you will now be asked
         to set up a new account.</string>
 
+    <!-- Change Passcode -->
+    <string name="change_passcode_start_title">Change Passcode</string>
+    <string name="change_passcode_start_message">Please select a new device
+        passcode. This passcode is used when opening up the application.</string>
+    <string name="change_passcode_old">Old Passcode</string>
+    <string name="change_passcode_new">New Passcode</string>
+    <string name="change_passcode_copy">Retype New Passcode</string>
+    <string name="change_passcode_end_title">Finish</string>
+    <string name="change_passcode_end_message">Your application passcode has
+        been reset.</string>
+
+    <!-- Change Passcode -->
+    <string name="change_password_start_title">Change Password</string>
+    <string name="change_password_start_message">Please select a new password.
+        Your existing server account\'s password will be replaced with this
+        new password.</string>
+    <string name="change_password_old">Old Password</string>
+    <string name="change_password_new">New Password</string>
+    <string name="change_password_copy">Retype New Password</string>
+    <string name="change_password_end_title">Finish</string>
+    <string name="change_password_end_message">Your password has
+        been reset.</string>
+
+    <string name="change_passcode_not_matched_title">Passcode doesn\'t match</string>
+    <string name="change_passcode_not_matched_message">The new passcode must
+        match the retyped passcode.</string>
+    <string name="change_password_not_matched_title">Password doesn\'t match</string>
+    <string name="change_password_not_matched_message">The new password must
+        match the retyped passcode.</string>
+    <string name="change_passcode_wrong_title">Incorrect passcode</string>
+    <string name="change_passcode_wrong_message">The old passcode was
+        incorrect.</string>
+
     <!-- New account -->
     <string name="new_account_title">Set Up New Account</string>
     <string name="new_account_ok">Set Up New Account</string>
@@ -138,7 +171,6 @@
         Please check and try again.</string>
     <string name="unknown_error_message">An unknown server error was
         reported.</string>
-
     <string name="generate_key_title">RSA Key Generated</string>
     <string name="generate_key_message">Your RSA Key has been generated.</string>
 

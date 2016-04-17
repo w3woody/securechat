@@ -177,7 +177,7 @@ public class OnboardingLoginAccount extends Fragment implements WizardFragment
 					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 					builder.setMessage(R.string.login_error_message);
 					builder.setTitle(R.string.login_error_title);
-					builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+					builder.setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which)
 						{
