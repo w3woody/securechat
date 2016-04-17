@@ -29,6 +29,10 @@
                   android:windowSoftInputMode="adjustResize"
                   android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <activity android:name=".activities.DisconnectActivity"
+                  android:windowSoftInputMode="adjustResize"
+                  android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

@@ -142,6 +142,15 @@ public class MainActivity extends AppCompatActivity
 		DrawerLayout layout = (DrawerLayout)findViewById(R.id.drawer_layout);
 		layout.closeDrawers();
 
+		/*
+		 *  Disconnect item
+		 */
+		if (position == 2) {
+			Intent intent = new Intent(this,DisconnectActivity.class);
+			startActivity(intent);
+			return;
+		}
+
 		FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 		Snackbar.make(fab, "Boo!", Snackbar.LENGTH_LONG)
 				.setAction("Action", null).show();

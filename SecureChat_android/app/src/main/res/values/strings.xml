@@ -73,6 +73,20 @@
     <string name="login_forgot">Forgot Password</string>
     <string name="login_new_account">New Account</string>
 
+    <!-- Disconnect -->
+    <string name="disconnect_start_title">Disconnect</string>
+    <string name="disconnect_start_message">By disconnecting this device
+        from your account, you will lose all messages on this device and
+        you will no longer receive messages from the remote server.\n\n
+        Because messages are not stored on the remote server, lost messages
+        may not be recovered.\n\nThis operation cannot be undone.</string>
+    <string name="disconnect_start_ok">Disconnect From Account</string>
+    <string name="disconnect_end_title">Finish</string>
+    <string name="disconnect_end_message">This device has been disconnected
+        from your account, and all messages have been erased from this
+        device. RSA tokens have been cleared, and you will now be asked
+        to set up a new account.</string>
+
     <!-- New account -->
     <string name="new_account_title">Set Up New Account</string>
     <string name="new_account_ok">Set Up New Account</string>
