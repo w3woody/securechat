@@ -612,6 +612,16 @@ public class SCMessageQueue
 		database = null;
 	}
 
+	/**
+	 * Clear queue
+	 */
+
+	public void clearQueue(Context ctx)
+	{
+		stopQueue();
+		SCMessageDatabase.removeDatabase(ctx);
+	}
+
 	/************************************************************************/
 	/*																		*/
 	/*	Database Access														*/

@@ -542,10 +542,7 @@ static NSString *StringAtOffset(const uint8_t *bytes, int *offset)
 		 *	This is a bit brute force
 		 */
 
-		[self.input close];
-		[self.output close];
-		self.input = nil;
-		self.output = nil;
+		[self closeConnection];
 	} else {
 		/*
 		 *	Polling close
@@ -564,13 +561,7 @@ static NSString *StringAtOffset(const uint8_t *bytes, int *offset)
 
 - (void)clearQueue
 {
-	self.database = nil;
-	if (self.timer) {
-		[self.timer invalidate];
-		self.timer = nil;
-	}
-	[self closeConnection];
-
+	[self stopQueue];
 	[SCMessageDatabase removeDatabase];
 }
 

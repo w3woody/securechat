@@ -68,7 +68,7 @@
 	 *	fact that the user picked the wrong username.
 	 */
 
-	if ([creds.username isEqualToString:[[SCRSAManager shared] username]]) {
+	if (![creds.username isEqualToString:[[SCRSAManager shared] username]]) {
 		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.75 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
 			NSString *title = NSLocalizedString(@"Login Error", @"title");
 			NSString *message = NSLocalizedString(@"The username or password provided do not match", @"message");

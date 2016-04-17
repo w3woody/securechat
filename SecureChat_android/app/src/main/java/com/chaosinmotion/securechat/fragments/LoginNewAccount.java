@@ -20,8 +20,10 @@ package com.chaosinmotion.securechat.fragments;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -29,20 +31,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.chaosinmotion.securechat.MainApplication;
 import com.chaosinmotion.securechat.R;
-import com.chaosinmotion.securechat.activities.MainActivity;
+import com.chaosinmotion.securechat.activities.OnboardingActivity;
 import com.chaosinmotion.securechat.activities.WizardFragment;
 import com.chaosinmotion.securechat.activities.WizardInterface;
+import com.chaosinmotion.securechat.messages.SCMessageQueue;
+import com.chaosinmotion.securechat.rsa.SCRSAManager;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class OnboardingFinished extends Fragment implements WizardFragment
+public class LoginNewAccount extends Fragment implements WizardFragment
 {
 	private WizardInterface wizardInterface;
-	private Button doneButton;
+	private Button newAccount;
 
-	public OnboardingFinished()
+	public LoginNewAccount()
 	{
 		// Required empty public constructor
 	}
@@ -61,13 +66,13 @@ public class OnboardingFinished extends Fragment implements WizardFragment
 	{
 		super.onActivityCreated(bundle);
 
-		doneButton = (Button)getView().findViewById(R.id.done);
-		doneButton.setOnClickListener(new View.OnClickListener()
+		newAccount = (Button)getView().findViewById(R.id.newAccount);
+		newAccount.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(View v)
 			{
-				doDone();
+				doNewAccount();
 			}
 		});
 	}
@@ -77,7 +82,7 @@ public class OnboardingFinished extends Fragment implements WizardFragment
 	                         Bundle savedInstanceState)
 	{
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_onboarding_finished, container, false);
+		return inflater.inflate(R.layout.fragment_login_new_account, container, false);
 	}
 
 	@Override
@@ -85,23 +90,63 @@ public class OnboardingFinished extends Fragment implements WizardFragment
 	{
 	}
 
-	private void doDone()
-	{
-		Intent intent = new Intent(getActivity(),MainActivity.class);
-		getActivity().startActivity(intent);
-		getActivity().finish();
-	}
-
 	@Override
 	public int getTitleResourceID()
 	{
-		return R.string.onboarding_title_finished;
+		return R.string.new_account_title;
 	}
 
 	@Override
 	public boolean showNext()
 	{
 		return false;
+	}
+
+	private void runNewAccount()
+	{
+		/*
+		 *  Stop message queue, dismiss this and run the dialog for
+		 *  onboarding in my place.
+		 */
+
+		SCMessageQueue.get().stopQueue();
+		MainApplication.loginResult(false);
+
+		SCMessageQueue.get().clearQueue(getActivity());
+		SCRSAManager.shared().clear(getActivity());
+
+		/*
+		 *  Launch onboarding sequence
+		 */
+		Intent intent = new Intent(getActivity(), OnboardingActivity.class);
+		getActivity().startActivity(intent);
+		getActivity().finish();
+	}
+
+	private void doNewAccount()
+	{
+		/*
+		 *  Alert user and verify
+		 */
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		builder.setMessage(R.string.new_account_verify_message);
+		builder.setTitle(R.string.new_account_verify_title);
+		builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				// Ignore
+			}
+		});
+		builder.setPositiveButton(R.string.new_account_verify_ok, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				runNewAccount();
+			}
+		});
+		builder.show();
 	}
 
 	/*

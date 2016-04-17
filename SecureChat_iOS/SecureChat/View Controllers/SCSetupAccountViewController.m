@@ -50,7 +50,7 @@
 {
 	UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Are you sure?", @"title") message:NSLocalizedString(@"This will erase the old RSA key, reset the username on this device, and cause all stored messages to be erased.",@"message") preferredStyle:UIAlertControllerStyleAlert];
 
-	UIAlertAction *action = [UIAlertAction actionWithTitle:NSLocalizedString(@"New Device", @"verb") style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action) {
+	UIAlertAction *action = [UIAlertAction actionWithTitle:NSLocalizedString(@"New Account", @"verb") style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action) {
 
 		/*
 		 *	Stop the network interaction between the message queue and the

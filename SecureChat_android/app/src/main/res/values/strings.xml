@@ -65,6 +65,26 @@
     <string name="onboarding_generate_key">Generate Key</string>
     <string name="onboarding_regenerate_key">Regenerate Key</string>
 
+    <!-- Login Dialog -->
+    <string name="login_ok">Login</string>
+    <string name="login_title">Login</string>
+    <string name="login_message">Please supply your username and password
+        for your server account.</string>
+    <string name="login_forgot">Forgot Password</string>
+    <string name="login_new_account">New Account</string>
+
+    <!-- New account -->
+    <string name="new_account_title">Set Up New Account</string>
+    <string name="new_account_ok">Set Up New Account</string>
+    <string name="new_account_message">When you set up a new account,
+        the contents of this device, the old private key, and other account
+        information will be erased.</string>
+    <string name="new_account_verify_title">Are you sure?</string>
+    <string name="new_account_verify_ok">New Account</string>
+    <string name="new_account_verify_message">This will erase the old RSA key,
+        reset the username on this device, and cause all stored messages
+        to be erased.</string>
+
     <!-- Alert errors -->
     <string name="passcode_short_title">Passcode too short</string>
     <string name="passcode_short_message">The passcode you selected is too
@@ -77,9 +97,33 @@
     <string name="reset_password_message">Your password has been reset.
         Please check on another device on your account for steps to
         reset your password.</string>
+
+    <!-- Standard network errors -->
+    <string name="server_exception_title">Server Error</string>
     <string name="login_error_title">Login Error</string>
+    <string name="internal_error_title">Internal Error</string>
+    <string name="not_authorized_title">Not Authorized</string>
+    <string name="username_already_exists_title">User already exists</string>
+    <string name="unknown_device_title">Unknown device</string>
+    <string name="unknown_user_title">Unknown user</string>
+    <string name="unknown_error_title">Unknown error</string>
+
+    <string name="server_exception_message">An unexpected problem was reported
+        by the remote server</string>
     <string name="login_error_message">The username or password provided
         are incorrect.</string>
+    <string name="internal_error_message">An unexpected problem was reported
+        by the remote server.</string>
+    <string name="not_authorized_message">You are currently not
+        authorized to perform this operation.</string>
+    <string name="username_already_exists_message">The username you selected
+        is already taken; please pick another.</string>
+    <string name="unknown_device_message">Unable to find this device in
+        the server</string>
+    <string name="unknown_user_message">The user you provided is unknown.
+        Please check and try again.</string>
+    <string name="unknown_error_message">An unknown server error was
+        reported.</string>
 
     <string name="generate_key_title">RSA Key Generated</string>
     <string name="generate_key_message">Your RSA Key has been generated.</string>
