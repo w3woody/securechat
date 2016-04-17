@@ -142,13 +142,25 @@ public abstract class AbstractWizardActivity extends AppCompatActivity implement
 		}
 	}
 
+	/**
+	 * Override this method if you wish to prevent the wizard from
+	 * exiting.
+	 * @return
+	 */
+	protected boolean canGoBack()
+	{
+		return true;
+	}
+
 	@Override
 	public void onBackPressed()
 	{
 		if (getFragmentManager().getBackStackEntryCount() != 0) {
 			goBack();
 		} else {
-			super.onBackPressed();
+			if (canGoBack()) {
+				super.onBackPressed();
+			}
 		}
 	}
 }

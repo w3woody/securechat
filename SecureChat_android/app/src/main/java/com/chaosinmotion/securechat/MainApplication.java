@@ -23,11 +23,13 @@ import android.app.AlertDialog;
 import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
+import com.chaosinmotion.securechat.activities.LoginActivity;
 import com.chaosinmotion.securechat.messages.SCMessageQueue;
 import com.chaosinmotion.securechat.network.SCNetwork;
 import com.chaosinmotion.securechat.network.SCNetworkCredentials;
@@ -137,6 +139,9 @@ public class MainApplication extends Application implements SCNetwork.Delegate,
 		}
 		Activity a = activities.peek();
 		loginCallback = response;
+
+		Intent intent = new Intent(a, LoginActivity.class);
+		a.startActivity(intent);
 	}
 
 	public static void loginResult(boolean result)

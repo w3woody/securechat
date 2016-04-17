@@ -33,4 +33,15 @@ public class LoginActivity extends AbstractWizardActivity
 	{
 		return new LoginAccount();
 	}
+
+	/**
+	 * Returns false; this is because if we need to log in, we have a
+	 * problem that needs to be resolved.
+	 * @return
+	 */
+	@Override
+	protected boolean canGoBack()
+	{
+		return false;
+	}
 }

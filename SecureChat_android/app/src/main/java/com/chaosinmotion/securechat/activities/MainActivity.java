@@ -35,8 +35,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.chaosinmotion.securechat.MainApplication;
 import com.chaosinmotion.securechat.R;
 import com.chaosinmotion.securechat.activities.OnboardingActivity;
+import com.chaosinmotion.securechat.network.SCNetwork;
 import com.chaosinmotion.securechat.rsa.SCRSAManager;
 
 import java.util.List;
