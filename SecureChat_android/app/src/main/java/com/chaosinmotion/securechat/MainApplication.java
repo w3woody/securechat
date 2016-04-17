@@ -23,6 +23,7 @@ import android.app.ProgressDialog;
 
 import com.chaosinmotion.securechat.network.SCNetwork;
 import com.chaosinmotion.securechat.network.SCNetworkCredentials;
+import com.chaosinmotion.securechat.rsa.SCRSAManager;
 
 /**
  * Created by woody on 4/16/16.
@@ -49,7 +50,8 @@ public class MainApplication extends Application implements SCNetwork.Delegate
 	@Override
 	public SCNetworkCredentials credentials()
 	{
-		return null;
+		return new SCNetworkCredentials(SCRSAManager.shared().getUsername(),
+				SCRSAManager.shared().getPasswordHash());
 	}
 
 	@Override

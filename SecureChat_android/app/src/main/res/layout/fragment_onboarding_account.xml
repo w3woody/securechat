@@ -44,7 +44,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/create_account"
+            android:text="@string/login_account"
             android:id="@+id/loginAccount"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20sp"
@@ -54,7 +54,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/login_account"
+            android:text="@string/create_account"
             android:id="@+id/createAccount"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20sp"

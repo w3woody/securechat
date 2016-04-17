@@ -33,4 +33,9 @@ public interface WizardInterface
 	 * @param fragment
 	 */
 	void transitionToFragment(Fragment fragment);
+
+	/**
+	 * Transition backwards
+	 */
+	void goBack();
 }

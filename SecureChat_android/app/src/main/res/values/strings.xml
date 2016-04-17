@@ -8,6 +8,7 @@
     <!-- Simple stuff -->
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="done">Done</string>
 
     <string name="network_wait">Connecting to server</string>
 
@@ -15,6 +16,16 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- Onboarding Strings -->
+    <string name="onboarding_title_instructions">SecureChat Setup</string>
+    <string name="onboarding_title_select_passcode">Select Passcode</string>
+    <string name="onboarding_title_generate_rsa">Select RSA Key</string>
+    <string name="onboarding_title_select_server">Select Server URL</string>
+    <string name="onboarding_title_account">User Account</string>
+    <string name="onboarding_title_login">Log Into Your Account</string>
+    <string name="onboarding_title_create">Create New Account</string>
+    <string name="onboarding_title_forgot_password">Forgot Password</string>
+    <string name="onboarding_title_finished">Finished</string>
+
     <string name="onboarding_instructions">You currently do not have an account
         associated with this device.\n\nThe next few screens will allow you to
         create an RSA public/private key, and to set up a new account or connect
@@ -31,8 +42,26 @@
     <string name="onboarding_select_server">Now you need to enter a
         SecureChat server URL. This is the Java Tomcat server that was set
         up to chat between clients.</string>
+    <string name="onboarding_create_account">Select a username and password.
+        This will be used to identify you to other people.\n\nFor the best
+        security, select a username which is not related to your e-mail
+        address or your personal name....</string>
+    <string name="onboarding_login_account">Enter your username/password
+        pair. If you have forgotten your password, you can reset it using
+        another device associated with your account.</string>
+    <string name="onboarding_forgot_password_info">Enter the username of the
+        account whose password you wish to reset.\n\nThis will send a
+        message to your other attached devices giving you the chance
+        to reset your password. You may then log in using this device
+        to add it to your account.</string>
+    <string name="onboarding_finished">Your device is now set up and
+        connected to your account.</string>
     <string name="onboarding_passcode">Passcode</string>
+    <string name="onboarding_password">Password</string>
+    <string name="onboarding_username">Username</string>
     <string name="onboarding_server">Server URL</string>
+    <string name="onboarding_forgot_password">Forgot Password</string>
+    <string name="onboarding_reset_password">Reset Password</string>
     <string name="onboarding_generate_key">Generate Key</string>
     <string name="onboarding_regenerate_key">Regenerate Key</string>
 
@@ -40,6 +69,17 @@
     <string name="passcode_short_title">Passcode too short</string>
     <string name="passcode_short_message">The passcode you selected is too
         short. It needs to be at least 4 digits.</string>
+    <string name="weak_password_title">Password weak</string>
+    <string name="weak_password_message">Your password must be at least 8
+        characters, with a capital and lowercase letter, number and
+        punctuation.</string>
+    <string name="reset_password_title">Reset Password</string>
+    <string name="reset_password_message">Your password has been reset.
+        Please check on another device on your account for steps to
+        reset your password.</string>
+    <string name="login_error_title">Login Error</string>
+    <string name="login_error_message">The username or password provided
+        are incorrect.</string>
 
     <string name="generate_key_title">RSA Key Generated</string>
     <string name="generate_key_message">Your RSA Key has been generated.</string>

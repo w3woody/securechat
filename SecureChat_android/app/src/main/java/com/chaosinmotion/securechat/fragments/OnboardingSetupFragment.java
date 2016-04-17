@@ -20,20 +20,16 @@ package com.chaosinmotion.securechat.fragments;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.net.Uri;
-import android.os.Bundle;
 import android.app.Fragment;
+import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 
 import com.chaosinmotion.securechat.R;
 import com.chaosinmotion.securechat.activities.WizardFragment;
 import com.chaosinmotion.securechat.activities.WizardInterface;
-import com.chaosinmotion.securechat.rsa.SCRSAManager;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -71,6 +67,12 @@ public class OnboardingSetupFragment extends Fragment implements WizardFragment
 		wizardInterface.transitionToFragment(new OnboardingSetPasscode());
 	}
 
+	@Override
+	public int getTitleResourceID()
+	{
+		return R.string.onboarding_title_instructions;
+	}
+
 	/*
 	 *  Dear Google: WTF?
 	 */
@@ -101,5 +103,11 @@ public class OnboardingSetupFragment extends Fragment implements WizardFragment
 	{
 		super.onDetach();
 		wizardInterface = null;
+	}
+
+	@Override
+	public boolean showNext()
+	{
+		return true;
 	}
 }

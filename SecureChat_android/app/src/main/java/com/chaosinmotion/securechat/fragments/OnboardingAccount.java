@@ -93,12 +93,30 @@ public class OnboardingAccount extends Fragment implements WizardFragment
 	@Override
 	public void doNext()
 	{
+		doCreate();
 //		wizardInterface.transitionToFragment(new OnboardingSetPasscode());
+	}
+
+	@Override
+	public int getTitleResourceID()
+	{
+		return R.string.onboarding_title_account;
+	}
+
+	@Override
+	public boolean showNext()
+	{
+		return false;
+	}
+
+	private void doCreate()
+	{
+		wizardInterface.transitionToFragment(new OnboardingCreateAccount());
 	}
 
 	private void doLogin()
 	{
-
+		wizardInterface.transitionToFragment(new OnboardingLoginAccount());
 	}
 
 	/*

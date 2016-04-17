@@ -174,6 +174,12 @@ public class OnboardingSetServer extends Fragment implements WizardFragment, SCN
 	}
 
 	@Override
+	public int getTitleResourceID()
+	{
+		return R.string.onboarding_title_select_server;
+	}
+
+	@Override
 	public void startWaitSpinner()
 	{
 		if (progressDialog != null) return;
@@ -194,5 +200,11 @@ public class OnboardingSetServer extends Fragment implements WizardFragment, SCN
 
 		progressDialog.hide();;
 		progressDialog = null;
+	}
+
+	@Override
+	public boolean showNext()
+	{
+		return true;
 	}
 }

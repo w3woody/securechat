@@ -24,7 +24,7 @@ package com.chaosinmotion.securechat.utils;
  */
 public class PasswordComplexity
 {
-	public boolean complexityTest(String str)
+	public static boolean complexityTest(String str)
 	{
 		if (str.length() < 8) return false;
 

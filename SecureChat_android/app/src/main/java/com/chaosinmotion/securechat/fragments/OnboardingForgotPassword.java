@@ -21,30 +21,34 @@ package com.chaosinmotion.securechat.fragments;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.chaosinmotion.securechat.R;
 import com.chaosinmotion.securechat.activities.WizardFragment;
 import com.chaosinmotion.securechat.activities.WizardInterface;
-import com.chaosinmotion.securechat.rsa.SCRSAManager;
+import com.chaosinmotion.securechat.network.SCNetwork;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Set the passcode fragment
  */
-public class OnboardingSetPasscode extends Fragment implements WizardFragment
+public class OnboardingForgotPassword extends Fragment implements WizardFragment
 {
 	private WizardInterface wizardInterface;
-	private EditText passcode;
+	private EditText username;
+	private Button resetButton;
 
-	public OnboardingSetPasscode()
+	public OnboardingForgotPassword()
 	{
 		// Required empty public constructor
 	}
@@ -64,7 +68,16 @@ public class OnboardingSetPasscode extends Fragment implements WizardFragment
 	{
 		super.onActivityCreated(bundle);
 
-		passcode = (EditText)getView().findViewById(R.id.passcode);
+		username = (EditText)getView().findViewById(R.id.username);
+		resetButton = (Button)getView().findViewById(R.id.resetPassword);
+		resetButton.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				doResetPassword();
+			}
+		});
 	}
 
 	@Override
@@ -72,7 +85,7 @@ public class OnboardingSetPasscode extends Fragment implements WizardFragment
 	                         Bundle savedInstanceState)
 	{
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_onboarding_set_passcode, container, false);
+		return inflater.inflate(R.layout.fragment_onboarding_forgot_password, container, false);
 	}
 
 	@TargetApi(23)
@@ -101,52 +114,52 @@ public class OnboardingSetPasscode extends Fragment implements WizardFragment
 	{
 		super.onDetach();
 		wizardInterface = null;
-		passcode = null;
+		username = null;
 	}
 
+	private void doResetPassword()
+	{
+		try {
+			JSONObject d = new JSONObject();
+			d.put("username",username.getText().toString());
+			SCNetwork.get().request("login/forgotpassword", d, this, new SCNetwork.ResponseInterface()
+			{
+				@Override
+				public void responseResult(SCNetwork.Response response)
+				{
+					if (response.isSuccess()) {
+						AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+						builder.setMessage(R.string.reset_password_message);
+						builder.setTitle(R.string.reset_password_title);
+						builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which)
+							{
+								wizardInterface.goBack();
+							}
+						});
+						builder.show();
+					}
+				}
+			});
+		}
+		catch (JSONException ex) {
+		}
+	}
 
 	@Override
 	public void doNext()
 	{
-		String code = passcode.getText().toString();
-		if (code.length() < 4) {
-			/*
-			 *  Alert user if code too short.
-			 */
-			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-			builder.setMessage(R.string.passcode_short_message);
-			builder.setTitle(R.string.passcode_short_title);
-			builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which)
-				{
-					// Ignore
-				}
-			});
-			builder.show();
-		} else {
-			/*
-			 *  Force clear and reset of RSA manager
-			 */
-			SCRSAManager.shared().clear(getActivity());
-			SCRSAManager.shared().setPasscode(code,getActivity());
-
-			/*
-			 *  Transition to next screen
-			 */
-			wizardInterface.transitionToFragment(new OnboardingSetRSAKey());
-		}
 	}
 
 	@Override
 	public int getTitleResourceID()
 	{
-		return R.string.onboarding_title_select_passcode;
+		return R.string.onboarding_title_forgot_password;
 	}
 
-	@Override
 	public boolean showNext()
 	{
-		return true;
+		return false;
 	}
 }

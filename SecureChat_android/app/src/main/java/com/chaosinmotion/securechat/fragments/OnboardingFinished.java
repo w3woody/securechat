@@ -20,31 +20,29 @@ package com.chaosinmotion.securechat.fragments;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.net.Uri;
-import android.os.Bundle;
 import android.app.Fragment;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.Button;
 
 import com.chaosinmotion.securechat.R;
+import com.chaosinmotion.securechat.activities.MainActivity;
 import com.chaosinmotion.securechat.activities.WizardFragment;
 import com.chaosinmotion.securechat.activities.WizardInterface;
-import com.chaosinmotion.securechat.rsa.SCRSAManager;
 
 /**
- * Set the passcode fragment
+ * A simple {@link Fragment} subclass.
  */
-public class OnboardingSetPasscode extends Fragment implements WizardFragment
+public class OnboardingFinished extends Fragment implements WizardFragment
 {
 	private WizardInterface wizardInterface;
-	private EditText passcode;
+	private Button doneButton;
 
-	public OnboardingSetPasscode()
+	public OnboardingFinished()
 	{
 		// Required empty public constructor
 	}
@@ -55,16 +53,23 @@ public class OnboardingSetPasscode extends Fragment implements WizardFragment
 		super.onCreate(savedInstanceState);
 
 		if (getArguments() != null) {
-			// TODO: load arguments
+			// TODO: Load arguments
 		}
 	}
-
 	@Override
 	public void onActivityCreated(Bundle bundle)
 	{
 		super.onActivityCreated(bundle);
 
-		passcode = (EditText)getView().findViewById(R.id.passcode);
+		doneButton = (Button)getView().findViewById(R.id.done);
+		doneButton.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				doDone();
+			}
+		});
 	}
 
 	@Override
@@ -72,8 +77,36 @@ public class OnboardingSetPasscode extends Fragment implements WizardFragment
 	                         Bundle savedInstanceState)
 	{
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_onboarding_set_passcode, container, false);
+		return inflater.inflate(R.layout.fragment_onboarding_account, container, false);
 	}
+
+	@Override
+	public void doNext()
+	{
+	}
+
+	private void doDone()
+	{
+		Intent intent = new Intent(getActivity(),MainActivity.class);
+		getActivity().startActivity(intent);
+		getActivity().finish();
+	}
+
+	@Override
+	public int getTitleResourceID()
+	{
+		return R.string.onboarding_title_finished;
+	}
+
+	@Override
+	public boolean showNext()
+	{
+		return false;
+	}
+
+	/*
+	 *  Dear Google: WTF?
+	 */
 
 	@TargetApi(23)
 	public void onActivity(Context context)
@@ -101,52 +134,5 @@ public class OnboardingSetPasscode extends Fragment implements WizardFragment
 	{
 		super.onDetach();
 		wizardInterface = null;
-		passcode = null;
-	}
-
-
-	@Override
-	public void doNext()
-	{
-		String code = passcode.getText().toString();
-		if (code.length() < 4) {
-			/*
-			 *  Alert user if code too short.
-			 */
-			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-			builder.setMessage(R.string.passcode_short_message);
-			builder.setTitle(R.string.passcode_short_title);
-			builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which)
-				{
-					// Ignore
-				}
-			});
-			builder.show();
-		} else {
-			/*
-			 *  Force clear and reset of RSA manager
-			 */
-			SCRSAManager.shared().clear(getActivity());
-			SCRSAManager.shared().setPasscode(code,getActivity());
-
-			/*
-			 *  Transition to next screen
-			 */
-			wizardInterface.transitionToFragment(new OnboardingSetRSAKey());
-		}
-	}
-
-	@Override
-	public int getTitleResourceID()
-	{
-		return R.string.onboarding_title_select_passcode;
-	}
-
-	@Override
-	public boolean showNext()
-	{
-		return true;
 	}
 }

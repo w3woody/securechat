@@ -50,9 +50,9 @@ import java.util.concurrent.Future;
  */
 public class SCNetwork
 {
-	private static final int LOGIN_SUCCESS = 0;
-	private static final int LOGIN_FAILURE = 1;
-	private static final int LOGIN_SERVERERROR = 2;
+	public static final int LOGIN_SUCCESS = 0;
+	public static final int LOGIN_FAILURE = 1;
+	public static final int LOGIN_SERVERERROR = 2;
 
 	/**
 	 * Response interface used by callers to get a response from our

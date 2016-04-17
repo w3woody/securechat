@@ -37,6 +37,7 @@ import java.util.Stack;
 public abstract class AbstractWizardActivity extends AppCompatActivity implements WizardInterface
 {
 	private Stack<WizardFragment> wizardStack;
+	private Toolbar toolbar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -57,9 +58,21 @@ public abstract class AbstractWizardActivity extends AppCompatActivity implement
 			wizardStack.push((WizardFragment)first);
 		}
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-		toolbar.setTitle("SecureChat Setup");
+		toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
+
+		updateTitleState();
+	}
+
+	private void updateTitleState()
+	{
+		WizardFragment f = wizardStack.peek();
+		int resID = f.getTitleResourceID();
+		String resName = getResources().getString(resID);
+
+		setTitle(resName);
+		// ### TODO: Set title
+
 	}
 
 	/**
@@ -94,11 +107,16 @@ public abstract class AbstractWizardActivity extends AppCompatActivity implement
 		t.commit();
 
 		wizardStack.push((WizardFragment)fragment);
+		updateTitleState();
+		invalidateOptionsMenu();
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
+		WizardFragment f = wizardStack.peek();
+		if (!f.showNext()) return false;
+
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.menu_onboarding, menu);
 		return true;
@@ -115,11 +133,20 @@ public abstract class AbstractWizardActivity extends AppCompatActivity implement
 	}
 
 	@Override
-	public void onBackPressed()
+	public void goBack()
 	{
-		if(getFragmentManager().getBackStackEntryCount() != 0) {
+		if (getFragmentManager().getBackStackEntryCount() != 0) {
 			getFragmentManager().popBackStack();
 			wizardStack.pop();
+			updateTitleState();
+		}
+	}
+
+	@Override
+	public void onBackPressed()
+	{
+		if (getFragmentManager().getBackStackEntryCount() != 0) {
+			goBack();
 		} else {
 			super.onBackPressed();
 		}

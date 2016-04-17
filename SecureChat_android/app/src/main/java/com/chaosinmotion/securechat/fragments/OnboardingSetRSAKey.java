@@ -277,4 +277,16 @@ public class OnboardingSetRSAKey extends Fragment implements WizardFragment
 			});
 		}
 	}
+
+	@Override
+	public int getTitleResourceID()
+	{
+		return R.string.onboarding_title_generate_rsa;
+	}
+
+	@Override
+	public boolean showNext()
+	{
+		return true;
+	}
 }

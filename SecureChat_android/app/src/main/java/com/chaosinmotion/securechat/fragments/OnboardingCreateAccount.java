@@ -21,11 +21,10 @@ package com.chaosinmotion.securechat.fragments;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,17 +33,27 @@ import android.widget.EditText;
 import com.chaosinmotion.securechat.R;
 import com.chaosinmotion.securechat.activities.WizardFragment;
 import com.chaosinmotion.securechat.activities.WizardInterface;
+import com.chaosinmotion.securechat.messages.SCMessageQueue;
+import com.chaosinmotion.securechat.network.SCNetwork;
+import com.chaosinmotion.securechat.network.SCNetworkCredentials;
 import com.chaosinmotion.securechat.rsa.SCRSAManager;
+import com.chaosinmotion.securechat.utils.PasswordComplexity;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 
 /**
  * Set the passcode fragment
  */
-public class OnboardingSetPasscode extends Fragment implements WizardFragment
+public class OnboardingCreateAccount extends Fragment implements WizardFragment
 {
 	private WizardInterface wizardInterface;
-	private EditText passcode;
+	private EditText username;
+	private EditText password;
 
-	public OnboardingSetPasscode()
+	public OnboardingCreateAccount()
 	{
 		// Required empty public constructor
 	}
@@ -64,7 +73,8 @@ public class OnboardingSetPasscode extends Fragment implements WizardFragment
 	{
 		super.onActivityCreated(bundle);
 
-		passcode = (EditText)getView().findViewById(R.id.passcode);
+		username = (EditText)getView().findViewById(R.id.username);
+		password = (EditText)getView().findViewById(R.id.password);
 	}
 
 	@Override
@@ -72,7 +82,7 @@ public class OnboardingSetPasscode extends Fragment implements WizardFragment
 	                         Bundle savedInstanceState)
 	{
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_onboarding_set_passcode, container, false);
+		return inflater.inflate(R.layout.fragment_onboarding_create_account, container, false);
 	}
 
 	@TargetApi(23)
@@ -101,21 +111,20 @@ public class OnboardingSetPasscode extends Fragment implements WizardFragment
 	{
 		super.onDetach();
 		wizardInterface = null;
-		passcode = null;
+		username = null;
+		password = null;
 	}
 
 
 	@Override
 	public void doNext()
 	{
-		String code = passcode.getText().toString();
-		if (code.length() < 4) {
-			/*
-			 *  Alert user if code too short.
-			 */
+		String uname = username.getText().toString();
+		String pwd = password.getText().toString();
+		if (!PasswordComplexity.complexityTest(pwd)) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-			builder.setMessage(R.string.passcode_short_message);
-			builder.setTitle(R.string.passcode_short_title);
+			builder.setMessage(R.string.weak_password_message);
+			builder.setTitle(R.string.weak_password_title);
 			builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which)
@@ -124,24 +133,53 @@ public class OnboardingSetPasscode extends Fragment implements WizardFragment
 				}
 			});
 			builder.show();
-		} else {
-			/*
-			 *  Force clear and reset of RSA manager
-			 */
-			SCRSAManager.shared().clear(getActivity());
-			SCRSAManager.shared().setPasscode(code,getActivity());
+		}
 
-			/*
-			 *  Transition to next screen
-			 */
-			wizardInterface.transitionToFragment(new OnboardingSetRSAKey());
+		final SCNetworkCredentials creds = new SCNetworkCredentials(uname);
+		creds.setPasswordFromClearText(pwd);
+
+		try {
+			JSONObject json = new JSONObject();
+			json.put("username", creds.getUsername());
+			json.put("password", creds.getPassword());
+			json.put("deviceid", SCRSAManager.shared().getDeviceUUID());
+			json.put("pubkey", SCRSAManager.shared().getPublicKey());
+
+			SCNetwork.get().request("login/createaccount", json, this, new SCNetwork.ResponseInterface()
+			{
+				@Override
+				public void responseResult(SCNetwork.Response response)
+				{
+					if (response.isSuccess()) {
+						/*
+						 *  Success. Save the username and password,
+						 *  and save the whole thing to the back end.
+						 */
+						SCRSAManager.shared().setCredentials(creds.getUsername(),creds.getPassword());
+						SCRSAManager.shared().encodeSecureData(getActivity());
+
+						/*
+						 *  We have what we need to start the queue
+						 */
+						SCMessageQueue.get().startQueue(getActivity());
+
+						/*
+						 *  Done. Go to the next page
+						 */
+
+						wizardInterface.transitionToFragment(new OnboardingFinished());
+					}
+				}
+			});
+		}
+		catch (JSONException ex) {
 		}
 	}
 
 	@Override
 	public int getTitleResourceID()
 	{
-		return R.string.onboarding_title_select_passcode;
+		return R.string.onboarding_title_create;
 	}
 
 	@Override

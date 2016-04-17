@@ -26,6 +26,17 @@ package com.chaosinmotion.securechat.activities;
 public interface WizardFragment
 {
 	/**
+	 * Get the title that should be shown at this stage
+	 */
+
+	int getTitleResourceID();
+
+	/**
+	 * Determine if we get the next item
+	 */
+	boolean showNext();
+
+	/**
 	 * Event sent by activity to indicate the next button was pressed
 	 */
 	void doNext();
