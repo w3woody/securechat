@@ -608,8 +608,10 @@ public class SCMessageQueue
 		 *  Close database
 		 */
 
-		database.closeDatabase();
-		database = null;
+		if (database != null) {
+			database.closeDatabase();
+			database = null;
+		}
 	}
 
 	/**
