@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2016. William Edward Woody
   ~
@@ -21,7 +22,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.OnboardingSetPasscode"
     android:id="@+id/scrollView">
 
     <LinearLayout
@@ -37,21 +37,40 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/onboarding_select_server"
+            android:text="@string/enter_passcode"
             android:gravity="top"
             android:textSize="20sp"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textUri"
             android:ems="10"
-            android:id="@+id/server"
+            android:id="@+id/passcode"
             android:layout_marginTop="10sp"
-            android:hint="@string/onboarding_server"
+            android:hint="@string/onboarding_passcode"
             android:textSize="20sp"
-            android:text="http://192.168.1.215:8080/securechat"
-            />
+            android:password="true"
+            android:inputType="number"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_button"
+            android:id="@+id/loginAccount"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20sp"
+            style="@style/OnboardButton"
+            android:allowUndo="false"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/setup_device"
+            android:id="@+id/createAccount"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20sp"
+            style="@style/OnboardButton"
+            android:allowUndo="false"/>
 
     </LinearLayout>
 

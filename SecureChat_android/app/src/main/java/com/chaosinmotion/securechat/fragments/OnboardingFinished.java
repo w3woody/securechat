@@ -22,12 +22,15 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.chaosinmotion.securechat.R;
+import com.chaosinmotion.securechat.activities.MainActivity;
 import com.chaosinmotion.securechat.activities.WizardFragment;
 import com.chaosinmotion.securechat.activities.WizardInterface;
 
@@ -37,6 +40,7 @@ import com.chaosinmotion.securechat.activities.WizardInterface;
 public class OnboardingFinished extends Fragment implements WizardFragment
 {
 	private WizardInterface wizardInterface;
+	private Button done;
 
 	public OnboardingFinished()
 	{
@@ -56,6 +60,16 @@ public class OnboardingFinished extends Fragment implements WizardFragment
 	public void onActivityCreated(Bundle bundle)
 	{
 		super.onActivityCreated(bundle);
+
+		done = (Button)getView().findViewById(R.id.done);
+		done.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				doNext();
+			}
+		});
 	}
 
 	@Override
@@ -63,25 +77,27 @@ public class OnboardingFinished extends Fragment implements WizardFragment
 	                         Bundle savedInstanceState)
 	{
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_change_passcode_end, container, false);
+		return inflater.inflate(R.layout.fragment_onboarding_finished, container, false);
 	}
 
 	@Override
 	public void doNext()
 	{
+		Intent intent = new Intent(getActivity(), MainActivity.class);
+		getActivity().startActivity(intent);
 		getActivity().finish();
 	}
 
 	@Override
 	public int getTitleResourceID()
 	{
-		return R.string.change_passcode_end_title;
+		return R.string.onboarding_title_finished;
 	}
 
 	@Override
 	public boolean showNext()
 	{
-		return false;
+		return true;
 	}
 
 	/*

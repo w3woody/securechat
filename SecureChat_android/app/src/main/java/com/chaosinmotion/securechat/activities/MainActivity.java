@@ -104,6 +104,19 @@ public class MainActivity extends AppCompatActivity
 			Intent intent = new Intent(this, OnboardingActivity.class);
 			startActivity(intent);
 			finish();
+			return;
+		}
+
+		/*
+		 *  Verify if we need the passcode. If the passcode is not set,
+		 *  start the passcode sequence instead.
+		 */
+
+		if (!SCRSAManager.shared().hasRSAKey()) {
+			Intent intent = new Intent(this, PasscodeActivity.class);
+			startActivity(intent);
+			finish();
+			return;
 		}
 	}
 

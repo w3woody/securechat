@@ -73,6 +73,19 @@
     <string name="login_forgot">Forgot Password</string>
     <string name="login_new_account">New Account</string>
 
+    <!-- Select Password -->
+    <string name="enter_passcode">Please enter your passcode.</string>
+    <string name="login_button">Login</string>
+    <string name="setup_device">Set Up As New Device</string>
+
+    <string name="incorrect_passcode_title">Incorrect passcode</string>
+    <string name="incorrect_passcode_message">The passcode you entered is
+        incorrect.</string>
+    <string name="new_device_title">Are you sure?</string>
+    <string name="new_device_message">This will erase the old RSA key,
+        reset the username on this device, and cause all stored messages
+        to be erased.</string>
+
     <!-- Disconnect -->
     <string name="disconnect_start_title">Disconnect</string>
     <string name="disconnect_start_message">By disconnecting this device
