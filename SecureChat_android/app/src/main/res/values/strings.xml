@@ -133,6 +133,12 @@
     <string name="change_passcode_wrong_message">The old passcode was
         incorrect.</string>
 
+    <!-- Device count formatting -->
+    <string name="you_have_singular">You have %d device.</string>
+    <string name="you_have_plural">You have %d devices.</string>
+    <string name="user_has_singular">User has %d device.</string>
+    <string name="user_has_plural">User has %d devices.</string>
+
     <!-- New account -->
     <string name="new_account_title">Set Up New Account</string>
     <string name="new_account_ok">Set Up New Account</string>
