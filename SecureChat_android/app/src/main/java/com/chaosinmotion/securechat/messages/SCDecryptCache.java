@@ -60,6 +60,14 @@ public class SCDecryptCache
 		cache = new Cache();
 	}
 
+	public static synchronized SCDecryptCache get()
+	{
+		if (shared == null) {
+			shared = new SCDecryptCache();
+		}
+		return shared;
+	}
+
 	/**
 	 * Decrypt the message. If stored in the cache, the message is returned
 	 * immediately. Otherwise, the message is decrypted in a background

@@ -28,18 +28,19 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.chaosinmotion.securechat.MainApplication;
 import com.chaosinmotion.securechat.R;
-import com.chaosinmotion.securechat.activities.OnboardingActivity;
-import com.chaosinmotion.securechat.network.SCNetwork;
+import com.chaosinmotion.securechat.chatusers.ChatUsersAdapter;
+import com.chaosinmotion.securechat.messages.SCDeviceCache;
+import com.chaosinmotion.securechat.messages.SCMessageDatabase;
+import com.chaosinmotion.securechat.messages.SCMessageQueue;
 import com.chaosinmotion.securechat.rsa.SCRSAManager;
+import com.chaosinmotion.securechat.views.SCChatSummaryView;
 
 import java.util.List;
 
@@ -49,7 +50,8 @@ public class MainActivity extends AppCompatActivity
 	private ListView navDrawerList;
 	private ArrayAdapter<String> navDrawerAdapter;
 	private ListView senderList;
-	private ArrayAdapter<String> senderListAdapter;
+	private ChatUsersAdapter senderAdapter;
+	private SCChatSummaryView summaryView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -79,13 +81,34 @@ public class MainActivity extends AppCompatActivity
 		});
 
 		/*
-		 *  TODO: Finish me. For now, fillter.
+		 *  Set up our adapter to point to our list.
 		 */
 
 		senderList = (ListView)findViewById(R.id.main_list);
-		senderListAdapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, new String[]{ "Hi."} );
-		senderList.setAdapter(senderListAdapter);
+		senderAdapter = new ChatUsersAdapter(this);
+		senderList.setAdapter(senderAdapter);
+
+		senderList.setOnItemClickListener(new AdapterView.OnItemClickListener()
+		{
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+			{
+				/*
+				 *  Get the sender
+				 */
+
+				List<SCMessageDatabase.Sender> l = SCMessageQueue.get().getSenders();
+				SCMessageDatabase.Sender sender = l.get(position);
+
+				/*
+				 *  Open activity with chat window for sender. (TODO)
+				 */
+			}
+		});
+
+		summaryView = (SCChatSummaryView)findViewById(R.id.chatsummary);
+		summaryView.setDeviceCount(1);
+		summaryView.setSelf(true);
 	}
 
 	@Override
@@ -118,6 +141,22 @@ public class MainActivity extends AppCompatActivity
 			finish();
 			return;
 		}
+
+		/*
+		 *  We're able to start up, so start the queue.
+		 */
+		SCMessageQueue.get().startQueue(this);
+		senderAdapter.refreshData();
+
+		SCDeviceCache.get().devicesForSender(SCRSAManager.shared().getUsername(), new SCDeviceCache.DeviceCallback()
+		{
+			@Override
+			public void foundDevices(int userID, List<SCDeviceCache.Device> array)
+			{
+				summaryView.setSelf(true);
+				summaryView.setDeviceCount(array.size());
+			}
+		});
 	}
 
 	@Override
