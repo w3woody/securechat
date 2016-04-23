@@ -37,26 +37,39 @@
         <ListView
             android:id="@+id/main_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context=".activities.MainActivity"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             tools:showIn="@layout/activity_main">
 
         </ListView>
 
+        <com.chaosinmotion.securechat.views.SCColorView
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:id="@+id/view"/>
+
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/editText"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:hint="@string/chat_prompt"
+                android:maxLines="4"
+                android:background="@android:color/transparent"
+                android:minHeight="44dp"/>
 
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/disconnect_start_ok"
-                android:id="@+id/disconnect"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20sp"
-                style="@style/OnboardButton"
-                android:allowUndo="false"/>
+                android:layout_width="66dp"
+                android:layout_height="match_parent"
+                android:text="@string/send"
+                android:id="@+id/send"
+                style="@style/OnboardButton" />
 
         </LinearLayout>
 

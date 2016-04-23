@@ -16,29 +16,37 @@
  *
  */
 
-package com.chaosinmotion.securechat.activities;
+package com.chaosinmotion.securechat.views;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-
-import com.chaosinmotion.securechat.R;
+import android.content.Context;
+import android.graphics.Canvas;
+import android.util.AttributeSet;
+import android.view.View;
 
 /**
- * Created by woody on 4/22/16.
+ * Stupid simple color view to help with drawing hairlines
+ * Created by woody on 4/23/16.
  */
-public class ChatActivity extends AppCompatActivity
+public class SCColorView extends View
 {
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
+	public SCColorView(Context context)
+	{
+		super(context);
+	}
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+	public SCColorView(Context context, AttributeSet attrs)
+	{
+		super(context, attrs);
+	}
 
-        setTitle("Chat");   // TODO: Test
-    }
+	public SCColorView(Context context, AttributeSet attrs, int defStyleAttr)
+	{
+		super(context, attrs, defStyleAttr);
+	}
+
+	@Override
+	protected void onDraw(Canvas canvas)
+	{
+		canvas.drawColor(0xFFCCCCCC);
+	}
 }

@@ -159,7 +159,11 @@ public class MainActivity extends AppCompatActivity
 			public void foundDevices(int userID, List<SCDeviceCache.Device> array)
 			{
 				summaryView.setSelf(true);
-				summaryView.setDeviceCount(array.size());
+				if (array == null) {
+					summaryView.setDeviceCount(0);
+				} else {
+					summaryView.setDeviceCount(array.size());
+				}
 			}
 		});
 	}
