@@ -21,9 +21,13 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".activities.ChatActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
         <activity android:name=".activities.OnboardingActivity"
-                  android:windowSoftInputMode="adjustResize"
-                  android:theme="@style/AppTheme.NoActionBar">
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity android:name=".activities.LoginActivity"
                   android:windowSoftInputMode="adjustResize"

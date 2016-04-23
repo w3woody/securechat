@@ -17,6 +17,11 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <!-- New Chat Dialog -->
+    <string name="newchat_title">New Chat</string>
+    <string name="newchat_chat">Chat</string>
+    <string name="newchat_message">Enter the user you wish to chat with</string>
+
     <!-- Onboarding Strings -->
     <string name="onboarding_title_instructions">SecureChat Setup</string>
     <string name="onboarding_title_select_passcode">Select Passcode</string>

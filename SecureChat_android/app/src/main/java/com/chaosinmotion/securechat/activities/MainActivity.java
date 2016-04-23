@@ -18,6 +18,7 @@
 
 package com.chaosinmotion.securechat.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -75,8 +77,11 @@ public class MainActivity extends AppCompatActivity
 			@Override
 			public void onClick(View view)
 			{
-				Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-						.setAction("Action", null).show();
+				/*
+				 *  TODO: Run the dialog to capture the user we're going to talk to.
+				 */
+
+                openNewChat();
 			}
 		});
 
@@ -248,4 +253,29 @@ public class MainActivity extends AppCompatActivity
 
 		return super.onOptionsItemSelected(item);
 	}
+
+    private void openNewChat()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.newchat_title);
+        builder.setMessage(R.string.newchat_message);
+        builder.setPositiveButton(R.string.newchat_chat, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                /*
+                 *  TODO: Start the chat
+                 */
+
+                Intent intent = new Intent(MainActivity.this,ChatActivity.class);
+                startActivity(intent);
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Ignore
+            }
+        });
+        builder.show();
+    }
 }
