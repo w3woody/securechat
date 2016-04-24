@@ -25,6 +25,9 @@
     <string name="newchat_message">Enter the user you wish to chat with</string>
     <string name="newchat_user">Username</string>
 
+    <string name="selfchat_title">Error</string>
+    <string name="selfchat_message">You cannot chat with yourself.</string>
+
     <!-- Onboarding Strings -->
     <string name="onboarding_title_instructions">SecureChat Setup</string>
     <string name="onboarding_title_select_passcode">Select Passcode</string>

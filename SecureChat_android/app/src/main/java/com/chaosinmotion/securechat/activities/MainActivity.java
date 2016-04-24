@@ -18,6 +18,7 @@
 
 package com.chaosinmotion.securechat.activities;
 
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -27,7 +28,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -260,6 +260,21 @@ public class MainActivity extends AppCompatActivity
 		return super.onOptionsItemSelected(item);
 	}
 
+	private void selfChatError()
+	{
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(R.string.selfchat_title);
+		builder.setMessage(R.string.selfchat_message);
+		builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+			}
+		});
+		builder.show();
+	}
+
     private void openNewChat()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -272,11 +287,25 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int which) {
 	            EditText uname = (EditText)view.findViewById(R.id.username);
-	            String username = uname.getText().toString();
+	            final String username = uname.getText().toString();
 
-                Intent intent = new Intent(MainActivity.this,ChatActivity.class);
-	            intent.putExtra("username",username);
-                startActivity(intent);
+	            if (username.equals(SCRSAManager.shared().getUsername())) {
+		            selfChatError();
+	            }
+
+	            SCDeviceCache.get().devicesForSender(username, new SCDeviceCache.DeviceCallback()
+	            {
+		            @Override
+		            public void foundDevices(int userID, List<SCDeviceCache.Device> array)
+		            {
+			            if (userID != 0) {
+				            Intent intent = new Intent(MainActivity.this,ChatActivity.class);
+				            intent.putExtra("username",username);
+				            intent.putExtra("userid",userID);
+				            startActivity(intent);
+			            }
+		            }
+	            });
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

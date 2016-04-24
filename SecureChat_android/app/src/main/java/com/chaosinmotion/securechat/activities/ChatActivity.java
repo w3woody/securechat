@@ -24,14 +24,21 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.widget.ListView;
 
 import com.chaosinmotion.securechat.R;
+import com.chaosinmotion.securechat.chatusers.ChatAdapter;
 
 /**
  * Created by woody on 4/22/16.
  */
 public class ChatActivity extends AppCompatActivity
 {
+	private String username;
+	private int userID;
+	private ChatAdapter chatActivity;
+	private ListView listView;
+
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
@@ -41,8 +48,15 @@ public class ChatActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         Intent intent = getIntent();
-        String username = intent.getStringExtra("username");
+        username = intent.getStringExtra("username");
+	    userID = intent.getIntExtra("userid",0);
 
         setTitle(username);   // TODO: Test
+
+	    listView = (ListView)findViewById(R.id.main_list);
+	    chatActivity = new ChatAdapter(this,userID);
+	    listView.setAdapter(chatActivity);
+
+	    // TODO: Scroll to end, maintain scroll to end.
     }
 }
