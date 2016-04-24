@@ -30,10 +30,12 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.chaosinmotion.securechat.R;
@@ -261,16 +263,19 @@ public class MainActivity extends AppCompatActivity
     private void openNewChat()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.newchat_title);
-        builder.setMessage(R.string.newchat_message);
+	    LayoutInflater inflater = getLayoutInflater();
+
+	    final View view = inflater.inflate(R.layout.dialog_chat,null);
+	    builder.setView(view);
+
         builder.setPositiveButton(R.string.newchat_chat, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                /*
-                 *  TODO: Start the chat
-                 */
+	            EditText uname = (EditText)view.findViewById(R.id.username);
+	            String username = uname.getText().toString();
 
                 Intent intent = new Intent(MainActivity.this,ChatActivity.class);
+	            intent.putExtra("username",username);
                 startActivity(intent);
             }
         });
@@ -280,6 +285,7 @@ public class MainActivity extends AppCompatActivity
                 // Ignore
             }
         });
+
         builder.show();
     }
 }

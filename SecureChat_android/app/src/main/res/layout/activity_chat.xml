@@ -62,7 +62,9 @@
                 android:hint="@string/chat_prompt"
                 android:maxLines="4"
                 android:background="@android:color/transparent"
-                android:minHeight="44dp"/>
+                android:minHeight="44dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"/>
 
             <Button
                 android:layout_width="66dp"

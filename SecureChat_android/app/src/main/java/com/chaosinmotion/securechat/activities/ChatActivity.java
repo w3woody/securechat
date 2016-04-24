@@ -19,6 +19,7 @@
 package com.chaosinmotion.securechat.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -39,6 +40,9 @@ public class ChatActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        setTitle("Chat");   // TODO: Test
+        Intent intent = getIntent();
+        String username = intent.getStringExtra("username");
+
+        setTitle(username);   // TODO: Test
     }
 }
