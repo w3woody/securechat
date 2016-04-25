@@ -88,7 +88,7 @@ public class SCChatView extends View
 
 	public void setMessage(boolean rflag, String msg, String dt)
 	{
-		receiveFlag = rflag;
+		receiveFlag = !rflag;
 		message = msg;
 		date = dt;
 

@@ -94,16 +94,11 @@ public class ChatActivity extends AppCompatActivity
 		textView.setText("");
 
 		String sending = getResources().getString(R.string.sending);
-		final ProgressDialog progressDialog = ProgressDialog.show(this,sending,null,true);
 		SCMessageQueue.get().sendMessage(clearText, username, new SCMessageQueue.SenderCompletion()
 		{
 			@Override
 			public void senderCallback(boolean success)
 			{
-				if (progressDialog != null) {
-					progressDialog.hide();
-				}
-
 				if (success) {
 					// TODO: send success?
 				} else {
