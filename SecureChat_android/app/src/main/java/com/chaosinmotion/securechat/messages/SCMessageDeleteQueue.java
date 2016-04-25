@@ -18,6 +18,8 @@
 
 package com.chaosinmotion.securechat.messages;
 
+import android.util.Log;
+
 import com.chaosinmotion.securechat.network.SCNetwork;
 import com.chaosinmotion.securechat.rsa.SCRSAManager;
 import com.chaosinmotion.securechat.rsa.SCSHA256;
@@ -83,6 +85,10 @@ public class SCMessageDeleteQueue
 		QueueItem item = new QueueItem();
 		item.messageID = messageID;
 		item.message = data;
+		if ((messageID == 0) || (data == null) || (data.length == 0)) {
+			Log.d("SecureChat","Zero message?");
+			return;
+		}
 
 		synchronized(decodeQueue) {
 			decodeQueue.addFirst(item);
