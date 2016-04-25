@@ -198,9 +198,9 @@ public class SCChatView extends View
 			l = (int)(getWidth() - maxWidth - 30 * density);
 		}
 		r = (int)(l + maxWidth + 20 * density);
-		b = (int)(t + maxWidth + 10 * density);
+		b = (int)(t + layout.getHeight() + 10 * density);
 		RectF rr = new RectF(l,t,r,b);
-		float radius = 22 * density;
+		float radius = 12 * density;
 
 		canvas.drawRoundRect(rr,radius,radius,bubblePaint);
 

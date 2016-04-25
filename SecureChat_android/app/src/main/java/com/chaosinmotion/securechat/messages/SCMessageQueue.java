@@ -417,6 +417,7 @@ public class SCMessageQueue
 	 * asynchronous networking. Attempt to open a connection.
 	 */
 
+	// TODO: Sort out threading.
 	private void openConnection(String host, int port, boolean ssl) throws NoSuchAlgorithmException, KeyManagementException, IOException, JSONException
 	{
 		if (ssl) {

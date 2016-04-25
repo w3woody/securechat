@@ -69,6 +69,7 @@ public class SCMessageDeleteQueue
 			}
 		};
 		decodeQueueThread.setDaemon(true);
+		decodeQueueThread.start();
 	}
 
 	/**
@@ -103,7 +104,7 @@ public class SCMessageDeleteQueue
 			synchronized(decodeQueue) {
 				while ((decodeQueue != null) && (decodeQueue.size() == 0)) {
 					try {
-						wait();
+						decodeQueue.wait();
 					} catch (InterruptedException e) {
 					}
 				}
