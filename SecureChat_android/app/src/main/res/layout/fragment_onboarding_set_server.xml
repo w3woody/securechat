@@ -50,7 +50,6 @@
             android:layout_marginTop="10sp"
             android:hint="@string/onboarding_server"
             android:textSize="20sp"
-            android:text="http://192.168.1.215:8080/securechat"
             />
 
     </LinearLayout>
