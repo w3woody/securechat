@@ -5,3 +5,5 @@ SecureChat_iOS/SecureChat.xcodeproj/xcuserdata
 SecureChat_server/war/securechat_server
 SecureChat_server/war/WEB-INF/deploy
 SecureChat_server/gwt-unitCache
+SecureChat_server/build
+SecureChat_server/securechat.war

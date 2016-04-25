@@ -413,9 +413,19 @@ public class SCMessageQueue
 	private void closeConnection()
 	{
 		try {
-			socket.close();
 			input.close();
+		}
+		catch (IOException e) {
+		}
+
+		try {
 			output.close();
+		}
+		catch (IOException e) {
+		}
+
+		try {
+			socket.close();
 		}
 		catch (IOException e) {
 		}
@@ -465,6 +475,7 @@ public class SCMessageQueue
 		/*
 		 *  Kick off an output stream
 		 */
+
 		output = new SCOutputStream(socket.getOutputStream());
 
 		/*
@@ -593,6 +604,7 @@ public class SCMessageQueue
 	public void startQueue(Context ctx)
 	{
 		if (!SCRSAManager.shared().canStartServices()) return;
+		if (database != null) return;   // already started
 
 		/*
 		 *  Open database
@@ -618,6 +630,7 @@ public class SCMessageQueue
 
 	public void stopQueue()
 	{
+		if (database == null) return;       // Already stopped
 		NotificationCenter.defaultCenter().postNotification(NOTIFICATION_STOPQUEUE,this);
 
 		/*

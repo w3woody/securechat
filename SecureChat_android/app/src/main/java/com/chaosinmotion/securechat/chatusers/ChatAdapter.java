@@ -31,6 +31,7 @@ import com.chaosinmotion.securechat.messages.SCMessageDatabase;
 import com.chaosinmotion.securechat.messages.SCMessageQueue;
 import com.chaosinmotion.securechat.utils.DateUtils;
 import com.chaosinmotion.securechat.utils.NotificationCenter;
+import com.chaosinmotion.securechat.utils.ThreadPool;
 import com.chaosinmotion.securechat.views.SCChatSummaryView;
 import com.chaosinmotion.securechat.views.SCChatView;
 
@@ -179,13 +180,20 @@ public class ChatAdapter implements ListAdapter, NotificationCenter.Observer
 	}
 
 	@Override
-	public void notification(NotificationCenter.Notification n)
+	public void notification(final NotificationCenter.Notification n)
 	{
-		Integer val = (Integer)(n.getUserData().get("userid"));
-		if (val.intValue() == senderID) {
-			// Invalidate cache and resend
-			notifyDataSetChanged();
-		}
+		ThreadPool.get().enqueueMain(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				Integer val = (Integer)(n.getUserData().get("userid"));
+				if (val.intValue() == senderID) {
+					// Invalidate cache and resend
+					notifyDataSetChanged();
+				}
+			}
+		});
 	}
 
 	public void notifyDataSetChanged()

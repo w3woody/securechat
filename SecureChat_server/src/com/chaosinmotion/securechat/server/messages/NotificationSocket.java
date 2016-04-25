@@ -89,7 +89,7 @@ public class NotificationSocket implements Runnable
 	 * @param password
 	 * @return
 	 */
-	private boolean validate(String username, String password, String deviceid)
+	private int validate(String username, String password, String deviceid)
 	{
 		Connection c = null;
 		PreparedStatement ps = null;
@@ -139,10 +139,10 @@ public class NotificationSocket implements Runnable
 					 * This fails to run.
 					 */
 					
-					return false;
+					return 1;
 				}
 			} else {
-				return false;
+				return 2;
 			}
 			
 			/*
@@ -193,6 +193,7 @@ public class NotificationSocket implements Runnable
 			}
 		}
 		catch (Exception ignore) {
+			return 3;
 		}
 		finally {
 			try {
@@ -205,7 +206,7 @@ public class NotificationSocket implements Runnable
 			}
 		}
 		
-		return false;
+		return 0;
 	}
 	
 
@@ -247,9 +248,11 @@ public class NotificationSocket implements Runnable
 			 * Validate
 			 */
 			
-			if (!validate(username,password,deviceid)) {
-				byte[] b = new byte[1];
+			int err = validate(username,password,deviceid);
+			if (err != 0) {
+				byte[] b = new byte[2];
 				b[0] = 0x22;
+				b[1] = (byte)err;
 				try {
 					out.writeData(b);
 				}

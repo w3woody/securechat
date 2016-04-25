@@ -508,6 +508,7 @@ static NSString *StringAtOffset(const uint8_t *bytes, int *offset)
 - (void)startQueue
 {
 	if (![[SCRSAManager shared] canStartServices]) return;
+	if (self.database) return;			// Already started
 
 	/*
 	 *	Open the database
@@ -530,6 +531,7 @@ static NSString *StringAtOffset(const uint8_t *bytes, int *offset)
 
 - (void)stopQueue
 {
+	if (self.database == nil) return;		// already stopped
 	[[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_STOPQUEUE object:self];
 
 	/*

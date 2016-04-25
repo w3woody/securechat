@@ -29,6 +29,7 @@ import android.widget.ListAdapter;
 import com.chaosinmotion.securechat.messages.SCMessageDatabase;
 import com.chaosinmotion.securechat.messages.SCMessageQueue;
 import com.chaosinmotion.securechat.utils.NotificationCenter;
+import com.chaosinmotion.securechat.utils.ThreadPool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,7 +104,7 @@ public class ChatUsersAdapter implements ListAdapter, NotificationCenter.Observe
 	@Override
 	public boolean hasStableIds()
 	{
-		return false;
+		return true;
 	}
 
 	@Override
@@ -151,7 +152,14 @@ public class ChatUsersAdapter implements ListAdapter, NotificationCenter.Observe
 	@Override
 	public void notification(NotificationCenter.Notification n)
 	{
-		notifyDataSetChanged();
+		ThreadPool.get().enqueueMain(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				notifyDataSetChanged();
+			}
+		});
 	}
 
 
