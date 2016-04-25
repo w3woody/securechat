@@ -29,7 +29,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -116,6 +118,7 @@ public class MainActivity extends AppCompatActivity
 				startActivity(intent);
 			}
 		});
+		registerForContextMenu(senderList);
 
 		summaryView = (SCChatSummaryView)findViewById(R.id.chatsummary);
 		summaryView.setDeviceCount(1);
@@ -186,6 +189,36 @@ public class MainActivity extends AppCompatActivity
 	{
 		super.onConfigurationChanged(config);
 		drawerToggle.onConfigurationChanged(config);
+	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
+	{
+		if (v.getId() == R.id.main_list) {
+			String[] menuItems = getResources().getStringArray(R.array.context_menu);
+			for (int i = 0; i < menuItems.length; ++i) {
+				menu.add(Menu.NONE,i,i,menuItems[i]);
+			}
+		}
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item)
+	{
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+		List<SCMessageDatabase.Sender> l = SCMessageQueue.get().getSenders();
+		SCMessageDatabase.Sender sender = l.get(info.position);
+
+		if (item.getItemId() == 0) {
+			/*
+			 *  Delete the sender that was clicked on
+			 */
+
+			SCMessageQueue.get().deleteSender(sender.getSenderID());
+			senderAdapter.notifyDataSetChanged();
+		}
+
+		return true;
 	}
 
 	private void initializeDrawer()

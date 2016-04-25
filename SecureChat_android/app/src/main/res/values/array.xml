@@ -24,4 +24,8 @@
         <item>Change Application Passcode</item>
         <item>Disconnect From Account</item>
     </string-array>
+
+    <string-array name="context_menu">
+        <item>Delete</item>
+    </string-array>
 </resources>

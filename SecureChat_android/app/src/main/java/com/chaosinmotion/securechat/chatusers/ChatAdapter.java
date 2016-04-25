@@ -90,7 +90,7 @@ public class ChatAdapter implements ListAdapter, NotificationCenter.Observer
 		return SCMessageQueue.get().getMessagesForSender(senderID);
 	}
 
-	private SCMessageDatabase.Message getMessageAtIndex(int index)
+	public SCMessageDatabase.Message getMessageAtIndex(int index)
 	{
 		int loc = (index & ~15);
 		int len = 16;
@@ -184,10 +184,15 @@ public class ChatAdapter implements ListAdapter, NotificationCenter.Observer
 		Integer val = (Integer)(n.getUserData().get("userid"));
 		if (val.intValue() == senderID) {
 			// Invalidate cache and resend
-			list = null;
-			for (DataSetObserver obs: observers) {
-				obs.onChanged();
-			}
+			notifyDataSetChanged();
+		}
+	}
+
+	public void notifyDataSetChanged()
+	{
+		list = null;
+		for (DataSetObserver obs: observers) {
+			obs.onChanged();
 		}
 	}
 }

@@ -151,6 +151,12 @@ public class ChatUsersAdapter implements ListAdapter, NotificationCenter.Observe
 	@Override
 	public void notification(NotificationCenter.Notification n)
 	{
+		notifyDataSetChanged();
+	}
+
+
+	public void notifyDataSetChanged()
+	{
 		data = SCMessageQueue.get().getSenders();
 		for (DataSetObserver obs: observers) {
 			obs.onChanged();

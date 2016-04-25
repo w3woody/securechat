@@ -25,7 +25,11 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -34,6 +38,8 @@ import com.chaosinmotion.securechat.R;
 import com.chaosinmotion.securechat.chatusers.ChatAdapter;
 import com.chaosinmotion.securechat.messages.SCMessageDatabase;
 import com.chaosinmotion.securechat.messages.SCMessageQueue;
+
+import java.util.List;
 
 /**
  * Created by woody on 4/22/16.
@@ -64,6 +70,7 @@ public class ChatActivity extends AppCompatActivity
 	    listView = (ListView)findViewById(R.id.main_list);
 	    chatActivity = new ChatAdapter(this,userID);
 	    listView.setAdapter(chatActivity);
+	    registerForContextMenu(listView);
 
 	    sendButton = (Button)findViewById(R.id.send);
 	    textView = (EditText)findViewById(R.id.editText);
@@ -105,4 +112,34 @@ public class ChatActivity extends AppCompatActivity
 			}
 		});
 	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
+	{
+		if (v.getId() == R.id.main_list) {
+			String[] menuItems = getResources().getStringArray(R.array.context_menu);
+			for (int i = 0; i < menuItems.length; ++i) {
+				menu.add(Menu.NONE,i,i,menuItems[i]);
+			}
+		}
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item)
+	{
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+		SCMessageDatabase.Message msg = chatActivity.getMessageAtIndex(info.position);
+
+		if (item.getItemId() == 0) {
+			/*
+			 *  Delete the sender that was clicked on
+			 */
+
+			SCMessageQueue.get().deleteMessage(msg.getMessageID());
+			chatActivity.notifyDataSetChanged();
+		}
+
+		return true;
+	}
+
 }
