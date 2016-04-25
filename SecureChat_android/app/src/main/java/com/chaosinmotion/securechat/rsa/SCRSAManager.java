@@ -344,7 +344,7 @@ public class SCRSAManager
 			System.arraycopy(data,i*blockSize,encBuffer,0,blockSize);
 
 			// RSA Transform
-			BigInteger bi = new BigInteger(encBuffer);
+			BigInteger bi = new BigInteger(1,encBuffer);
 			BigInteger ei = privateRSAKey.transform(bi);
 			byte[] dec = ei.toByteArray();
 
