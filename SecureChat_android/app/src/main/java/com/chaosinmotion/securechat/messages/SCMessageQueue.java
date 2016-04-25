@@ -318,14 +318,27 @@ public class SCMessageQueue
 			d.put("deviceid",SCRSAManager.shared().getDeviceUUID());
 			d.put("username",creds.getUsername());
 			d.put("password",creds.hashPasswordWithToken(token));
-			byte[] data = d.toString().getBytes("UTF-8");
-			output.writeData(data);
+			final byte[] data = d.toString().getBytes("UTF-8");
+
+			ThreadPool.get().enqueueAsync(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					try {
+						output.writeData(data);
+					}
+					catch (IOException e) {
+						// Should never happen.
+					}
+				}
+			});
 		}
 		catch (JSONException e) {
 			// Should never happen
 		}
-		catch (IOException e) {
-			// Should never happen
+		catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -414,10 +427,10 @@ public class SCMessageQueue
 
 	/**
 	 * The back end is advertising an endpoint we can connect to for
-	 * asynchronous networking. Attempt to open a connection.
+	 * asynchronous networking. Attempt to open a connection. Note that
+	 * this must be kicked off in a background thread.
 	 */
 
-	// TODO: Sort out threading.
 	private void openConnection(String host, int port, boolean ssl) throws NoSuchAlgorithmException, KeyManagementException, IOException, JSONException
 	{
 		if (ssl) {
@@ -533,17 +546,31 @@ public class SCMessageQueue
 				 */
 
 				if (response.isSuccess()) {
-					String host = response.getData().optString("host");
-					int port = response.getData().optInt("port");
-					boolean ssl = response.getData().optBoolean("ssl");
+					final String host = response.getData().optString("host");
+					final int port = response.getData().optInt("port");
+					final boolean ssl = response.getData().optBoolean("ssl");
 
-					try {
-						openConnection(host, port, ssl);
-					}
-					catch (final Exception ex) {
-						startPolling("Unknown exception " + ex.getMessage());
-						Log.d("SecureChat","Exception while opening socket",ex);
-					}
+					ThreadPool.get().enqueueAsync(new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							try {
+								openConnection(host, port, ssl);
+							}
+							catch (final Exception ex) {
+								ThreadPool.get().enqueueMain(new Runnable()
+								{
+									@Override
+									public void run()
+									{
+										startPolling("Unknown exception " + ex.getMessage());
+										Log.d("SecureChat","Exception while opening socket",ex);
+									}
+								});
+							}
+						}
+					});
 				} else {
 					startPolling("Server responsed unavailable");
 				}

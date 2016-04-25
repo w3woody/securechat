@@ -352,7 +352,18 @@ public class MessageQueue
 				if (rs.next()) {
 					sendername = rs.getString(1);
 				}
-				socket.sendMessage(messageid, senderid, sendername, toflag, ts, message);
+				
+				try {
+					socket.sendMessage(messageid, senderid, sendername, toflag, ts, message);
+				}
+				catch (IOException ex) {
+					/*
+					 * Ignore the error. This can happen because one of the
+					 * clients attached to receive notifications has screwed
+					 * something up. Since this is advisory anyway, the best
+					 * solution is to ignore it and move on to other devices.
+					 */
+				}
 			}
 
 			return messageid;
