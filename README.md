@@ -23,6 +23,12 @@ The purpose of this exercise is to assume _what if?_, and to provide a demonstra
 
 Also note that I am not providing an implementation of this system for public use. That is, I am not running a publicly available SecureChat server, nor am I providing the iOS app on the App Store. Instead, this is intended to be a demonstration of how an individual can provide a secure chat system by providing a sample implementation.
 
+## What's New
+
+* Added a new Android client! Compatible with the API and properly works with both iOS and Android clients.
+* Numerous bug fixes, including fixing a problem with notifications.
+* Various iOS client bug fixes.
+
 ## License
 
     SecureChat: A secure chat system which permits secure communications 
