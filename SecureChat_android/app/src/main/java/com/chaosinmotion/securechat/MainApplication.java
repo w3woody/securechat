@@ -21,13 +21,9 @@ package com.chaosinmotion.securechat;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Application;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.EditText;
 
 import com.chaosinmotion.securechat.activities.LoginActivity;
 import com.chaosinmotion.securechat.messages.SCMessageQueue;
@@ -146,7 +142,10 @@ public class MainApplication extends Application implements SCNetwork.Delegate,
 
 	public static void loginResult(boolean result)
 	{
-		loginCallback.didLogin(result);
+		if (loginCallback != null) {
+			loginCallback.didLogin(result);
+			loginCallback = null;
+		}
 	}
 
 	/*

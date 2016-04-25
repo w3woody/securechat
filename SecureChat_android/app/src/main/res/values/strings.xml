@@ -10,6 +10,7 @@
     <string name="cancel">Cancel</string>
     <string name="done">Done</string>
     <string name="send">Send</string>
+    <string name="sending">Sending</string>
     <string name="chat_prompt">Chat Message</string>
 
     <string name="network_wait">Connecting to server</string>

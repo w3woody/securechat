@@ -95,6 +95,7 @@ public class SCDeviceCache
 		DeviceCacheEntry e = store.get(sender);
 		if ((e != null) && (e.expires > t)) {
 			callback.foundDevices(e.userid,e.devices);
+			return;
 		}
 
 		JSONObject d = new JSONObject();

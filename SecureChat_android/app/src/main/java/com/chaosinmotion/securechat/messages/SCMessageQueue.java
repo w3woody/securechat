@@ -717,6 +717,7 @@ public class SCMessageQueue
 				ds.put("checksum",checksum);
 				ds.put("message",message);
 				ds.put("deviceid",d.getDeviceID());
+				ds.put("destuser",senderID);
 				messages.put(ds);
 			} catch (Exception e) {
 				// Should not happen; only if there is a constant error above
@@ -736,6 +737,7 @@ public class SCMessageQueue
 			ds.put("checksum",checksum);
 			ds.put("message",message);
 			ds.put("deviceid",SCRSAManager.shared().getDeviceUUID());
+			ds.put("destuser",senderID);
 			messages.put(ds);
 		} catch (Exception e) {
 			// Should not happen; only if there is a constant error above

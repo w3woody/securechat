@@ -255,7 +255,9 @@ public class SCMessageDatabase
 	 */
 	public static void removeDatabase(Context ctx)
 	{
-		ctx.deleteFile(MESSAGEFILE);
+		if (!ctx.deleteFile(MESSAGEFILE)) {
+			Log.d("SecureChat","Database " + MESSAGEFILE + " could not be removed.");
+		}
 	}
 
 	/************************************************************************/
@@ -305,7 +307,15 @@ public class SCMessageDatabase
 		stmt.bindDouble(5, timestamp.getTime()/1000.0);
 		stmt.bindBlob(6, message);
 
-		stmt.executeInsert();
+		try {
+			stmt.executeInsert();
+		}
+		catch (Exception ex) {
+			return false;
+		}
+		finally {
+			stmt.close();
+		}
 
 		/*
 		 *	Delete cached messages

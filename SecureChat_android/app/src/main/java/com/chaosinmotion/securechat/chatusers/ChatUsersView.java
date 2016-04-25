@@ -115,10 +115,10 @@ public class ChatUsersView extends View
 
 		Paint.FontMetrics fm = senderPaint.getFontMetrics();
 		height = (int)(30 * density);
-		height += fm.ascent + fm.descent + fm.leading;
+		height += fm.descent + fm.leading - fm.ascent;
 
 		fm = messagePaint.getFontMetrics();
-		height += 2 * (fm.ascent + fm.descent + fm.leading);
+		height += 2 * (fm.descent + fm.leading - fm.ascent);
 
 		/*
 		 *  Now filter through our measure spec
@@ -155,7 +155,7 @@ public class ChatUsersView extends View
 		Paint.FontMetrics fm = senderPaint.getFontMetrics();
 
 		int x = (int)(15 * density);
-		int y = (int)(10 * density + fm.ascent);
+		int y = (int)(10 * density - fm.ascent);
 
 		canvas.drawText(senderName,x,y,senderPaint);
 
@@ -165,11 +165,11 @@ public class ChatUsersView extends View
 
 		y += (int)(10 * density + fm.descent + fm.leading);
 		fm = messagePaint.getFontMetrics();
-		y += fm.ascent;
-		x += 2;     // indent message
+		y -= fm.ascent;
 
 		StaticLayout layout = new StaticLayout(senderMessage,
 				messagePaint,getWidth() - x * 3, Layout.Alignment.ALIGN_NORMAL,1,0,true);
+		x *= 2;
 		int i,len = layout.getLineCount();
 		if (len > 2) len = 2;
 		for (i = 0; i < len; ++i) {
@@ -177,7 +177,7 @@ public class ChatUsersView extends View
 			int end = layout.getLineEnd(i);
 
 			canvas.drawText(senderMessage,start,end,x,y,messagePaint);
-			y += fm.ascent + fm.descent + fm.leading;
+			y += fm.descent + fm.leading - fm.ascent;
 		}
 	}
 
