@@ -18,6 +18,7 @@
 
 package com.chaosinmotion.securechat.messages;
 
+import com.chaosinmotion.securechat.encapsulation.SCMessageObject;
 import com.chaosinmotion.securechat.rsa.SCRSAManager;
 import com.chaosinmotion.securechat.utils.ThreadPool;
 
@@ -34,14 +35,14 @@ import java.util.LinkedHashMap;
  */
 public class SCDecryptCache
 {
-	private static class Cache extends LinkedHashMap<Integer,String>
+	private static class Cache extends LinkedHashMap<Integer,SCMessageObject>
 	{
 		public Cache()
 		{
 			super(100,0.75f,true);
 		}
 		@Override
-		protected boolean removeEldestEntry(Entry<Integer, String> eldest)
+		protected boolean removeEldestEntry(Entry<Integer, SCMessageObject> eldest)
 		{
 			return size() > 250;        // 250 messages, arbitrary limit
 		}
@@ -49,7 +50,7 @@ public class SCDecryptCache
 
 	public interface DecryptCallback
 	{
-		void decryptedMessage(int messageID, String msg);
+		void decryptedMessage(int messageID, SCMessageObject msg);
 	}
 
 	private static SCDecryptCache shared;
@@ -77,9 +78,9 @@ public class SCDecryptCache
 	 * @param callback The callback if this is decoded asynchronously
 	 * @return The message or null if not in the cache
 	 */
-	public String decrypt(final byte[] data, final int index, final DecryptCallback callback)
+	public SCMessageObject decrypt(final byte[] data, final int index, final DecryptCallback callback)
 	{
-		String ret = cache.get(index);
+		SCMessageObject ret = cache.get(index);
 		if (ret != null) return ret;
 
 		ThreadPool.get().enqueueAsync(new Runnable()
@@ -87,21 +88,17 @@ public class SCDecryptCache
 			@Override
 			public void run()
 			{
-				try {
-					byte[] decrypt = SCRSAManager.shared().decodeData(data);
-					final String str = new String(decrypt,"UTF-8");
-					ThreadPool.get().enqueueMain(new Runnable()
+				byte[] decrypt = SCRSAManager.shared().decodeData(data);
+				final SCMessageObject msg = new SCMessageObject(decrypt);
+				ThreadPool.get().enqueueMain(new Runnable()
+				{
+					@Override
+					public void run()
 					{
-						@Override
-						public void run()
-						{
-							cache.put(index,str);
-							callback.decryptedMessage(index,str);
-						}
-					});
-				} catch (UnsupportedEncodingException e) {
-					callback.decryptedMessage(index,"");
-				}
+						cache.put(index,msg);
+						callback.decryptedMessage(index,msg);
+					}
+				});
 			}
 		});
 		return null;

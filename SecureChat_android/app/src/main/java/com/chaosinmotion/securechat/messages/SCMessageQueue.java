@@ -22,6 +22,7 @@ import android.content.Context;
 import android.util.Base64;
 import android.util.Log;
 
+import com.chaosinmotion.securechat.encapsulation.SCMessageObject;
 import com.chaosinmotion.securechat.network.SCNetwork;
 import com.chaosinmotion.securechat.network.SCNetworkCredentials;
 import com.chaosinmotion.securechat.rsa.SCRSAEncoder;
@@ -723,7 +724,7 @@ public class SCMessageQueue
 	/*																		*/
 	/************************************************************************/
 
-	private void encodeMessages(String clearText, final String sender, final int senderID,
+	private void encodeMessages(byte[] cdata, final String sender, final int senderID,
 	                            List<SCDeviceCache.Device> sarray,
 	                            List<SCDeviceCache.Device> marray,
 	                            final SenderCompletion callback) throws UnsupportedEncodingException
@@ -732,7 +733,6 @@ public class SCMessageQueue
 		 *  Calculate message checksum
 		 */
 
-		byte[] cdata = clearText.getBytes("UTF-8");
 		String checksum = SCSHA256.sha256(cdata);
 
 		/*
@@ -842,8 +842,8 @@ public class SCMessageQueue
 	 *	on which messages are sent for a user, refreshing every 5 minutes.
 	 */
 
-	public void sendMessage(final String clearText, final String sender,
-	                        final SenderCompletion callback)
+	public void sendMessage(final SCMessageObject clearText, final String sender,
+							final SenderCompletion callback)
 	{
 		/*
 		 *  This gets the devices for the sender, for me, and then
@@ -884,7 +884,7 @@ public class SCMessageQueue
 							public void run()
 							{
 								try {
-									encodeMessages(clearText,sender,userID,sarray,marray,callback);
+									encodeMessages(clearText.dataFromMessage(),sender,userID,sarray,marray,callback);
 								}
 								catch (UnsupportedEncodingException e) {
 									callback.senderCallback(false);

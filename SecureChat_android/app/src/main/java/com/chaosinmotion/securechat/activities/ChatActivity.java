@@ -36,6 +36,7 @@ import android.widget.ListView;
 
 import com.chaosinmotion.securechat.R;
 import com.chaosinmotion.securechat.chatusers.ChatAdapter;
+import com.chaosinmotion.securechat.encapsulation.SCMessageObject;
 import com.chaosinmotion.securechat.messages.SCMessageDatabase;
 import com.chaosinmotion.securechat.messages.SCMessageQueue;
 
@@ -93,8 +94,10 @@ public class ChatActivity extends AppCompatActivity
 
 		textView.setText("");
 
+		SCMessageObject msg = new SCMessageObject(clearText);
+
 		String sending = getResources().getString(R.string.sending);
-		SCMessageQueue.get().sendMessage(clearText, username, new SCMessageQueue.SenderCompletion()
+		SCMessageQueue.get().sendMessage(msg, username, new SCMessageQueue.SenderCompletion()
 		{
 			@Override
 			public void senderCallback(boolean success)

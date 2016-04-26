@@ -30,6 +30,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.chaosinmotion.securechat.R;
+import com.chaosinmotion.securechat.encapsulation.SCMessageObject;
 import com.chaosinmotion.securechat.messages.SCDecryptCache;
 import com.chaosinmotion.securechat.messages.SCMessageDatabase;
 
@@ -44,7 +45,7 @@ public class ChatUsersView extends View
 
 	private SCMessageDatabase.Sender sender;
 	private String senderName;
-	private String senderMessage;
+	private SCMessageObject senderMessage;
 
 	public ChatUsersView(Context context)
 	{
@@ -88,7 +89,7 @@ public class ChatUsersView extends View
 		senderMessage = SCDecryptCache.get().decrypt(s.getLastMessage(), s.getMessageID(), new SCDecryptCache.DecryptCallback()
 		{
 			@Override
-			public void decryptedMessage(int messageID, String msg)
+			public void decryptedMessage(int messageID, SCMessageObject msg)
 			{
 				if (messageID == sender.getMessageID()) {
 					senderMessage = msg;
@@ -98,7 +99,8 @@ public class ChatUsersView extends View
 		});
 
 		if (senderMessage == null) {
-			senderMessage = getResources().getString(R.string.decrypt_label);
+			String tmp = getResources().getString(R.string.decrypt_label);
+			senderMessage = new SCMessageObject(tmp);	// TODO: Better way to show in progress???
 		}
 		invalidate();
 	}
@@ -167,7 +169,8 @@ public class ChatUsersView extends View
 		fm = messagePaint.getFontMetrics();
 		y -= fm.ascent;
 
-		StaticLayout layout = new StaticLayout(senderMessage,
+		String summary = senderMessage.getSummaryMessageText();
+		StaticLayout layout = new StaticLayout(summary,
 				messagePaint,getWidth() - x * 3, Layout.Alignment.ALIGN_NORMAL,1,0,true);
 		x *= 2;
 		int i,len = layout.getLineCount();
@@ -176,7 +179,7 @@ public class ChatUsersView extends View
 			int start = layout.getLineStart(i);
 			int end = layout.getLineEnd(i);
 
-			canvas.drawText(senderMessage,start,end,x,y,messagePaint);
+			canvas.drawText(summary,start,end,x,y,messagePaint);
 			y += fm.descent + fm.leading - fm.ascent;
 		}
 	}

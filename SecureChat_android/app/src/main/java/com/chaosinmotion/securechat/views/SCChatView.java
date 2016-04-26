@@ -31,6 +31,8 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
+import com.chaosinmotion.securechat.encapsulation.SCMessageObject;
+
 /**
  * Created by woody on 4/23/16.
  */
@@ -40,7 +42,7 @@ public class SCChatView extends View
 	private TextPaint messagePaint;
 	private Paint bubblePaint;
 	private TextPaint datePaint;
-	private String message;
+	private SCMessageObject message;
 	private String date;
 	private boolean receiveFlag;
 
@@ -79,14 +81,14 @@ public class SCChatView extends View
 		datePaint.setColor(Color.LTGRAY);
 		datePaint.setTextSize((int)(density * 13));
 
-		message = "Hi.";
+		message = new SCMessageObject("Hi.");
 		date = "11/12/16/ 11:45 PMjy";
 		receiveFlag = false;
 		messagePaint.setColor(Color.WHITE);
 		bubblePaint.setColor(0xFF406080);
 	}
 
-	public void setMessage(boolean rflag, String msg, String dt)
+	public void setMessage(boolean rflag, SCMessageObject msg, String dt)
 	{
 		receiveFlag = !rflag;
 		message = msg;
@@ -108,6 +110,9 @@ public class SCChatView extends View
 		int padding;
 		int drawWidth;
 
+		// TODO: Different message types
+		String txt  = message.getMessageAsText();
+
 		/*
 		 *  Determine fitting width. We measure the maximum (unwrapped)
 		 *  size of the text, then limit by the width boundaries.
@@ -117,7 +122,7 @@ public class SCChatView extends View
 
 		padding = (int)(density * 140);     // padding
 		width = (int)(density * 200);
-		int w = (int)messagePaint.measureText(message) + padding;
+		int w = (int)messagePaint.measureText(txt) + padding;
 		if (width < w) width = w;
 
 		int widthMode = MeasureSpec.getMode(widthMeasureSpec);
@@ -136,7 +141,7 @@ public class SCChatView extends View
 		drawWidth = width - padding;
 		if (drawWidth < minDrawWidth) drawWidth = minDrawWidth;
 
-		StaticLayout layout = new StaticLayout(message,messagePaint,drawWidth, Layout.Alignment.ALIGN_NORMAL,1,0,true);
+		StaticLayout layout = new StaticLayout(txt,messagePaint,drawWidth, Layout.Alignment.ALIGN_NORMAL,1,0,true);
 		height = layout.getHeight();
 		height += 30 * density;
 		height += fm.descent - fm.ascent;
@@ -169,13 +174,17 @@ public class SCChatView extends View
 	{
 		super.onDraw(canvas);
 
+		// TODO: Different message types
+		String txt  = message.getMessageAsText();
+
+
 		/*
 		 *  Determine actual width of the text to render.
 		 */
 
 		int padding = (int)(density * 140);
 		int width = getWidth() - padding;
-		StaticLayout layout = new StaticLayout(message,messagePaint,width, Layout.Alignment.ALIGN_NORMAL,1,0,true);
+		StaticLayout layout = new StaticLayout(txt,messagePaint,width, Layout.Alignment.ALIGN_NORMAL,1,0,true);
 
 		float maxWidth = 0;
 		int i,len = layout.getLineCount();
