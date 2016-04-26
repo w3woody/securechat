@@ -410,29 +410,45 @@ public class SCMessageQueue
 	/**
 	 * Close network connection to notification stream
 	 */
-	private void closeConnection()
+	private synchronized void closeConnection()
 	{
-		try {
-			input.close();
-		}
-		catch (IOException e) {
-		}
-
-		try {
-			output.close();
-		}
-		catch (IOException e) {
-		}
-
-		try {
-			socket.close();
-		}
-		catch (IOException e) {
-		}
-
+		final SCInputStream is = input;
+		final SCOutputStream os = output;
+		final Socket s = socket;
 		socket = null;
 		input = null;
 		output = null;
+
+		/*
+		 *  If this is called on the main thread and the socket is open, this
+		 *  will throw an exception. So make sure this is on a background
+		 *  thread when we close, in case network activity needs to be
+		 *  performed to shut down the connection.
+		 */
+		ThreadPool.get().enqueueAsync(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				try {
+					input.close();
+				}
+				catch (IOException e) {
+				}
+
+				try {
+					output.close();
+				}
+				catch (IOException e) {
+				}
+
+				try {
+					socket.close();
+				}
+				catch (IOException e) {
+				}
+			}
+		});
 	}
 
 	/**
