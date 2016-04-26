@@ -18,6 +18,8 @@
 
 package com.chaosinmotion.securechat.rsa;
 
+import android.util.Log;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -94,9 +96,20 @@ public class SCRSAEncoder
 				 */
 				BigInteger bi = new BigInteger(1,encBuffer);
 				BigInteger ei = publicRSAKey.transform(bi);
+
 				byte[] enc = ei.toByteArray();
 				Arrays.fill(encBuffer, (byte)0);
-				System.arraycopy(enc, encSize - enc.length, encBuffer, 0, enc.length);
+
+				/* Align to the back of encBuffer. If large. backs align. */
+				int srcStart = 0;
+				int dstStart = encSize - enc.length;
+				int length = enc.length;
+				if (dstStart < 0) {
+					srcStart -= dstStart;
+					length += dstStart;
+					dstStart = 0;
+				}
+				System.arraycopy(enc, srcStart, encBuffer, dstStart, length);
 				
 				baos.write(encBuffer);
 			}
@@ -114,10 +127,21 @@ public class SCRSAEncoder
 
 			BigInteger bi = new BigInteger(1,encBuffer);
 			BigInteger ei = publicRSAKey.transform(bi);
+
 			byte[] enc = ei.toByteArray();
 			Arrays.fill(encBuffer, (byte)0);
-			System.arraycopy(enc, encSize - enc.length, encBuffer, 0, enc.length);
-			
+
+			/* Align to the back of encBuffer. If large. backs align. */
+			int srcStart = 0;
+			int dstStart = encSize - enc.length;
+			int length = enc.length;
+			if (dstStart < 0) {
+				srcStart -= dstStart;
+				length += dstStart;
+				dstStart = 0;
+			}
+			System.arraycopy(enc, srcStart, encBuffer, dstStart, length);
+
 			baos.write(encBuffer);
 		}
 

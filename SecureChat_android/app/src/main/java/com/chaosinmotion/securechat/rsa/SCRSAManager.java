@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.util.Arrays;
 
 /**
  * This is the equivalent of the SCRSAManager class on iOS. This contains
@@ -327,7 +328,6 @@ public class SCRSAManager
 		SCRSAPadding padding = new SCRSAPadding(privateRSAKey.getSize());
 		int msgSize = padding.getMessageSize();
 		int blockSize = padding.getEncodeSize();
-		int encSize = blockSize / 4;	// in 32-bit words
 
 		int blockLength = data.length;
 		blockLength /= padding.getEncodeSize();
@@ -346,10 +346,25 @@ public class SCRSAManager
 			// RSA Transform
 			BigInteger bi = new BigInteger(1,encBuffer);
 			BigInteger ei = privateRSAKey.transform(bi);
+
+			// Handle overflow/underflow cases by aligning to back of buffer
+			// This gives us the correct size (even if we have a lot of
+			// preceeding zeros for our buffer.
 			byte[] dec = ei.toByteArray();
 
+			Arrays.fill(encBuffer, (byte)0);
+			int srcStart = 0;
+			int dstStart = blockSize - dec.length;
+			int length = dec.length;
+			if (dstStart < 0) {
+				srcStart -= dstStart;
+				length += dstStart;
+				dstStart = 0;
+			}
+			System.arraycopy(dec, srcStart, encBuffer, dstStart, length);
+
 			// Decode
-			if (!padding.decode(dec,msgBuffer)) {
+			if (!padding.decode(encBuffer,msgBuffer)) {
 				/*
 				 *  Failure decoding data; checksum validation. Simply bail
 				 */

@@ -738,6 +738,7 @@ public class SCMessageQueue
 				ds.put("deviceid",d.getDeviceID());
 				messages.put(ds);
 			} catch (Exception e) {
+				Log.d("SecureChat","Exception",e);
 				// Should not happen; only if there is a constant error above
 			}
 		}
@@ -761,6 +762,7 @@ public class SCMessageQueue
 				ds.put("destuser",senderID);
 				messages.put(ds);
 			} catch (Exception e) {
+				Log.d("SecureChat","Exception",e);
 				// Should not happen; only if there is a constant error above
 			}
 		}
@@ -781,6 +783,7 @@ public class SCMessageQueue
 			ds.put("destuser",senderID);
 			messages.put(ds);
 		} catch (Exception e) {
+			Log.d("SecureChat","Exception",e);
 			// Should not happen; only if there is a constant error above
 		}
 
