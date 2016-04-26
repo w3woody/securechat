@@ -38,6 +38,7 @@
 #import "SCDeviceCache.h"
 #import "SCDevice.h"
 #import "SCMessageDeleteQueue.h"
+#import "SCMessageObject.h"
 
 #include "SCSecureHash.h"
 
@@ -611,7 +612,7 @@ static NSString *StringAtOffset(const uint8_t *bytes, int *offset)
  *	on which messages are sent for a user, refreshing every 5 minutes.
  */
 
-- (void)sendMessage:(NSString *)cleartext toSender:(NSString *)sender completion:(void (^)(BOOL success))callback
+- (void)sendMessage:(SCMessageObject *)cleartext toSender:(NSString *)sender completion:(void (^)(BOOL success))callback
 {
 	void (^copyCallback)(BOOL success) = [callback copy];
 
@@ -648,7 +649,7 @@ static NSString *StringAtOffset(const uint8_t *bytes, int *offset)
 				 *	Calculate message checksum
 				 */
 
-				NSData *cdata = [cleartext dataUsingEncoding:NSUTF8StringEncoding];
+				NSData *cdata = [cleartext dataFromMessage];
 				SCSHA256Context hasher;
 				hasher.Start();
 				hasher.Update(cdata.length, (const uint8_t *)cdata.bytes);

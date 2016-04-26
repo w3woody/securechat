@@ -27,6 +27,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class SCMessageObject;
+
 @interface SCDecryptCache : NSObject
 
 // Decryption cache. This takes a message and messageID, and decrypts
@@ -35,6 +37,6 @@
 
 + (SCDecryptCache *)shared;
 
-- (NSString *)decrypt:(NSData *)data atIndex:(NSInteger)index withCallback:(void (^)(NSInteger ident, NSString *msg))callback;
+- (SCMessageObject *)decrypt:(NSData *)data atIndex:(NSInteger)index withCallback:(void (^)(NSInteger ident, SCMessageObject *msg))callback;
 
 @end

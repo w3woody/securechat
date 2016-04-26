@@ -18,6 +18,8 @@
 		EF0C4F4B1C808A780085A9ED /* SCBlowfish.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF0C4F491C808A780085A9ED /* SCBlowfish.cpp */; };
 		EF0C4F4C1C808A780085A9ED /* SCBlowfish.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF0C4F491C808A780085A9ED /* SCBlowfish.cpp */; };
 		EF0C4F4E1C8099BD0085A9ED /* BlowfishTest.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF0C4F4D1C8099BD0085A9ED /* BlowfishTest.mm */; };
+		EF5A763F1CCFDA5200F597E3 /* SCMessageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = EF5A763E1CCFDA5200F597E3 /* SCMessageObject.m */; };
+		EF5A76401CCFDA5200F597E3 /* SCMessageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = EF5A763E1CCFDA5200F597E3 /* SCMessageObject.m */; };
 		EF6BCECD1C809E7400713CC8 /* SCUUIDGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF6BCECB1C809E7400713CC8 /* SCUUIDGenerator.cpp */; };
 		EF6BCECE1C809E7400713CC8 /* SCUUIDGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF6BCECB1C809E7400713CC8 /* SCUUIDGenerator.cpp */; };
 		EF6BCED11C80A3F200713CC8 /* SCRSAEncoder.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF6BCED01C80A3F200713CC8 /* SCRSAEncoder.mm */; };
@@ -129,6 +131,8 @@
 		EF0C4F491C808A780085A9ED /* SCBlowfish.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SCBlowfish.cpp; path = RSA/Blowfish/SCBlowfish.cpp; sourceTree = "<group>"; };
 		EF0C4F4A1C808A780085A9ED /* SCBlowfish.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCBlowfish.h; path = RSA/Blowfish/SCBlowfish.h; sourceTree = "<group>"; };
 		EF0C4F4D1C8099BD0085A9ED /* BlowfishTest.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = BlowfishTest.mm; sourceTree = "<group>"; };
+		EF5A763D1CCFDA5200F597E3 /* SCMessageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCMessageObject.h; path = Encapsulation/SCMessageObject.h; sourceTree = "<group>"; };
+		EF5A763E1CCFDA5200F597E3 /* SCMessageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCMessageObject.m; path = Encapsulation/SCMessageObject.m; sourceTree = "<group>"; };
 		EF6BCECB1C809E7400713CC8 /* SCUUIDGenerator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SCUUIDGenerator.cpp; path = UUID/SCUUIDGenerator.cpp; sourceTree = "<group>"; };
 		EF6BCECC1C809E7400713CC8 /* SCUUIDGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCUUIDGenerator.h; path = UUID/SCUUIDGenerator.h; sourceTree = "<group>"; };
 		EF6BCECF1C80A3F200713CC8 /* SCRSAEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCRSAEncoder.h; path = RSA/OC/SCRSAEncoder.h; sourceTree = "<group>"; };
@@ -339,6 +343,15 @@
 			name = Blowfish;
 			sourceTree = "<group>";
 		};
+		EF5A763C1CCFDA2700F597E3 /* Encapsulation */ = {
+			isa = PBXGroup;
+			children = (
+				EF5A763D1CCFDA5200F597E3 /* SCMessageObject.h */,
+				EF5A763E1CCFDA5200F597E3 /* SCMessageObject.m */,
+			);
+			name = Encapsulation;
+			sourceTree = "<group>";
+		};
 		EF6BCECA1C809E5100713CC8 /* UUID */ = {
 			isa = PBXGroup;
 			children = (
@@ -507,6 +520,7 @@
 		EFE8FDBC1C755144004A38AE /* SecureChat */ = {
 			isa = PBXGroup;
 			children = (
+				EF5A763C1CCFDA2700F597E3 /* Encapsulation */,
 				EFDEA0231C91A8200047CA2B /* Messages */,
 				EF6BCEE21C83473B00713CC8 /* Views */,
 				EF0C4F3F1C7FEC040085A9ED /* Utilities */,
@@ -750,6 +764,7 @@
 				EF6BCED51C80A50F00713CC8 /* SCKeychain.m in Sources */,
 				EF6BCEE51C83476800713CC8 /* SCTextField.m in Sources */,
 				EF6BCECD1C809E7400713CC8 /* SCUUIDGenerator.cpp in Sources */,
+				EF5A763F1CCFDA5200F597E3 /* SCMessageObject.m in Sources */,
 				EFDEA02A1C91AAFA0047CA2B /* SCDisconnectViewController.m in Sources */,
 				EFE64A801C98E9FF004FC201 /* SCDeviceCacheEntry.m in Sources */,
 				EFCBFA5A1C9EFDD900590E29 /* SCChatSummaryView.m in Sources */,
@@ -769,6 +784,7 @@
 				EF0C4F4C1C808A780085A9ED /* SCBlowfish.cpp in Sources */,
 				EFC49ADC1CB3E02B00ABDF40 /* TestSecureNetwork.m in Sources */,
 				EF6BCED21C80A3F200713CC8 /* SCRSAEncoder.mm in Sources */,
+				EF5A76401CCFDA5200F597E3 /* SCMessageObject.m in Sources */,
 				EF0C4F4E1C8099BD0085A9ED /* BlowfishTest.mm in Sources */,
 				EFE885FF1C96FC0600A36A9A /* SCMessageSender.m in Sources */,
 				EF0C4F371C7F3A580085A9ED /* SCRSAPadding.cpp in Sources */,

@@ -30,6 +30,7 @@
 #import "SCRSAManager.h"
 #import "SCRSAEncoder.h"
 #import "SCDecryptCache.h"
+#import "SCMessageObject.h"
 
 @interface SCSenderTableViewCell ()
 @property (strong) SCMessageSender *messageSender;
@@ -55,14 +56,19 @@
 	self.senderName.text = sender.senderName;
 	self.lastMessage.text = @"";
 
-	NSString *str = [[SCDecryptCache shared] decrypt:sender.lastMessage atIndex:sender.messageID withCallback:^(NSInteger ident, NSString *msg) {
+	/*
+	 *	TODO: Last message is presented using the special summary message
+	 *	text call. This may or may not be the right thing to do.
+	 */
+
+	SCMessageObject *str = [[SCDecryptCache shared] decrypt:sender.lastMessage atIndex:sender.messageID withCallback:^(NSInteger ident, SCMessageObject *msg) {
 		if (ident == sender.messageID) {
-			self.lastMessage.text = msg;
+			self.lastMessage.text = msg.summaryMessageText;
 		}
 	}];
 	
 	if (str) {
-		self.lastMessage.text = str;
+		self.lastMessage.text = str.summaryMessageText;
 	} else {
 		self.lastMessage.text = NSLocalizedString(@"(decrypting)", @"decrypting");
 	}

@@ -47,9 +47,9 @@
     // Configure the view for the selected state
 }
 
-- (void)setMessage:(NSString *)message atTime:(NSDate *)date
+- (void)setMessage:(SCMessageObject *)message atTime:(NSDate *)date
 {
-	self.chatBubble.textLabel = message;
+	self.chatBubble.message = message;
 	self.timeLabel.text = SCFormatDisplayTime(date);
 }
 

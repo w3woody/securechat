@@ -35,6 +35,7 @@
 #import "SCDeviceCache.h"
 #import "SCChatSummaryView.h"
 #import "SCDecryptCache.h"
+#import "SCMessageObject.h"
 
 @interface SCChatViewController ()
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -208,11 +209,13 @@
 	self.editHeight.constant = 45;
 	self.chatPrompt.hidden = NO;
 
+	SCMessageObject *msg = [[SCMessageObject alloc] initWithString:cleartext];
+
 	// We can do better than flashing the wait spinner. Ideally we need to
 	// have each bubble contain a spinner when in progress
 	[[SCWait shared] wait];
 
-	[[SCMessageQueue shared] sendMessage:cleartext toSender:self.senderName completion:^(BOOL success) {
+	[[SCMessageQueue shared] sendMessage:msg toSender:self.senderName completion:^(BOOL success) {
 		[[SCWait shared] stopWait];
 		if (success) {
 			// TODO -- send success?
@@ -240,10 +243,10 @@
 	NSArray<SCMessage *> *marray = [[SCMessageQueue shared] messagesInRange:range fromSender:self.senderID];
 	SCMessage *message = marray[ix & 15];
 
-	NSString *msg = [[SCDecryptCache shared] decrypt:message.message atIndex:message.messageID withCallback:nil];
+	SCMessageObject *msg = [[SCDecryptCache shared] decrypt:message.message atIndex:message.messageID withCallback:nil];
 	if (msg == nil) return 60;
 
-	CGSize size = [SCBubbleView sizeWithText:msg width:self.tableView.bounds.size.width - 80];
+	CGSize size = [SCBubbleView sizeWithMessage:msg width:self.tableView.bounds.size.width - 80];
 	return ceil(size.height + 31);		// text spacing + top spacing
 }
 
@@ -266,12 +269,13 @@
 
 	SCChatTableViewCell *cell = (SCChatTableViewCell *)[tableView dequeueReusableCellWithIdentifier:clabel forIndexPath:indexPath];
 
-	NSString *msg = [[SCDecryptCache shared] decrypt:message.message atIndex:message.messageID withCallback:^(NSInteger ident, NSString *msg) {
+	SCMessageObject *msg = [[SCDecryptCache shared] decrypt:message.message atIndex:message.messageID withCallback:^(NSInteger ident, SCMessageObject *msg) {
 		// row loaded, so reload
 		[self.tableView reloadRowsAtIndexPaths:@[ indexPath ] withRowAnimation:UITableViewRowAnimationFade];
 	}];
 	if (msg == nil) {
-		msg = NSLocalizedString(@"(decrypt)", @"message");
+		// TODO: Rethink the decrypt placeholder
+		msg = [[SCMessageObject alloc] initWithString:NSLocalizedString(@"(decrypt)", @"message")];
 	}
 	[cell setMessage:msg atTime:message.timestamp];
 

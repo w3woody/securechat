@@ -26,16 +26,17 @@
  */
 
 #import <UIKit/UIKit.h>
+@class SCMessageObject;
 
 IB_DESIGNABLE
 
 @interface SCBubbleView : UIView
 
 @property (assign) IBInspectable BOOL senderFlag;
-@property (copy) IBInspectable NSString *text;
+@property (copy) SCMessageObject *msg;
 
-+ (CGSize)sizeWithText:(NSString *)text width:(CGFloat)width;
++ (CGSize)sizeWithMessage:(SCMessageObject *)msg width:(CGFloat)width;
 
-- (void)setTextLabel:(NSString *)text;
+- (void)setMessage:(SCMessageObject *)msg;
 
 @end

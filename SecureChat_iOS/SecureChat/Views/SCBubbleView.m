@@ -26,6 +26,7 @@
  */
 
 #import "SCBubbleView.h"
+#import "SCMessageObject.h"
 
 @interface SCBubbleView ()
 @end
@@ -54,9 +55,9 @@
 	self.contentMode = UIViewContentModeRedraw;
 }
 
-- (void)setTextLabel:(NSString *)text
+- (void)setMessage:(SCMessageObject *)msg
 {
-	self.text = text;
+	self.msg = msg;
 	[self setNeedsDisplay];
 }
 
@@ -124,9 +125,12 @@
     [label drawInRect: text2Rect withAttributes: text2FontAttributes];
 }
 
-+ (CGSize)sizeWithText:(NSString *)text width:(CGFloat)width
++ (CGSize)sizeWithMessage:(SCMessageObject *)msg width:(CGFloat)width
 {
 	NSDictionary *d = @{ NSFontAttributeName: [UIFont systemFontOfSize: UIFont.labelFontSize] };
+
+	// TODO: Handle different message types.
+	NSString *text = [msg messageAsText];
 
 	CGRect r = [text boundingRectWithSize:CGSizeMake(width - 22, 9999) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingTruncatesLastVisibleLine attributes:d context:nil];
 	r.size.width += 22;
@@ -139,7 +143,10 @@
 	CGRect bounds = self.bounds;
 	NSDictionary *d = @{ NSFontAttributeName: [UIFont systemFontOfSize: UIFont.labelFontSize] };
 
-	CGRect r = [self.text boundingRectWithSize:CGSizeMake(bounds.size.width - 22, 9999) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingTruncatesLastVisibleLine attributes:d context:nil];
+	// TODO: Handle different message types.
+	NSString *text = [self.msg messageAsText];
+
+	CGRect r = [text boundingRectWithSize:CGSizeMake(bounds.size.width - 22, 9999) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingTruncatesLastVisibleLine attributes:d context:nil];
 	r.size.width += 22;
 	r.size.height += 10;
 	if (r.size.width < 44) r.size.width = 44;
@@ -149,7 +156,7 @@
 	}
 	bounds.size = r.size;
 
-	[self drawBubbleWithFrame:bounds leftFlag:!self.senderFlag label:self.text];
+	[self drawBubbleWithFrame:bounds leftFlag:!self.senderFlag label:text];
 }
 
 @end

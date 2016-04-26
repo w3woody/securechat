@@ -27,9 +27,10 @@
 
 #import "SCDecryptCache.h"
 #import "SCRSAManager.h"
+#import "SCMessageObject.h"
 
 @interface SCDecryptCache ()
-@property (strong) NSCache<NSNumber *, NSString *> *cache;
+@property (strong) NSCache<NSNumber *, SCMessageObject *> *cache;
 @end
 
 @implementation SCDecryptCache
@@ -52,22 +53,22 @@
 	return self;
 }
 
-- (NSString *)decrypt:(NSData *)data atIndex:(NSInteger)index withCallback:(void (^)(NSInteger ident, NSString *msg))callback;
+- (SCMessageObject *)decrypt:(NSData *)data atIndex:(NSInteger)index withCallback:(void (^)(NSInteger ident, SCMessageObject *msg))callback;
 {
 	NSNumber *n = @( index );
-	NSString *ret = [self.cache objectForKey:n];
+	SCMessageObject *ret = [self.cache objectForKey:n];
 	if (ret) {
 		return ret;
 	} else if (callback) {
-		void (^copyCallback)(NSInteger ident, NSString *msg) = [callback copy];
+		void (^copyCallback)(NSInteger ident, SCMessageObject *msg) = [callback copy];
 
 		// async decode
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 			NSData *decrypt = [[SCRSAManager shared] decodeData:data];
-			NSString *str = [[NSString alloc] initWithData:decrypt encoding:NSUTF8StringEncoding];
+			SCMessageObject *obj = [[SCMessageObject alloc] initWithData:decrypt];
 			dispatch_async(dispatch_get_main_queue(), ^{
-				[self.cache setObject:str forKey:n];
-				copyCallback(index,str);
+				[self.cache setObject:obj forKey:n];
+				copyCallback(index,obj);
 			});
 		});
 	}
