@@ -244,7 +244,6 @@
                                                     <rect key="frame" x="70" y="5" width="520" height="39"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="text" value="Sent Message"/>
                                                         <userDefinedRuntimeAttribute type="boolean" keyPath="senderFlag" value="YES"/>
                                                     </userDefinedRuntimeAttributes>
                                                 </view>
@@ -285,7 +284,6 @@
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="boolean" keyPath="senderFlag" value="NO"/>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="text" value="Received Message"/>
                                                     </userDefinedRuntimeAttributes>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="11/12/16 11:45 PM" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eth-Il-fNZ">

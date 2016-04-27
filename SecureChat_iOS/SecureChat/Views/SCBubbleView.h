@@ -33,7 +33,7 @@ IB_DESIGNABLE
 @interface SCBubbleView : UIView
 
 @property (assign) IBInspectable BOOL senderFlag;
-@property (copy) SCMessageObject *msg;
+@property (strong) SCMessageObject *msg;
 
 + (CGSize)sizeWithMessage:(SCMessageObject *)msg width:(CGFloat)width;
 
