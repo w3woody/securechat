@@ -334,6 +334,9 @@
                                             <constraint firstAttribute="width" constant="44" id="HAD-rG-bxJ"/>
                                         </constraints>
                                         <state key="normal" image="photo"/>
+                                        <connections>
+                                            <action selector="doCamera:" destination="H1J-6l-LB6" eventType="touchUpInside" id="0lb-L9-paa"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fvl-dI-44m">
                                         <rect key="frame" x="534" y="1" width="66" height="44"/>
@@ -405,6 +408,7 @@
                         <outlet property="chatPrompt" destination="WZC-1M-cSX" id="VHq-4K-3gw"/>
                         <outlet property="deviceCount" destination="aBq-Vh-Fep" id="d3c-8H-8kG"/>
                         <outlet property="editHeight" destination="MzN-SB-bZU" id="1kq-YI-dyO"/>
+                        <outlet property="photoButton" destination="T9l-mB-XI7" id="BQP-Kk-ncs"/>
                         <outlet property="sendButton" destination="fvl-dI-44m" id="QYV-NU-4h9"/>
                         <outlet property="tableView" destination="j2S-Dy-l8K" id="vjj-AW-JO7"/>
                         <outlet property="textView" destination="kem-pv-XlS" id="U5k-Aw-aWn"/>

@@ -65,7 +65,7 @@
  *	Generated in PaintCode
  */
 
-- (void)drawBubbleWithFrame: (CGRect)frame leftFlag: (BOOL)leftFlag label: (NSString*)label
+- (void)drawBubbleWithFrame: (CGRect)frame leftFlag: (BOOL)leftFlag
 {
     //// Color Declarations
     UIColor* senderColor = [UIColor colorWithRed: 0.891 green: 0.891 blue: 0.891 alpha: 1];
@@ -114,49 +114,42 @@
 
     //// Text 2 Drawing
     CGRect text2Rect = CGRectMake(CGRectGetMinX(frame) + 11, CGRectGetMinY(frame) + 4, CGRectGetWidth(frame) - 22, CGRectGetHeight(frame) - 8);
-    UIBezierPath* text2Path = [UIBezierPath bezierPathWithRect: text2Rect];
-    [bkColor setFill];
-    [text2Path fill];
-    NSMutableParagraphStyle* text2Style = NSMutableParagraphStyle.defaultParagraphStyle.mutableCopy;
-    text2Style.alignment = NSTextAlignmentLeft;
-
-    NSDictionary* text2FontAttributes = @{NSFontAttributeName: [UIFont systemFontOfSize: UIFont.labelFontSize], NSForegroundColorAttributeName: txtColor, NSParagraphStyleAttributeName: text2Style};
-
-    [label drawInRect: text2Rect withAttributes: text2FontAttributes];
+	[self.msg drawWithRect:text2Rect withTextColor:txtColor];
 }
 
 + (CGSize)sizeWithMessage:(SCMessageObject *)msg width:(CGFloat)width
 {
-	NSDictionary *d = @{ NSFontAttributeName: [UIFont systemFontOfSize: UIFont.labelFontSize] };
+//	NSDictionary *d = @{ NSFontAttributeName: [UIFont systemFontOfSize: UIFont.labelFontSize] };
+//
+//	// TODO: Handle different message types.
+//	NSString *text = [msg messageAsText];
+//
+//	CGRect r = [text boundingRectWithSize:CGSizeMake(width - 22, 9999) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingTruncatesLastVisibleLine attributes:d context:nil];
+//	r.size.width += 22;
+//	if (r.size.width < 44) r.size.width = 44;
+//	return CGSizeMake(ceil(r.size.width+22), ceil(r.size.height+8));
 
-	// TODO: Handle different message types.
-	NSString *text = [msg messageAsText];
-
-	CGRect r = [text boundingRectWithSize:CGSizeMake(width - 22, 9999) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingTruncatesLastVisibleLine attributes:d context:nil];
-	r.size.width += 22;
-	if (r.size.width < 44) r.size.width = 44;
-	return CGSizeMake(ceil(r.size.width+22), ceil(r.size.height+8));
+	CGSize size = [msg sizeForWidth:width - 22];
+	if (size.width < 44) size.width = 44;
+	return CGSizeMake(ceil(size.width + 22),ceil(size.height + 8));
 }
 
 - (void)drawRect:(CGRect)rect
 {
 	CGRect bounds = self.bounds;
-	NSDictionary *d = @{ NSFontAttributeName: [UIFont systemFontOfSize: UIFont.labelFontSize] };
 
-	// TODO: Handle different message types.
-	NSString *text = [self.msg messageAsText];
+	CGSize size = [self.msg sizeForWidth:bounds.size.width - 22];
 
-	CGRect r = [text boundingRectWithSize:CGSizeMake(bounds.size.width - 22, 9999) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingTruncatesLastVisibleLine attributes:d context:nil];
-	r.size.width += 22;
-	r.size.height += 10;
-	if (r.size.width < 44) r.size.width = 44;
+	size.width += 22;
+	size.height += 10;
+	if (size.width < 44) size.width = 44;
 
 	if (self.senderFlag) {
-		bounds.origin.x += bounds.size.width - r.size.width;
+		bounds.origin.x += bounds.size.width - size.width;
 	}
-	bounds.size = r.size;
+	bounds.size = size;
 
-	[self drawBubbleWithFrame:bounds leftFlag:!self.senderFlag label:text];
+	[self drawBubbleWithFrame:bounds leftFlag:!self.senderFlag];
 }
 
 @end

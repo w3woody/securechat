@@ -27,8 +27,10 @@
 
 
 #import "SCMessageObject.h"
+#import "UIImage+SCResizeImage.h"
 
 @interface SCMessageObject ()
+@property (strong) UIImage *image;
 @property (copy) NSString *message;
 @end
 
@@ -37,8 +39,30 @@
 - (id)initWithData:(NSData *)data
 {
 	if (nil != (self = [super init])) {
-		// TODO: Figure out a better way to handle this.
-		self.message = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+		NSUInteger len = [data length];
+		uint8_t *bytes = (uint8_t *)[data bytes];
+
+		self.image = nil;
+		self.message = nil;
+
+		if ((len > 2) && (bytes[0] == 0x01)) {
+			/*
+			 *	Escape
+			 */
+
+			NSData *d = [NSData dataWithBytesNoCopy:bytes+2 length:len-2 freeWhenDone:NO];
+			if (bytes[1] == 0x00) {
+				// 0x01 0x00: JPEG
+				self.image = [UIImage imageWithData:d];
+
+			} else if (bytes[1] == 0x01) {
+				// 0x01 0x01: Message
+				self.message = [[NSString alloc] initWithBytes:bytes length:len encoding:NSUTF8StringEncoding];
+
+			}
+		} else {
+			self.message = [[NSString alloc] initWithBytes:bytes length:len encoding:NSUTF8StringEncoding];
+		}
 	}
 	return self;
 }
@@ -52,23 +76,92 @@
 	return self;
 }
 
+// Create a message to be sent
+- (id)initWithImage:(UIImage *)image
+{
+	if (nil != (self = [super init])) {
+		self.image = image;
+	}
+	return self;
+}
+
+
 // Encode this message as a data blob
 - (NSData *)dataFromMessage
 {
-	return [self.message dataUsingEncoding:NSUTF8StringEncoding];
-}
+	NSData *data;
+	uint8_t b[2];
 
-// Message Data
-- (NSString *)messageAsText
-{
-	return self.message;
+	if (self.message) {
+		data = [self.message dataUsingEncoding:NSUTF8StringEncoding];
+		if (data.length < 1) return data;
+
+		[data getBytes:b range:NSMakeRange(0, 1)];
+		if (b[0] != 1) return data;
+
+		b[0] = 1;
+		b[1] = 1;
+	} else if (self.image) {
+		data = UIImageJPEGRepresentation(self.image, 0.75);
+
+		b[0] = 1;
+		b[1] = 0;
+	} else {
+		return nil;
+	}
+
+	NSMutableData *ret = [[NSMutableData alloc] initWithCapacity:data.length + 2];
+
+	[ret appendBytes:b length:2];
+	[ret appendData:data];
+
+	return ret;
 }
 
 // Summary view content
 - (NSString *)summaryMessageText
 {
-	return self.message;
+	if (self.message) {
+		return self.message;
+	} else if (self.image) {
+		return NSLocalizedString(@"(photo)", @"Photo filler");
+	} else {
+		return nil;
+	}
 }
 
+// Bubble rendering management
+- (CGSize)sizeForWidth:(CGFloat)width
+{
+	if (self.message) {
+		NSDictionary *d = @{ NSFontAttributeName: [UIFont systemFontOfSize: UIFont.labelFontSize] };
+		CGRect r = [self.message boundingRectWithSize:CGSizeMake(width, 9999) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingTruncatesLastVisibleLine attributes:d context:nil];
+		return r.size;
+	} else if (self.image) {
+		return [self.image sizeForWidth:width];
+	} else {
+		// TODO: Size?
+		return CGSizeMake(44, 22);
+	}
+}
+
+- (void)drawWithRect:(CGRect)rect withTextColor:(NSString *)txtColor
+{
+	if (self.message) {
+		NSDictionary *d = @{ NSFontAttributeName: [UIFont systemFontOfSize: UIFont.labelFontSize],
+							 NSForegroundColorAttributeName: txtColor };
+
+		[self.message drawInRect:rect withAttributes: d];
+	} else if (self.image) {
+		UIImage *i = [self.image resizeToSize:rect.size];
+		CGSize size = i.size;
+
+		rect.origin.x += (rect.size.width - size.width)/2;
+		rect.origin.y += (rect.size.height - size.height)/2;
+		rect.size = size;
+
+		[i drawInRect:rect];
+	}
+}
 
 @end

@@ -26,7 +26,7 @@
  */
 
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 /*
  *	The intent of this object is to help encapsulate and parse a message
@@ -42,13 +42,17 @@
 // Create a message to be sent
 - (id)initWithString:(NSString *)msg;
 
+// Create a message to be sent
+- (id)initWithImage:(UIImage *)image;
+
 // Encode this message as a data blob
 - (NSData *)dataFromMessage;
 
-// Message Data
-- (NSString *)messageAsText;
-
 // Summary view content
 - (NSString *)summaryMessageText;
+
+// Bubble rendering management
+- (CGSize)sizeForWidth:(CGFloat)width;
+- (void)drawWithRect:(CGRect)rect withTextColor:(UIColor *)txtColor;
 
 @end

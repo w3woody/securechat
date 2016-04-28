@@ -58,6 +58,8 @@
 		EFCBFA5A1C9EFDD900590E29 /* SCChatSummaryView.m in Sources */ = {isa = PBXBuildFile; fileRef = EFCBFA591C9EFDD900590E29 /* SCChatSummaryView.m */; };
 		EFCBFA5D1C9F1D8500590E29 /* SCDecryptCache.m in Sources */ = {isa = PBXBuildFile; fileRef = EFCBFA5C1C9F1D8500590E29 /* SCDecryptCache.m */; };
 		EFCBFA601CA02E4900590E29 /* SCMessageDeleteQueue.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFCBFA5F1CA02E4900590E29 /* SCMessageDeleteQueue.mm */; };
+		EFD344BD1CD2386D0023186F /* UIImage+SCResizeImage.m in Sources */ = {isa = PBXBuildFile; fileRef = EFD344BC1CD2386D0023186F /* UIImage+SCResizeImage.m */; };
+		EFD344BF1CD2A5D80023186F /* BlockEncodeTest.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFD344BE1CD2A5D80023186F /* BlockEncodeTest.mm */; };
 		EFDE9FF61C8D04480047CA2B /* SCNetworkResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = EFDE9FF51C8D04480047CA2B /* SCNetworkResponse.m */; };
 		EFDE9FF91C8D0D4A0047CA2B /* SCNetworkCredentials.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFDE9FF81C8D0D4A0047CA2B /* SCNetworkCredentials.mm */; };
 		EFDE9FFC1C8E55290047CA2B /* SCWait.m in Sources */ = {isa = PBXBuildFile; fileRef = EFDE9FFB1C8E55290047CA2B /* SCWait.m */; };
@@ -189,6 +191,9 @@
 		EFCBFA5C1C9F1D8500590E29 /* SCDecryptCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCDecryptCache.m; path = Utilities/SCDecryptCache.m; sourceTree = "<group>"; };
 		EFCBFA5E1CA02E4900590E29 /* SCMessageDeleteQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCMessageDeleteQueue.h; path = Messages/SCMessageDeleteQueue.h; sourceTree = "<group>"; };
 		EFCBFA5F1CA02E4900590E29 /* SCMessageDeleteQueue.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SCMessageDeleteQueue.mm; path = Messages/SCMessageDeleteQueue.mm; sourceTree = "<group>"; };
+		EFD344BB1CD2386D0023186F /* UIImage+SCResizeImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+SCResizeImage.h"; path = "Categories/UIImage+SCResizeImage.h"; sourceTree = "<group>"; };
+		EFD344BC1CD2386D0023186F /* UIImage+SCResizeImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+SCResizeImage.m"; path = "Categories/UIImage+SCResizeImage.m"; sourceTree = "<group>"; };
+		EFD344BE1CD2A5D80023186F /* BlockEncodeTest.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = BlockEncodeTest.mm; sourceTree = "<group>"; };
 		EFDE9FF41C8D04480047CA2B /* SCNetworkResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCNetworkResponse.h; path = Utilities/SCNetworkResponse.h; sourceTree = "<group>"; };
 		EFDE9FF51C8D04480047CA2B /* SCNetworkResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCNetworkResponse.m; path = Utilities/SCNetworkResponse.m; sourceTree = "<group>"; };
 		EFDE9FF71C8D0D4A0047CA2B /* SCNetworkCredentials.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCNetworkCredentials.h; path = Utilities/SCNetworkCredentials.h; sourceTree = "<group>"; };
@@ -412,6 +417,15 @@
 			name = "Forgot Password";
 			sourceTree = "<group>";
 		};
+		EFD344BA1CD238090023186F /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				EFD344BB1CD2386D0023186F /* UIImage+SCResizeImage.h */,
+				EFD344BC1CD2386D0023186F /* UIImage+SCResizeImage.m */,
+			);
+			name = Categories;
+			sourceTree = "<group>";
+		};
 		EFDEA0031C8F0D040047CA2B /* Login */ = {
 			isa = PBXGroup;
 			children = (
@@ -520,6 +534,7 @@
 		EFE8FDBC1C755144004A38AE /* SecureChat */ = {
 			isa = PBXGroup;
 			children = (
+				EFD344BA1CD238090023186F /* Categories */,
 				EF5A763C1CCFDA2700F597E3 /* Encapsulation */,
 				EFDEA0231C91A8200047CA2B /* Messages */,
 				EF6BCEE21C83473B00713CC8 /* Views */,
@@ -563,6 +578,7 @@
 				EF6BCEDD1C81EACB00713CC8 /* ManagerTests.m */,
 				EFE885F61C96F2CA00A36A9A /* SCDatabaseTest.m */,
 				EFC49ADB1CB3E02B00ABDF40 /* TestSecureNetwork.m */,
+				EFD344BE1CD2A5D80023186F /* BlockEncodeTest.mm */,
 			);
 			path = SecureChatTests;
 			sourceTree = "<group>";
@@ -771,6 +787,7 @@
 				EF8B4B7D1CA330650073D41E /* SCForgotViewController.m in Sources */,
 				EF0C4F4B1C808A780085A9ED /* SCBlowfish.cpp in Sources */,
 				EFDEA02D1C91AB530047CA2B /* SCDisconnectFinishViewController.m in Sources */,
+				EFD344BD1CD2386D0023186F /* UIImage+SCResizeImage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -779,6 +796,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EFE8FDD81C755144004A38AE /* SecureChatTests.mm in Sources */,
+				EFD344BF1CD2A5D80023186F /* BlockEncodeTest.mm in Sources */,
 				EFE8FDFF1C7CAD36004A38AE /* SCMontMath.cpp in Sources */,
 				EFE885F71C96F2CA00A36A9A /* SCDatabaseTest.m in Sources */,
 				EF0C4F4C1C808A780085A9ED /* SCBlowfish.cpp in Sources */,

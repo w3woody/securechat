@@ -36,6 +36,17 @@
 #import "SCChatSummaryView.h"
 #import "SCDecryptCache.h"
 #import "SCMessageObject.h"
+#import "UIImage+SCResizeImage.h"
+
+/*
+ *	Constants
+ */
+
+#define MAXDIMENSION		640		// max size of image uploaded to server
+
+/*
+ *	Class internals
+ */
 
 @interface SCChatViewController ()
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -43,11 +54,16 @@
 @property (weak, nonatomic) IBOutlet UITextView *textView;
 @property (weak, nonatomic) IBOutlet SCChatSummaryView *deviceCount;
 @property (weak, nonatomic) IBOutlet UILabel *chatPrompt;
+@property (weak, nonatomic) IBOutlet UIButton *photoButton;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *editHeight;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *bottomBorder;
 
 @property (strong) NSMutableDictionary<NSNumber *, NSString *> *decode;
+
+// For image uploading
+@property (strong) UIPopoverController *popover;
+
 @end
 
 @implementation SCChatViewController
@@ -223,6 +239,114 @@
 			// TODO -- send failure?
 		}
 	}];
+}
+
+#pragma mark - Camera
+
+- (void)closePicker:(UIImagePickerController *)picker
+{
+	if (self.popover) {
+		[self.popover dismissPopoverAnimated:YES];
+		self.popover = nil;
+	} else {
+		[picker dismissViewControllerAnimated:YES completion:nil];
+	}
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+	[self closePicker:picker];
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
+{
+	UIImage *image = info[UIImagePickerControllerOriginalImage];
+	image = [image resizeToFit:MAXDIMENSION];
+	if (image != nil) {
+		// Construct message and upload
+		SCMessageObject *msg = [[SCMessageObject alloc] initWithImage:image];
+
+		[[SCWait shared] wait];
+		[[SCMessageQueue shared] sendMessage:msg toSender:self.senderName completion:^(BOOL success) {
+			[[SCWait shared] stopWait];
+
+			// Dismiss only after uploaded
+			[self closePicker:picker];
+
+			if (success) {
+				// TODO -- send success?
+			} else {
+				// TODO -- send failure?
+			}
+		}];
+
+	} else {
+		[self closePicker:picker];
+	}
+}
+
+- (void)doPhotoLibrary
+{
+	UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+	picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+	picker.delegate = self;
+
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+		self.popover = [[UIPopoverController alloc] initWithContentViewController:picker];
+		[self.popover presentPopoverFromRect:self.photoButton.bounds inView:self.photoButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+	} else {
+		self.popover = nil;
+		[self presentViewController:picker animated:YES completion:nil];
+	}
+}
+
+- (void)doTakePhoto
+{
+	UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+	picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+	picker.delegate = self;
+	self.popover = nil;
+
+	[self presentViewController:picker animated:YES completion:nil];
+}
+
+- (IBAction)doCamera:(id)sender
+{
+	/*
+	 *	Present picker depending on what is available.
+	 *
+	 *	Note: on the iPad this is a kludge. Ideally we'd use a table view and
+	 *	present our view controller for picking a photograph by pushing the
+	 *	navigation controller in the popover.
+	 */
+
+	UIAlertController *c;
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+		c = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Select Photograph Source", @"Prompt") message:nil preferredStyle:UIAlertControllerStyleAlert];
+	} else {
+		c = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+	}
+
+	UIAlertAction *action = [UIAlertAction actionWithTitle:NSLocalizedString(@"Photo Library", @"Button") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+		[self doPhotoLibrary];
+	}];
+	[c addAction:action];
+
+	if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+		action = [UIAlertAction actionWithTitle:NSLocalizedString(@"Take Photo", @"Button") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+			[self doTakePhoto];
+		}];
+		[c addAction:action];
+	}
+
+	if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
+		action = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"Button") style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+
+		}];
+		[c addAction:action];
+	}
+
+	[self presentViewController:c animated:YES completion:nil];
 }
 
 #pragma mark - Table View
