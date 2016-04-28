@@ -119,10 +119,26 @@
 				encBuffer[i] = ntohl(encBuffer[i]);
 			}
 
+			// Spin the bytes. That's because our padding puts the MSB
+			// at word 0, and our SCBigInteger implementation wants the
+			// MSB at word n-1
+			for (size_t i = 0, j = encSize-1; i < j; ++i, --j) {
+				uint32_t tmp = encBuffer[i];
+				encBuffer[i] = encBuffer[j];
+				encBuffer[j] = tmp;
+			}
+
 			// Now convert to an integer, and transform via RSA
 			SCBigInteger bi(encBuffer,(uint32_t)encSize);
 			SCBigInteger ei = self.publicRSAKey->Transform(bi);
 			memcpy(encBuffer,ei.GetData(),encSize * sizeof(uint32_t));
+
+			// Spin the bytes
+			for (size_t i = 0, j = encSize-1; i < j; ++i, --j) {
+				uint32_t tmp = encBuffer[i];
+				encBuffer[i] = encBuffer[j];
+				encBuffer[j] = tmp;
+			}
 
 			// Spin the bits back to network order and write the data
 			for (uint32_t i = 0; i < encSize; ++i) {
