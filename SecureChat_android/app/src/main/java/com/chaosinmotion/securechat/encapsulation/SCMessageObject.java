@@ -79,9 +79,9 @@ public class SCMessageObject
 	 * Construct new message object from bitmap
 	 * @param bmap
 	 */
-    public SCMessageObject(Bitmap bmap)
+    public SCMessageObject(JPEGImage bmap)
     {
-	    image = new JPEGImage(bmap);
+	    image = bmap;
     }
 
     /**

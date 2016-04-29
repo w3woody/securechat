@@ -68,6 +68,34 @@ public class JPEGImage
 		imageData = baos.toByteArray();
 	}
 
+	public JPEGImage(Bitmap bmap, int width, int height)
+	{
+		int sizeWidth = bmap.getWidth();
+		int sizeHeight = bmap.getHeight();
+
+		if (sizeWidth > width) {
+			sizeHeight = (sizeHeight * width)/sizeWidth;
+			sizeWidth = width;
+		}
+		if (sizeHeight > height) {
+			sizeWidth = (sizeWidth * height)/sizeHeight;
+			sizeHeight = height;
+		}
+
+		Bitmap scale = Bitmap.createScaledBitmap(bmap,sizeWidth,sizeHeight,true);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		scale.compress(Bitmap.CompressFormat.JPEG,75,baos);
+		try {
+			baos.close();
+		}
+		catch (IOException e) {
+			// Should never happen
+		}
+		imageData = baos.toByteArray();
+		imageWidth = sizeWidth;
+		imageHeight = sizeHeight;
+	}
+
 	private JPEGImage(int width, int height, byte[] data)
 	{
 		imageWidth = width;
