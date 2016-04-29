@@ -32,6 +32,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.chaosinmotion.securechat.encapsulation.SCMessageObject;
+import com.chaosinmotion.securechat.utils.Size;
 
 /**
  * Created by woody on 4/23/16.
@@ -110,9 +111,6 @@ public class SCChatView extends View
 		int padding;
 		int drawWidth;
 
-		// TODO: Different message types
-		String txt  = message.getMessageAsText();
-
 		/*
 		 *  Determine fitting width. We measure the maximum (unwrapped)
 		 *  size of the text, then limit by the width boundaries.
@@ -122,7 +120,7 @@ public class SCChatView extends View
 
 		padding = (int)(density * 140);     // padding
 		width = (int)(density * 200);
-		int w = (int)messagePaint.measureText(txt) + padding;
+		int w = message.maximumWidth(messagePaint) + padding;
 		if (width < w) width = w;
 
 		int widthMode = MeasureSpec.getMode(widthMeasureSpec);
@@ -141,8 +139,7 @@ public class SCChatView extends View
 		drawWidth = width - padding;
 		if (drawWidth < minDrawWidth) drawWidth = minDrawWidth;
 
-		StaticLayout layout = new StaticLayout(txt,messagePaint,drawWidth, Layout.Alignment.ALIGN_NORMAL,1,0,true);
-		height = layout.getHeight();
+		height = message.sizeForWidth(messagePaint,drawWidth).getHeight();
 		height += 30 * density;
 		height += fm.descent - fm.ascent;
 
@@ -174,26 +171,14 @@ public class SCChatView extends View
 	{
 		super.onDraw(canvas);
 
-		// TODO: Different message types
-		String txt  = message.getMessageAsText();
-
-
 		/*
 		 *  Determine actual width of the text to render.
 		 */
 
 		int padding = (int)(density * 140);
 		int width = getWidth() - padding;
-		StaticLayout layout = new StaticLayout(txt,messagePaint,width, Layout.Alignment.ALIGN_NORMAL,1,0,true);
 
-		float maxWidth = 0;
-		int i,len = layout.getLineCount();
-		for (i = 0; i < len; ++i) {
-			float w = layout.getLineWidth(i);
-			if (w > maxWidth) {
-				maxWidth = w;
-			}
-		}
+		Size size = message.sizeForWidth(messagePaint,width);
 
 		/*
 		 *  Calculate rectangle placement of the oval for chatting.
@@ -204,10 +189,10 @@ public class SCChatView extends View
 		if (receiveFlag) {
 			l = (int)(density * 10);        // 10 off the left for received
 		} else {
-			l = (int)(getWidth() - maxWidth - 30 * density);
+			l = (int)(getWidth() - size.getWidth() - 30 * density);
 		}
-		r = (int)(l + maxWidth + 20 * density);
-		b = (int)(t + layout.getHeight() + 10 * density);
+		r = (int)(l + size.getWidth() + 20 * density);
+		b = (int)(t + size.getHeight() + 10 * density);
 		RectF rr = new RectF(l,t,r,b);
 		float radius = 12 * density;
 
@@ -235,10 +220,9 @@ public class SCChatView extends View
 		 *  Draw the embedded text
 		 */
 
-		canvas.save();
-		canvas.translate(l + 10*density, t + 5*density);
-		layout.draw(canvas);
-		canvas.restore();
+		int xpos = (int)(l + 10*density);
+		int ypos = (int)(l + 5*density);
+		message.drawWithRect(canvas,messagePaint,xpos, ypos,xpos + size.getWidth(), ypos + size.getHeight());
 
 		/*
 		 *  Draw the date
