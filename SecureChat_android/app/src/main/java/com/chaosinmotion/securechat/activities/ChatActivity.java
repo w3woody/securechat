@@ -123,7 +123,7 @@ public class ChatActivity extends AppCompatActivity
 		if ((requestCode == TAKE_PICTURE) && (resultCode == Activity.RESULT_OK)) {
 			getContentResolver().notifyChange(imageUri,null);
 			ContentResolver cr = getContentResolver();
-			Bitmap bmap;
+			Bitmap bmap = null;
 
 			try {
 				bmap = MediaStore.Images.Media.getBitmap(cr,imageUri);
@@ -133,6 +133,11 @@ public class ChatActivity extends AppCompatActivity
 			catch (Exception ex) {
 				Toast.makeText(this,"Failed to load photograph",Toast.LENGTH_LONG).show();
 				Log.e("SecureChat","Camera failure",ex);
+			}
+			finally {
+				if (bmap != null) {
+					bmap.recycle();
+				}
 			}
 		}
 	}

@@ -51,23 +51,6 @@ public class JPEGImage
 
 	}
 
-	public JPEGImage(Bitmap bmap)
-	{
-		imageWidth = bmap.getWidth();
-		imageHeight = bmap.getHeight();
-
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		bmap.compress(Bitmap.CompressFormat.JPEG,75,baos);
-		try {
-			baos.close();
-		}
-		catch (IOException e) {
-			// Should never happen
-		}
-
-		imageData = baos.toByteArray();
-	}
-
 	public JPEGImage(Bitmap bmap, int width, int height)
 	{
 		int sizeWidth = bmap.getWidth();
@@ -85,6 +68,8 @@ public class JPEGImage
 		Bitmap scale = Bitmap.createScaledBitmap(bmap,sizeWidth,sizeHeight,true);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		scale.compress(Bitmap.CompressFormat.JPEG,75,baos);
+		scale.recycle();
+
 		try {
 			baos.close();
 		}
@@ -206,8 +191,8 @@ public class JPEGImage
 			drawHeight = height;
 		}
 
-		left += (left + right - drawWidth)/2;
-		top += (top + bottom - drawHeight)/2;
+		left = (left + right - drawWidth)/2;
+		top = (top + bottom - drawHeight)/2;
 
 		Bitmap orig = BitmapFactory.decodeByteArray(imageData,0,imageData.length);
 		Rect src = new Rect(0,0,imageWidth,imageHeight);

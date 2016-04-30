@@ -23,6 +23,8 @@ import com.chaosinmotion.securechat.rsa.SCRSAManager;
 import com.chaosinmotion.securechat.utils.ThreadPool;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 /**
@@ -54,11 +56,13 @@ public class SCDecryptCache
 	}
 
 	private static SCDecryptCache shared;
+	private HashMap<Integer,ArrayList<DecryptCallback>> callback;
 	private Cache cache;
 
 	private SCDecryptCache()
 	{
 		cache = new Cache();
+		callback = new HashMap<Integer,ArrayList<DecryptCallback>>();
 	}
 
 	public static synchronized SCDecryptCache get()
@@ -75,32 +79,49 @@ public class SCDecryptCache
 	 * thread and returned once decrypted.
 	 * @param data The data to decrypt
 	 * @param index The message index of the message to decrypt
-	 * @param callback The callback if this is decoded asynchronously
+	 * @param c The callback if this is decoded asynchronously
 	 * @return The message or null if not in the cache
 	 */
-	public SCMessageObject decrypt(final byte[] data, final int index, final DecryptCallback callback)
+	public synchronized SCMessageObject decrypt(final byte[] data, final int index, final DecryptCallback c)
 	{
 		SCMessageObject ret = cache.get(index);
 		if (ret != null) return ret;
 
-		ThreadPool.get().enqueueAsync(new Runnable()
-		{
-			@Override
-			public void run()
+		ArrayList<DecryptCallback> list = callback.get(index);
+		boolean runFlag = false;
+		if (list == null) {
+			runFlag = true;
+			list = new ArrayList<DecryptCallback>();
+			callback.put(index,list);
+		}
+		list.add(c);
+
+		if (runFlag) {
+			ThreadPool.get().enqueueAsync(new Runnable()
 			{
-				byte[] decrypt = SCRSAManager.shared().decodeData(data);
-				final SCMessageObject msg = new SCMessageObject(decrypt);
-				ThreadPool.get().enqueueMain(new Runnable()
+				@Override
+				public void run()
 				{
-					@Override
-					public void run()
+					byte[] decrypt = SCRSAManager.shared().decodeData(data);
+					final SCMessageObject msg = new SCMessageObject(decrypt);
+					ThreadPool.get().enqueueMain(new Runnable()
 					{
-						cache.put(index,msg);
-						callback.decryptedMessage(index,msg);
-					}
-				});
-			}
-		});
+						@Override
+						public void run()
+						{
+							cache.put(index, msg);
+
+							ArrayList<DecryptCallback> l = callback.get(index);
+							callback.remove(index);
+
+							for (DecryptCallback cb: l) {
+								cb.decryptedMessage(index, msg);
+							}
+						}
+					});
+				}
+			});
+		}
 		return null;
 	}
 }

@@ -221,7 +221,7 @@ public class SCChatView extends View
 		 */
 
 		int xpos = (int)(l + 10*density);
-		int ypos = (int)(l + 5*density);
+		int ypos = (int)(t + 5*density);
 		message.drawWithRect(canvas,messagePaint,xpos, ypos,xpos + size.getWidth(), ypos + size.getHeight());
 
 		/*

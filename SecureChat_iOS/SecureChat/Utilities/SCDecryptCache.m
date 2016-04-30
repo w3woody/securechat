@@ -31,6 +31,7 @@
 
 @interface SCDecryptCache ()
 @property (strong) NSCache<NSNumber *, SCMessageObject *> *cache;
+@property (strong) NSMutableDictionary<NSNumber *, NSMutableArray *> *callback;
 @end
 
 @implementation SCDecryptCache
@@ -49,28 +50,47 @@
 {
 	if (nil != (self = [super init])) {
 		self.cache = [[NSCache alloc] init];
+		self.callback = [[NSMutableDictionary alloc] init];
 	}
 	return self;
 }
 
-- (SCMessageObject *)decrypt:(NSData *)data atIndex:(NSInteger)index withCallback:(void (^)(NSInteger ident, SCMessageObject *msg))callback;
+- (SCMessageObject *)decrypt:(NSData *)data atIndex:(NSInteger)index withCallback:(void (^)(NSInteger ident, SCMessageObject *msg))c;
 {
 	NSNumber *n = @( index );
 	SCMessageObject *ret = [self.cache objectForKey:n];
 	if (ret) {
 		return ret;
-	} else if (callback) {
-		void (^copyCallback)(NSInteger ident, SCMessageObject *msg) = [callback copy];
+	} else if (c) {
+		@synchronized (self) {
+			BOOL runFlag = NO;
+			NSMutableArray *a = self.callback[n];
+			if (a == nil) {
+				runFlag = YES;
+				a = [[NSMutableArray alloc] init];
+				self.callback[n] = a;
+			}
+			[a addObject:[c copy]];
 
-		// async decode
-		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-			NSData *decrypt = [[SCRSAManager shared] decodeData:data];
-			SCMessageObject *obj = [[SCMessageObject alloc] initWithData:decrypt];
-			dispatch_async(dispatch_get_main_queue(), ^{
-				[self.cache setObject:obj forKey:n];
-				copyCallback(index,obj);
-			});
-		});
+			if (runFlag) {
+				// async decode
+				dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+					NSData *decrypt = [[SCRSAManager shared] decodeData:data];
+					SCMessageObject *obj = [[SCMessageObject alloc] initWithData:decrypt];
+					dispatch_async(dispatch_get_main_queue(), ^{
+						[self.cache setObject:obj forKey:n];
+
+						NSArray *a = [self.callback[n] copy];
+						[self.callback removeObjectForKey:n];
+
+						for (void (^cb)(NSInteger integer, SCMessageObject *msg) in a) {
+							cb(index,obj);
+						}
+					});
+				});
+			}
+
+		}
 	}
 		
 	return nil;
