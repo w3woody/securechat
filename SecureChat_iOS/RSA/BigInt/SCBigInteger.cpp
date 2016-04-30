@@ -32,11 +32,26 @@
 
 /************************************************************************/
 /*																		*/
+/*	Internal Declarations												*/
+/*																		*/
+/************************************************************************/
+
+typedef uint32_t	BIWIDEWORD;			// twice the width of BIWORD
+typedef int32_t		SIGNED_BIWIDEWORD;	// twice the width of BIWORD
+
+#define MINALLOC	32					// minimum words to allocate
+#define BITSPERWORD	16					// Bits in BIWORD
+
+#define ESTIMATE(x)		((3 + (x))/4)	// Estimate words by number length
+//#define ESTIMATE(x)		((8 + (x))/9)	// Estimate words by number length (32-bit version)
+
+/************************************************************************/
+/*																		*/
 /*	Internal Support													*/
 /*																		*/
 /************************************************************************/
 
-static int BitCount(uint32_t ct)
+static int BitCount(BIWORD ct)
 {
 	int ret = 0;
 	while (ct) {
@@ -57,10 +72,10 @@ static int BitCount(uint32_t ct)
  *		Construction from integer value
  */
 
-SCBigInteger::SCBigInteger(int32_t primVal)
+SCBigInteger::SCBigInteger(SIGNED_BIWORD primVal)
 {
-	dataAlloc = 32;
-	dataArray = (uint32_t *)malloc(sizeof(uint32_t) * dataAlloc);
+	dataAlloc = MINALLOC;
+	dataArray = (BIWORD *)malloc(sizeof(BIWORD) * dataAlloc);
 
 	isNeg = (primVal < 0);
 	isNan = false;
@@ -69,10 +84,10 @@ SCBigInteger::SCBigInteger(int32_t primVal)
 	dataSize = primVal ? 1 : 0;
 }
 
-SCBigInteger::SCBigInteger(uint32_t primVal, bool neg)
+SCBigInteger::SCBigInteger(BIWORD primVal, bool neg)
 {
-	dataAlloc = 32;
-	dataArray = (uint32_t *)malloc(sizeof(uint32_t) * dataAlloc);
+	dataAlloc = MINALLOC;
+	dataArray = (BIWORD *)malloc(sizeof(BIWORD) * dataAlloc);
 
 	isNeg = primVal ? neg : false;
 	isNan = false;
@@ -88,11 +103,11 @@ SCBigInteger::SCBigInteger(uint32_t primVal, bool neg)
 
 SCBigInteger::SCBigInteger(std::string val)
 {
-	size_t size = (8 + val.length()) / 9;	// estimate words (crude)
-	if (size < 32) size = 32;
+	size_t size = ESTIMATE(val.length());	// estimate words (crude, 16-bit)
+	if (size < MINALLOC) size = MINALLOC;
 
-	dataAlloc = (uint32_t)size;
-	dataArray = (uint32_t *)malloc(sizeof(uint32_t) * dataAlloc);
+	dataAlloc = size;
+	dataArray = (BIWORD *)malloc(sizeof(BIWORD) * dataAlloc);
 	dataArray[0] = 0;
 	dataSize = 0;
 
@@ -115,17 +130,17 @@ SCBigInteger::SCBigInteger(std::string val)
  *		Create integer based on raw data array
  */
 
-SCBigInteger::SCBigInteger(const uint32_t *data, const uint32_t nwords, bool neg)
+SCBigInteger::SCBigInteger(const BIWORD *data, const size_t nwords, bool neg)
 {
-	dataAlloc = 32;
+	dataAlloc = MINALLOC;
 	if (dataAlloc < nwords) dataAlloc = nwords;
-	dataArray = (uint32_t *)malloc(sizeof(uint32_t) * dataAlloc);
+	dataArray = (BIWORD *)malloc(sizeof(BIWORD) * dataAlloc);
 
 	isNeg = neg;
 	isNan = false;
 
 	dataSize = nwords;
-	memcpy(dataArray, data, sizeof(uint32_t) * nwords);
+	memcpy(dataArray, data, sizeof(BIWORD) * nwords);
 
 	while (dataSize > 0) {
 		if (dataArray[dataSize-1] == 0) --dataSize;
@@ -146,9 +161,9 @@ SCBigInteger::SCBigInteger(const SCBigInteger &bi)
 	isNan = bi.isNan;
 	isNeg = bi.isNeg;
 
-	dataArray = (uint32_t *)malloc(sizeof(uint32_t) * dataAlloc);
+	dataArray = (BIWORD *)malloc(sizeof(BIWORD) * dataAlloc);
 	if (dataSize) {
-		memmove(dataArray, bi.dataArray, sizeof(uint32_t) * dataSize);
+		memmove(dataArray, bi.dataArray, sizeof(BIWORD) * dataSize);
 	}
 }
 
@@ -166,7 +181,7 @@ SCBigInteger &SCBigInteger::operator = (const SCBigInteger &bi)
 	Realloc(dataSize);		// Resize memory if needed
 
 	if (dataSize) {
-		memmove(dataArray, bi.dataArray, sizeof(uint32_t) * dataSize);
+		memmove(dataArray, bi.dataArray, sizeof(BIWORD) * dataSize);
 	}
 
 	return *this;
@@ -181,7 +196,7 @@ SCBigInteger &SCBigInteger::operator = (const SCBigInteger &bi)
 
 SCBigInteger::~SCBigInteger()
 {
-	memset(dataArray,0,sizeof(uint32_t) * dataAlloc);
+	memset(dataArray,0,sizeof(BIWORD) * dataAlloc);
 	free(dataArray);
 	dataArray = NULL;
 	dataSize = 0;
@@ -201,10 +216,10 @@ SCBigInteger::~SCBigInteger()
  *		Realloc array if needed. This only grows but does not shrink
  */
 
-void SCBigInteger::Realloc(uint32_t size)
+void SCBigInteger::Realloc(size_t size)
 {
 	if (size > dataAlloc) {
-		uint32_t *tmp = (uint32_t *)realloc(dataArray, size * sizeof(uint32_t));
+		BIWORD *tmp = (BIWORD *)realloc(dataArray, size * sizeof(BIWORD));
 		if (tmp == NULL) throw std::bad_alloc();
 
 		dataAlloc = size;
@@ -218,22 +233,22 @@ void SCBigInteger::Realloc(uint32_t size)
  *	itself.
  */
 
-void SCBigInteger::MulAdd(uint32_t mul, uint32_t add)
+void SCBigInteger::MulAdd(BIWORD mul, BIWORD add)
 {
-	uint64_t scratch;
-	uint32_t i;
+	BIWIDEWORD scratch;
+	size_t i;
 
 	scratch = add;
 	for (i = 0; i < dataSize; ++i) {
-		scratch += ((uint64_t)mul) * dataArray[i];
-		dataArray[i] = (uint32_t)scratch;
-		scratch >>= 32;
+		scratch += ((BIWIDEWORD)mul) * dataArray[i];
+		dataArray[i] = (BIWORD)scratch;
+		scratch >>= BITSPERWORD;
 	}
 
 	if (scratch) {
 		// Size of data block has grown. Make sure we fit
 		Realloc(dataSize+1);
-		dataArray[dataSize] = (uint32_t)scratch;
+		dataArray[dataSize] = (BIWORD)scratch;
 		++dataSize;
 	}
 }
@@ -243,18 +258,18 @@ void SCBigInteger::MulAdd(uint32_t mul, uint32_t add)
  *		Divide by supplied integer, return remainder
  */
 
-uint32_t SCBigInteger::DivRemain(uint32_t div)
+BIWORD SCBigInteger::DivRemain(BIWORD div)
 {
-	uint64_t scratch;
-	uint32_t i;
+	BIWIDEWORD scratch;
+	size_t i;
 
 	i = dataSize;
 	scratch = 0;
 	while (i-- > 0) {
-		scratch = (scratch << 32) | dataArray[i];
+		scratch = (scratch << BITSPERWORD) | dataArray[i];
 
-		uint32_t rem = (uint32_t)(scratch % div);
-		dataArray[i] = (uint32_t)(scratch / div);
+		BIWORD rem = (BIWORD)(scratch % div);
+		dataArray[i] = (BIWORD)(scratch / div);
 
 		scratch = rem;
 	}
@@ -273,7 +288,7 @@ uint32_t SCBigInteger::DivRemain(uint32_t div)
 	 *	Return remainder
 	 */
 
-	return (uint32_t)scratch;
+	return (BIWORD)scratch;
 }
 
 /*	SCBigInteger::CompareAbs
@@ -299,10 +314,10 @@ int SCBigInteger::CompareAbs(const SCBigInteger &i) const
 		 *	to left
 		 */
 
-		uint32_t x = dataSize;
+		size_t x = dataSize;
 		while (x-- > 0) {
-			uint32_t l = dataArray[x];
-			uint32_t r = i.dataArray[x];
+			BIWORD l = dataArray[x];
+			BIWORD r = i.dataArray[x];
 			if (l > r) {
 				comp = 1;
 				break;
@@ -345,15 +360,15 @@ int SCBigInteger::CompareTo(const SCBigInteger &i) const
  *	the least significant bit towards the most significant bit.
  */
 
-void SCBigInteger::ShiftLeft(uint32_t bits)
+void SCBigInteger::ShiftLeft(size_t bits)
 {
 	if (bits == 0) return;
 	if (dataSize == 0) return;
 
-	uint64_t scratch;
-	uint32_t off = bits % 32;
-	uint32_t words = bits / 32;
-	uint32_t src,dst;
+	BIWIDEWORD scratch;
+	size_t off = bits % 32;
+	size_t words = bits / 32;
+	size_t src,dst;
 
 	// Make sure big enough
 	Realloc(dataSize + words + 1);
@@ -367,8 +382,8 @@ void SCBigInteger::ShiftLeft(uint32_t bits)
 		dst--;
 		scratch = dataArray[src];
 		scratch <<= off;
-		dataArray[dst+1] |= (uint32_t)(scratch >> 32);
-		dataArray[dst] = (uint32_t)scratch;
+		dataArray[dst+1] |= (BIWORD)(scratch >> BITSPERWORD);
+		dataArray[dst] = (BIWORD)scratch;
 	}
 	while (dst-- > 0) {
 		dataArray[dst] = 0;
@@ -386,25 +401,25 @@ void SCBigInteger::ShiftLeft(uint32_t bits)
  *	significant bit towards the least significant bit.
  */
 
-void SCBigInteger::ShiftRight(uint32_t bits)
+void SCBigInteger::ShiftRight(size_t bits)
 {
 	if (bits == 0) return;
 	if (dataSize == 0) return;
 
-	uint64_t scratch;
-	uint32_t off = bits % 32;
-	uint32_t words = bits / 32;
-	uint32_t src,dst;
+	BIWIDEWORD scratch;
+	size_t off = bits % 32;
+	size_t words = bits / 32;
+	size_t src,dst;
 
 	src = words;
 	dst = 0;
 	while (src < dataSize) {
 		scratch = dataArray[src];
-		scratch <<= (32 - off);
+		scratch <<= (BITSPERWORD - off);
 		if (dst > 0) {
-			dataArray[dst-1] |= (uint32_t)scratch;
+			dataArray[dst-1] |= (BIWORD)scratch;
 		}
-		dataArray[dst] = (uint32_t)(scratch >> 32);
+		dataArray[dst] = (BIWORD)(scratch >> BITSPERWORD);
 
 		++src;
 		++dst;
@@ -424,8 +439,8 @@ void SCBigInteger::ShiftRight(uint32_t bits)
 
 void SCBigInteger::AddInternal(const SCBigInteger &bi)
 {
-	uint64_t scratch = 0;
-	uint32_t pos = 0;
+	BIWIDEWORD scratch = 0;
+	BIWORD pos = 0;
 
 	// Make sure we have enough space.
 	if (dataAlloc < bi.dataSize+1) {
@@ -443,15 +458,15 @@ void SCBigInteger::AddInternal(const SCBigInteger &bi)
 		if (dataSize <= pos) {
 			dataSize = pos+1;
 		}
-		dataArray[pos++] = (uint32_t)scratch;
-		scratch >>= 32;
+		dataArray[pos++] = (BIWORD)scratch;
+		scratch >>= BITSPERWORD;
 	}
 
 	if (scratch) {
 		if (dataSize <= pos) {
 			dataSize = pos+1;
 		}
-		dataArray[pos++] = (uint32_t)scratch;
+		dataArray[pos++] = (BIWORD)scratch;
 	}
 }
 
@@ -462,8 +477,8 @@ void SCBigInteger::AddInternal(const SCBigInteger &bi)
 
 void SCBigInteger::SubInternal(const SCBigInteger &bi)
 {
-	int64_t scratch = 0;
-	uint32_t pos = 0;
+	SIGNED_BIWIDEWORD scratch = 0;
+	size_t pos = 0;
 
 	while (pos < dataSize) {
 		scratch += dataArray[pos];
@@ -471,8 +486,8 @@ void SCBigInteger::SubInternal(const SCBigInteger &bi)
 			scratch -= bi.dataArray[pos];
 		}
 
-		dataArray[pos++] = (uint32_t)scratch;
-		scratch >>= 32;
+		dataArray[pos++] = (BIWORD)scratch;
+		scratch >>= BITSPERWORD;
 	}
 
 	while (dataSize > 0) {
@@ -488,19 +503,22 @@ void SCBigInteger::SubInternal(const SCBigInteger &bi)
  *		Set the specified bit
  */
 
-void SCBigInteger::SetBit(uint32_t bit)
+void SCBigInteger::SetBit(size_t bit)
 {
-	uint32_t len = (bit + 32) >> 5;		// necessary space to fit.
+//	size_t len = (bit + BITSPERWORD) >> 5;		// necessary space to fit.
+	size_t len = (bit + BITSPERWORD) >> 4;		// necessary space to fit.
 	Realloc(len);
 
 	/*
 	 *	note that we have garbage at the bits above the data size count.
 	 */
 
-	uint32_t bmask = (uint32_t)(1L << (bit & 31));
-	uint32_t index = (uint32_t)(bit >> 5);
+//	BIWORD bmask = (BIWORD)(1L << (bit & 31));	// (1<<5)-1
+//	size_t index = bit >> 5;
+	BIWORD bmask = (BIWORD)(1L << (bit & 15));	// (1<<4)-1
+	size_t index = bit >> 4;
 
-	if (index >= dataSize) {
+	while (index >= dataSize) {
 		dataArray[dataSize++] = 0;
 	}
 
@@ -512,10 +530,12 @@ void SCBigInteger::SetBit(uint32_t bit)
  *		Test bit
  */
 
-bool SCBigInteger::BitTest(uint32_t bit) const
+bool SCBigInteger::BitTest(size_t bit) const
 {
-	uint32_t bmask = (uint32_t)(1L << (bit & 31));
-	uint32_t index = (uint32_t)(bit >> 5);
+//	BIWORD bmask = (BIWORD)(1L << (bit & 31));
+//	size_t index = (size_t)(bit >> 5);
+	BIWORD bmask = (BIWORD)(1L << (bit & 15));
+	size_t index = (size_t)(bit >> 4);
 
 	if (index >= dataSize) return false;
 	return 0 != (dataArray[index] & bmask);
@@ -534,7 +554,7 @@ void SCBigInteger::DivRemain(const SCBigInteger &i, SCBigInteger &m)
 	 *	This is a brute force algorithm of shift and subtract
 	 */
 
-	uint32_t bit = 0;
+	size_t bit = 0;
 	m.dataSize = 0;
 	while (CompareAbs(d) >= 0) {
 		++bit;
@@ -563,26 +583,26 @@ void SCBigInteger::DivRemain(const SCBigInteger &i, SCBigInteger &m)
  *		Multiply/add support for our multiply routine
  */
 
-void SCBigInteger::MulAdd(const SCBigInteger &add, uint32_t mul, uint32_t shift)
+void SCBigInteger::MulAdd(const SCBigInteger &add, BIWORD mul, size_t shift)
 {
 	// Set msize larger than any potential product here. Guarantee space.
-	uint32_t msize = shift + add.dataSize + 1;
+	size_t msize = shift + add.dataSize + 1;
 	if (msize < dataSize + 1) msize = dataSize + 1;
 	Realloc(msize);
 
-	uint64_t scratch = 0;
-	uint32_t pos = shift;
+	BIWIDEWORD scratch = 0;
+	size_t pos = shift;
 
 	// Iterate through all digits.
-	for (uint32_t i = 0; pos < msize; ++i, ++pos) {
+	for (size_t i = 0; pos < msize; ++i, ++pos) {
 		if (pos < dataSize) {
 			scratch += dataArray[pos];
 		}
 		if (i < add.dataSize) {
-			scratch += ((uint64_t)mul) * add.dataArray[i];
+			scratch += ((BIWIDEWORD)mul) * add.dataArray[i];
 		}
-		dataArray[pos] = (uint32_t)scratch;
-		scratch >>= 32;
+		dataArray[pos] = (BIWORD)scratch;
+		scratch >>= BITSPERWORD;
 	}
 
 	while (msize > 0) {
@@ -613,20 +633,23 @@ void SCBigInteger::MulAdd(const SCBigInteger &add, uint32_t mul, uint32_t shift)
  *	about zero effort.
  */
 
-SCBigInteger SCBigInteger::Random(int nbits)
+SCBigInteger SCBigInteger::Random(size_t nbits)
 {
 	SCBigInteger ret;
 
 	if (nbits < 1) nbits = 1;			// zero bits? Really?
 
-	int nwords = (nbits + 31) >> 5;		// # words of storage we need
+//	size_t nwords = (nbits + 31) >> 5;	// # words of storage we need
+	size_t nwords = (nbits + 15) >> 4;	// # words of storage we need
 	ret.Realloc(nwords);
 
-	SecRandomCopyBytes(kSecRandomDefault, nwords * 4, (uint8_t *)ret.dataArray);
+	SecRandomCopyBytes(kSecRandomDefault, nwords * sizeof(BIWORD), (uint8_t *)ret.dataArray);
 
 	// Now trim the top
-	if (nbits & 31) {
-		uint32_t mswmask = (uint32_t)(1L << (nbits & 31)) - 1;
+//	if (nbits & 31) {
+	if (nbits & 15) {
+//		BIWORD mswmask = (BIWORD)(1L << (nbits & 31)) - 1;
+		BIWORD mswmask = (BIWORD)(1L << (nbits & 15)) - 1;
 		ret.dataArray[nwords-1] &= mswmask;
 	}
 
@@ -659,8 +682,10 @@ SCBigInteger SCBigInteger::ProbablePrime(int nbits)
 	for (;;) {
 		// Set the nth bit. Random returned a word wide enough so we just
 		// need to flip the correct bit
-		uint32_t word = (nbits-1) >> 5;
-		uint32_t mask = (1 << ((nbits-1) & 31));
+//		size_t word = (nbits-1) >> 5;
+//		BIWORD mask = (1 << ((nbits-1) & 31));
+		size_t word = (nbits-1) >> 4;
+		BIWORD mask = (1 << ((nbits-1) & 15));
 		tmp.dataArray[word] |= mask;
 		tmp.dataSize = word+1;
 		tmp.dataArray[0] |= 1;		// make odd
@@ -693,7 +718,7 @@ bool SCBigInteger::IsProbablePrime(int certainty) const
 	 *	Step 1: iterate through the first handful of small primes
 	 */
 
-	static const uint32_t smallprimes[] = {
+	static const BIWORD smallprimes[] = {
 		3,5,7,11,13,17,19,23,29,
 		31,37,41,43,47,53,59,61,67,71,
 		73,79,83,89,97,101,103,107,109,113,
@@ -738,7 +763,7 @@ bool SCBigInteger::IsProbablePrime(int certainty) const
 
 	certainty /= 2;
 	int minRounds;
-	uint32_t nbits = GetBitLength();
+	size_t nbits = GetBitLength();
 	if (nbits < 256) {
 		minRounds = 27;
 	} else if (nbits < 512) {
@@ -755,26 +780,28 @@ bool SCBigInteger::IsProbablePrime(int certainty) const
 	return PassRabinMiller(certainty);
 }
 
-uint32_t SCBigInteger::GetBitLength() const
+size_t SCBigInteger::GetBitLength() const
 {
-	return (dataSize - 1) * 32 + BitCount(dataArray[dataSize-1]);
+//	return (dataSize - 1) * 32 + BitCount(dataArray[dataSize-1]);
+	return (dataSize - 1) * 16 + BitCount(dataArray[dataSize-1]);
 }
 
-uint32_t SCBigInteger::GetLowestSetBit() const
+size_t SCBigInteger::GetLowestSetBit() const
 {
-	uint32_t index = 0;
+	size_t index = 0;
 	while ((index < dataSize) && (dataArray[index] == 0)) ++index;
 	if (index >= dataSize) return -1;		// zero
 
-	uint32_t bit = 1;
-	uint32_t msb = dataArray[index];
-	uint32_t x = 0;
+	BIWORD bit = 1;
+	BIWORD msb = dataArray[index];
+	size_t x = 0;
 	while (0 == (bit & msb)) {
 		bit <<= 1;
 		++x;
 	}
 
-	return index * 32 + x;
+	return index * 16 + x;
+//	return index * 32 + x;
 }
 
 /*	SCBigInteger::PassRabinMiller
@@ -789,8 +816,8 @@ bool SCBigInteger::PassRabinMiller(int iterations) const
 	SCBigInteger two(2);
 	SCBigInteger pminus1 = *this - one;
 	SCBigInteger m = pminus1;
-	uint32_t a = m.GetLowestSetBit();
-	uint32_t blen = GetBitLength();
+	size_t a = m.GetLowestSetBit();
+	size_t blen = GetBitLength();
 	m.ShiftRight(a);
 
 	if (IsEven()) return false;
@@ -868,7 +895,7 @@ SCBigInteger SCBigInteger::operator * (const SCBigInteger &bi) const
 {
 	SCBigInteger tmp = 0;
 
-	uint32_t index;
+	size_t index;
 	for (index = 0; index < dataSize; ++index) {
 		tmp.MulAdd(bi, dataArray[index], index);
 	}
@@ -900,9 +927,9 @@ SCBigInteger SCBigInteger::operator % (const SCBigInteger &bi) const
  *		Internal method 
  */
 
-static uint32_t gcd(uint32_t x, uint32_t y)
+static BIWORD gcd(BIWORD x, BIWORD y)
 {
-	uint32_t tmp;
+	BIWORD tmp;
 
 	if (y > x) {
 		tmp = x;
@@ -967,7 +994,7 @@ SCBigInteger SCBigInteger::ModInverse(const SCBigInteger &bi) const
 	SCBigInteger tmp;
 	SCBigInteger u = bi;
 	SCBigInteger v = *this;		// pre-swap.
-	uint32_t k;
+	size_t k;
 
 	nan.isNan = true;
 	if (isNeg || (dataSize == 0)) return nan;
@@ -1226,7 +1253,7 @@ std::string SCBigInteger::ToString() const
 		SCBigInteger i = *this;
 
 		while (i.dataSize) {
-			uint32_t digit = i.DivRemain(10);
+			BIWORD digit = i.DivRemain(10);
 			tmp.push_back('0' + digit);
 		}
 
@@ -1269,8 +1296,9 @@ bool SCBigInteger::operator == (const SCBigInteger &i) const
 	if (isNeg != i.isNeg) return false;
 	if (dataSize != i.dataSize) return false;
 
-	uint32_t nwords = (i.dataSize + 31) >> 5;
+//	size_t nwords = (i.dataSize + 31) >> 5;
+	size_t nwords = (i.dataSize + 15) >> 4;
 
-	return memcmp(i.dataArray, dataArray, nwords * 4) == 0;
+	return memcmp(i.dataArray, dataArray, nwords * sizeof(BIWORD)) == 0;
 }
 

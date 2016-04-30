@@ -38,6 +38,9 @@
 /*																		*/
 /************************************************************************/
 
+typedef uint16_t	BIWORD;
+typedef int16_t		SIGNED_BIWORD;
+
 /*	SCBigInteger
  *
  *		Big integer class.
@@ -48,10 +51,10 @@
 class SCBigInteger
 {
 	public:
-								SCBigInteger(int32_t primVal = 0);
-								SCBigInteger(uint32_t primVal, bool neg);
+								SCBigInteger(SIGNED_BIWORD primVal = 0);
+								SCBigInteger(BIWORD primVal, bool neg);
 								SCBigInteger(std::string val);
-								SCBigInteger(const uint32_t *data, const uint32_t nwords, bool neg = false);
+								SCBigInteger(const BIWORD *data, const size_t nwords, bool neg = false);
 								~SCBigInteger();
 
 								SCBigInteger(const SCBigInteger &bi);
@@ -61,11 +64,11 @@ class SCBigInteger
 		 *	Access to the raw data array of the value
 		 */
 
-		const uint32_t			*GetData() const
+		const BIWORD			*GetData() const
 									{
 										return dataArray;
 									}
-		const uint32_t			GetDataSize() const
+		const size_t			GetDataSize() const
 									{
 										return dataSize;
 									}
@@ -75,7 +78,7 @@ class SCBigInteger
 									}
 
 		static SCBigInteger		ProbablePrime(int nbits);
-		static SCBigInteger		Random(int nbits);
+		static SCBigInteger		Random(size_t nbits);
 		bool					IsProbablePrime(int certainty = 100) const;
 
 		bool					operator == (const SCBigInteger &bi) const;
@@ -132,25 +135,25 @@ class SCBigInteger
 		 *	Internal support
 		 */
 		
-		void					Realloc(uint32_t size);
+		void					Realloc(size_t size);
 
-		void					MulAdd(uint32_t mul, uint32_t add);
-		void					MulAdd(const SCBigInteger &i, uint32_t mul, uint32_t shift);
-		uint32_t				DivRemain(uint32_t div);
+		void					MulAdd(BIWORD mul, BIWORD add);
+		void					MulAdd(const SCBigInteger &i, BIWORD mul, size_t shift);
+		BIWORD					DivRemain(BIWORD div);
 		void					DivRemain(const SCBigInteger &i, SCBigInteger &m);
 		int						CompareTo(const SCBigInteger &bi) const;
 		int						CompareAbs(const SCBigInteger &bi) const;
 
-		void					ShiftLeft(uint32_t bits);
-		void					ShiftRight(uint32_t bits);
-		void					SetBit(uint32_t bit);
-		bool					BitTest(uint32_t index) const;
+		void					ShiftLeft(size_t bits);
+		void					ShiftRight(size_t bits);
+		void					SetBit(size_t bit);
+		bool					BitTest(size_t index) const;
 
 		void					AddInternal(const SCBigInteger &bi);
 		void					SubInternal(const SCBigInteger &bi);
 
-		uint32_t				GetBitLength() const;
-		uint32_t				GetLowestSetBit() const;
+		size_t					GetBitLength() const;
+		size_t					GetLowestSetBit() const;
 		bool					PassRabinMiller(int iter) const;
 
 		SCBigInteger			ModPowOdd(const SCBigInteger &e, const SCBigInteger &m) const;
@@ -160,10 +163,10 @@ class SCBigInteger
 		 *	at index 0
 		 */
 
-		uint32_t				dataAlloc;			// size of dataArray
-		uint32_t				*dataArray;			// unsigned number value
+		size_t					dataAlloc;			// size of dataArray
+		BIWORD					*dataArray;			// unsigned number value
 
-		uint32_t				dataSize;			// size of representation in words
+		size_t					dataSize;			// size of representation in words
 		bool					isNeg;				// true if negative
 		bool					isNan;
 
@@ -242,7 +245,7 @@ class SCMontMath
 
 		bool				mrinit;
 
-		uint32_t			minv;
+		BIWORD				minv;
 		SCBigInteger		rmod;
 		SCBigInteger		r2mod;
 

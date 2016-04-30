@@ -160,7 +160,15 @@
 	a = SCBigInteger("2") % SCBigInteger("2");
 	XCTAssert(a.ToString() == "0");
 
+	SCBigInteger b("1000000000000");
+	SCBigInteger c("1000");
+
+	printf("%s\n",b.ToString().c_str());
+	printf("%s\n",c.ToString().c_str());
+
 	a = SCBigInteger("1000000000000") / SCBigInteger("1000");
+	printf("%s\n",a.ToString().c_str());
+
 	XCTAssert(a.ToString() == "1000000000");
 
 	a = SCBigInteger("1000000000000") / SCBigInteger("1000000000");
