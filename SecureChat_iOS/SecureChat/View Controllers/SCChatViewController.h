@@ -29,7 +29,7 @@
 
 @class SCMessageSender;
 
-@interface SCChatViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate>
+@interface SCChatViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 
 @property (copy) NSString *senderName;
 @property (assign) NSInteger senderID;

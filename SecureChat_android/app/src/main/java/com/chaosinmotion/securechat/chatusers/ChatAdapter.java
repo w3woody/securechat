@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 
 import com.chaosinmotion.securechat.R;
+import com.chaosinmotion.securechat.encapsulation.SCMessageObject;
 import com.chaosinmotion.securechat.messages.SCDecryptCache;
 import com.chaosinmotion.securechat.messages.SCMessageDatabase;
 import com.chaosinmotion.securechat.messages.SCMessageQueue;
@@ -139,10 +140,10 @@ public class ChatAdapter implements ListAdapter, NotificationCenter.Observer
 		SCMessageDatabase.Message msg = getMessageAtIndex(position);
 		String dateString = DateUtils.formatDisplayTime(msg.getTimestamp());
 
-		String message = SCDecryptCache.get().decrypt(msg.getMessage(), msg.getMessageID(), new SCDecryptCache.DecryptCallback()
+		SCMessageObject message = SCDecryptCache.get().decrypt(msg.getMessage(), msg.getMessageID(), new SCDecryptCache.DecryptCallback()
 		{
 			@Override
-			public void decryptedMessage(int messageID, String msg)
+			public void decryptedMessage(int messageID, SCMessageObject msg)
 			{
 				// If we had to decrypt a message, we now need to reload the
 				// view associated with that chat.
@@ -155,7 +156,8 @@ public class ChatAdapter implements ListAdapter, NotificationCenter.Observer
 			}
 		});
 		if (message == null) {
-			message = context.getResources().getString(R.string.decrypt_label);
+			String tmp = context.getResources().getString(R.string.decrypt_label);
+			message = new SCMessageObject(tmp);
 		}
 		chat.setMessage(msg.isReceiveFlag(),message,dateString);
 		return chat;

@@ -31,6 +31,9 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
+import com.chaosinmotion.securechat.encapsulation.SCMessageObject;
+import com.chaosinmotion.securechat.utils.Size;
+
 /**
  * Created by woody on 4/23/16.
  */
@@ -40,7 +43,7 @@ public class SCChatView extends View
 	private TextPaint messagePaint;
 	private Paint bubblePaint;
 	private TextPaint datePaint;
-	private String message;
+	private SCMessageObject message;
 	private String date;
 	private boolean receiveFlag;
 
@@ -79,14 +82,14 @@ public class SCChatView extends View
 		datePaint.setColor(Color.LTGRAY);
 		datePaint.setTextSize((int)(density * 13));
 
-		message = "Hi.";
+		message = new SCMessageObject("Hi.");
 		date = "11/12/16/ 11:45 PMjy";
 		receiveFlag = false;
 		messagePaint.setColor(Color.WHITE);
 		bubblePaint.setColor(0xFF406080);
 	}
 
-	public void setMessage(boolean rflag, String msg, String dt)
+	public void setMessage(boolean rflag, SCMessageObject msg, String dt)
 	{
 		receiveFlag = !rflag;
 		message = msg;
@@ -117,7 +120,7 @@ public class SCChatView extends View
 
 		padding = (int)(density * 140);     // padding
 		width = (int)(density * 200);
-		int w = (int)messagePaint.measureText(message) + padding;
+		int w = message.maximumWidth(messagePaint) + padding;
 		if (width < w) width = w;
 
 		int widthMode = MeasureSpec.getMode(widthMeasureSpec);
@@ -136,8 +139,7 @@ public class SCChatView extends View
 		drawWidth = width - padding;
 		if (drawWidth < minDrawWidth) drawWidth = minDrawWidth;
 
-		StaticLayout layout = new StaticLayout(message,messagePaint,drawWidth, Layout.Alignment.ALIGN_NORMAL,1,0,true);
-		height = layout.getHeight();
+		height = message.sizeForWidth(messagePaint,drawWidth).getHeight();
 		height += 30 * density;
 		height += fm.descent - fm.ascent;
 
@@ -175,16 +177,8 @@ public class SCChatView extends View
 
 		int padding = (int)(density * 140);
 		int width = getWidth() - padding;
-		StaticLayout layout = new StaticLayout(message,messagePaint,width, Layout.Alignment.ALIGN_NORMAL,1,0,true);
 
-		float maxWidth = 0;
-		int i,len = layout.getLineCount();
-		for (i = 0; i < len; ++i) {
-			float w = layout.getLineWidth(i);
-			if (w > maxWidth) {
-				maxWidth = w;
-			}
-		}
+		Size size = message.sizeForWidth(messagePaint,width);
 
 		/*
 		 *  Calculate rectangle placement of the oval for chatting.
@@ -195,10 +189,10 @@ public class SCChatView extends View
 		if (receiveFlag) {
 			l = (int)(density * 10);        // 10 off the left for received
 		} else {
-			l = (int)(getWidth() - maxWidth - 30 * density);
+			l = (int)(getWidth() - size.getWidth() - 30 * density);
 		}
-		r = (int)(l + maxWidth + 20 * density);
-		b = (int)(t + layout.getHeight() + 10 * density);
+		r = (int)(l + size.getWidth() + 20 * density);
+		b = (int)(t + size.getHeight() + 10 * density);
 		RectF rr = new RectF(l,t,r,b);
 		float radius = 12 * density;
 
@@ -226,10 +220,9 @@ public class SCChatView extends View
 		 *  Draw the embedded text
 		 */
 
-		canvas.save();
-		canvas.translate(l + 10*density, t + 5*density);
-		layout.draw(canvas);
-		canvas.restore();
+		int xpos = (int)(l + 10*density);
+		int ypos = (int)(t + 5*density);
+		message.drawWithRect(canvas,messagePaint,xpos, ypos,xpos + size.getWidth(), ypos + size.getHeight());
 
 		/*
 		 *  Draw the date

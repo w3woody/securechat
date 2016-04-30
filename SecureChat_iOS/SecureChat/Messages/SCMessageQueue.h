@@ -34,6 +34,7 @@
 
 @class SCMessageSender;
 @class SCMessage;
+@class SCMessageObject;
 
 /*
  *	Notification sent when there are new messages to display. This will
@@ -79,6 +80,6 @@
  *	on which messages are sent for a user, refreshing every 5 minutes.
  */
 
-- (void)sendMessage:(NSString *)cleartext toSender:(NSString *)sender completion:(void (^)(BOOL success))callback;
+- (void)sendMessage:(SCMessageObject *)cleartext toSender:(NSString *)sender completion:(void (^)(BOOL success))callback;
 
 @end

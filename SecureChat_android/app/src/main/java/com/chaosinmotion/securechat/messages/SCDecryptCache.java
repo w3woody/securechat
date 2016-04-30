@@ -18,10 +18,13 @@
 
 package com.chaosinmotion.securechat.messages;
 
+import com.chaosinmotion.securechat.encapsulation.SCMessageObject;
 import com.chaosinmotion.securechat.rsa.SCRSAManager;
 import com.chaosinmotion.securechat.utils.ThreadPool;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 /**
@@ -34,14 +37,14 @@ import java.util.LinkedHashMap;
  */
 public class SCDecryptCache
 {
-	private static class Cache extends LinkedHashMap<Integer,String>
+	private static class Cache extends LinkedHashMap<Integer,SCMessageObject>
 	{
 		public Cache()
 		{
 			super(100,0.75f,true);
 		}
 		@Override
-		protected boolean removeEldestEntry(Entry<Integer, String> eldest)
+		protected boolean removeEldestEntry(Entry<Integer, SCMessageObject> eldest)
 		{
 			return size() > 250;        // 250 messages, arbitrary limit
 		}
@@ -49,15 +52,17 @@ public class SCDecryptCache
 
 	public interface DecryptCallback
 	{
-		void decryptedMessage(int messageID, String msg);
+		void decryptedMessage(int messageID, SCMessageObject msg);
 	}
 
 	private static SCDecryptCache shared;
+	private HashMap<Integer,ArrayList<DecryptCallback>> callback;
 	private Cache cache;
 
 	private SCDecryptCache()
 	{
 		cache = new Cache();
+		callback = new HashMap<Integer,ArrayList<DecryptCallback>>();
 	}
 
 	public static synchronized SCDecryptCache get()
@@ -74,36 +79,49 @@ public class SCDecryptCache
 	 * thread and returned once decrypted.
 	 * @param data The data to decrypt
 	 * @param index The message index of the message to decrypt
-	 * @param callback The callback if this is decoded asynchronously
+	 * @param c The callback if this is decoded asynchronously
 	 * @return The message or null if not in the cache
 	 */
-	public String decrypt(final byte[] data, final int index, final DecryptCallback callback)
+	public synchronized SCMessageObject decrypt(final byte[] data, final int index, final DecryptCallback c)
 	{
-		String ret = cache.get(index);
+		SCMessageObject ret = cache.get(index);
 		if (ret != null) return ret;
 
-		ThreadPool.get().enqueueAsync(new Runnable()
-		{
-			@Override
-			public void run()
+		ArrayList<DecryptCallback> list = callback.get(index);
+		boolean runFlag = false;
+		if (list == null) {
+			runFlag = true;
+			list = new ArrayList<DecryptCallback>();
+			callback.put(index,list);
+		}
+		list.add(c);
+
+		if (runFlag) {
+			ThreadPool.get().enqueueAsync(new Runnable()
 			{
-				try {
+				@Override
+				public void run()
+				{
 					byte[] decrypt = SCRSAManager.shared().decodeData(data);
-					final String str = new String(decrypt,"UTF-8");
+					final SCMessageObject msg = new SCMessageObject(decrypt);
 					ThreadPool.get().enqueueMain(new Runnable()
 					{
 						@Override
 						public void run()
 						{
-							cache.put(index,str);
-							callback.decryptedMessage(index,str);
+							cache.put(index, msg);
+
+							ArrayList<DecryptCallback> l = callback.get(index);
+							callback.remove(index);
+
+							for (DecryptCallback cb: l) {
+								cb.decryptedMessage(index, msg);
+							}
 						}
 					});
-				} catch (UnsupportedEncodingException e) {
-					callback.decryptedMessage(index,"");
 				}
-			}
-		});
+			});
+		}
 		return null;
 	}
 }

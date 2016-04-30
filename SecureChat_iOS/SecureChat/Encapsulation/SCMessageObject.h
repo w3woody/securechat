@@ -1,9 +1,9 @@
 //
-//  SCChatTableViewCell.h
+//  SCMessageObject.h
 //  SecureChat
 //
-//  Created by William Woody on 3/19/16.
-//  Copyright © 2016 by William Edward Woody.
+//  Created by William Woody on 4/26/16.
+//  Copyright © 2016 William Edward Woody. All rights reserved.
 //
 
 /*	SecureChat: A secure chat system which permits secure communications 
@@ -25,14 +25,34 @@
  *	with this program. If not, see <http://www.gnu.org/licenses/>
  */
 
+
 #import <UIKit/UIKit.h>
-#import "SCBubbleView.h"
 
-@class SCMessage;
-@class SCMessageObject;
+/*
+ *	The intent of this object is to help encapsulate and parse a message
+ *	that is then sent via the SecureMessage back end.
+ */
 
-@interface SCChatTableViewCell : UITableViewCell
 
-- (void)setMessage:(SCMessageObject *)message atTime:(NSDate *)date;
+@interface SCMessageObject : NSObject
+
+// Initialize object from back end data
+- (id)initWithData:(NSData *)data;
+
+// Create a message to be sent
+- (id)initWithString:(NSString *)msg;
+
+// Create a message to be sent
+- (id)initWithImage:(UIImage *)image;
+
+// Encode this message as a data blob
+- (NSData *)dataFromMessage;
+
+// Summary view content
+- (NSString *)summaryMessageText;
+
+// Bubble rendering management
+- (CGSize)sizeForWidth:(CGFloat)width;
+- (void)drawWithRect:(CGRect)rect withTextColor:(UIColor *)txtColor;
 
 @end

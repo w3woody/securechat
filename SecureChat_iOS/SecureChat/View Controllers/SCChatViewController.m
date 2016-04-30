@@ -35,6 +35,18 @@
 #import "SCDeviceCache.h"
 #import "SCChatSummaryView.h"
 #import "SCDecryptCache.h"
+#import "SCMessageObject.h"
+#import "UIImage+SCResizeImage.h"
+
+/*
+ *	Constants
+ */
+
+#define MAXDIMENSION		640		// max size of image uploaded to server
+
+/*
+ *	Class internals
+ */
 
 @interface SCChatViewController ()
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -42,11 +54,16 @@
 @property (weak, nonatomic) IBOutlet UITextView *textView;
 @property (weak, nonatomic) IBOutlet SCChatSummaryView *deviceCount;
 @property (weak, nonatomic) IBOutlet UILabel *chatPrompt;
+@property (weak, nonatomic) IBOutlet UIButton *photoButton;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *editHeight;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *bottomBorder;
 
 @property (strong) NSMutableDictionary<NSNumber *, NSString *> *decode;
+
+// For image uploading
+@property (strong) UIPopoverController *popover;
+
 @end
 
 @implementation SCChatViewController
@@ -208,11 +225,13 @@
 	self.editHeight.constant = 45;
 	self.chatPrompt.hidden = NO;
 
+	SCMessageObject *msg = [[SCMessageObject alloc] initWithString:cleartext];
+
 	// We can do better than flashing the wait spinner. Ideally we need to
 	// have each bubble contain a spinner when in progress
 	[[SCWait shared] wait];
 
-	[[SCMessageQueue shared] sendMessage:cleartext toSender:self.senderName completion:^(BOOL success) {
+	[[SCMessageQueue shared] sendMessage:msg toSender:self.senderName completion:^(BOOL success) {
 		[[SCWait shared] stopWait];
 		if (success) {
 			// TODO -- send success?
@@ -220,6 +239,114 @@
 			// TODO -- send failure?
 		}
 	}];
+}
+
+#pragma mark - Camera
+
+- (void)closePicker:(UIImagePickerController *)picker
+{
+	if (self.popover) {
+		[self.popover dismissPopoverAnimated:YES];
+		self.popover = nil;
+	} else {
+		[picker dismissViewControllerAnimated:YES completion:nil];
+	}
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+	[self closePicker:picker];
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
+{
+	UIImage *image = info[UIImagePickerControllerOriginalImage];
+	image = [image resizeToFit:MAXDIMENSION];
+	if (image != nil) {
+		// Construct message and upload
+		SCMessageObject *msg = [[SCMessageObject alloc] initWithImage:image];
+
+		[[SCWait shared] wait];
+		[[SCMessageQueue shared] sendMessage:msg toSender:self.senderName completion:^(BOOL success) {
+			[[SCWait shared] stopWait];
+
+			// Dismiss only after uploaded
+			[self closePicker:picker];
+
+			if (success) {
+				// TODO -- send success?
+			} else {
+				// TODO -- send failure?
+			}
+		}];
+
+	} else {
+		[self closePicker:picker];
+	}
+}
+
+- (void)doPhotoLibrary
+{
+	UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+	picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+	picker.delegate = self;
+
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+		self.popover = [[UIPopoverController alloc] initWithContentViewController:picker];
+		[self.popover presentPopoverFromRect:self.photoButton.bounds inView:self.photoButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+	} else {
+		self.popover = nil;
+		[self presentViewController:picker animated:YES completion:nil];
+	}
+}
+
+- (void)doTakePhoto
+{
+	UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+	picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+	picker.delegate = self;
+	self.popover = nil;
+
+	[self presentViewController:picker animated:YES completion:nil];
+}
+
+- (IBAction)doCamera:(id)sender
+{
+	/*
+	 *	Present picker depending on what is available.
+	 *
+	 *	Note: on the iPad this is a kludge. Ideally we'd use a table view and
+	 *	present our view controller for picking a photograph by pushing the
+	 *	navigation controller in the popover.
+	 */
+
+	UIAlertController *c;
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+		c = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Select Photograph Source", @"Prompt") message:nil preferredStyle:UIAlertControllerStyleAlert];
+	} else {
+		c = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+	}
+
+	UIAlertAction *action = [UIAlertAction actionWithTitle:NSLocalizedString(@"Photo Library", @"Button") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+		[self doPhotoLibrary];
+	}];
+	[c addAction:action];
+
+	if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+		action = [UIAlertAction actionWithTitle:NSLocalizedString(@"Take Photo", @"Button") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+			[self doTakePhoto];
+		}];
+		[c addAction:action];
+	}
+
+	if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
+		action = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"Button") style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+
+		}];
+		[c addAction:action];
+	}
+
+	[self presentViewController:c animated:YES completion:nil];
 }
 
 #pragma mark - Table View
@@ -240,10 +367,10 @@
 	NSArray<SCMessage *> *marray = [[SCMessageQueue shared] messagesInRange:range fromSender:self.senderID];
 	SCMessage *message = marray[ix & 15];
 
-	NSString *msg = [[SCDecryptCache shared] decrypt:message.message atIndex:message.messageID withCallback:nil];
+	SCMessageObject *msg = [[SCDecryptCache shared] decrypt:message.message atIndex:message.messageID withCallback:nil];
 	if (msg == nil) return 60;
 
-	CGSize size = [SCBubbleView sizeWithText:msg width:self.tableView.bounds.size.width - 80];
+	CGSize size = [SCBubbleView sizeWithMessage:msg width:self.tableView.bounds.size.width - 80];
 	return ceil(size.height + 31);		// text spacing + top spacing
 }
 
@@ -266,12 +393,13 @@
 
 	SCChatTableViewCell *cell = (SCChatTableViewCell *)[tableView dequeueReusableCellWithIdentifier:clabel forIndexPath:indexPath];
 
-	NSString *msg = [[SCDecryptCache shared] decrypt:message.message atIndex:message.messageID withCallback:^(NSInteger ident, NSString *msg) {
+	SCMessageObject *msg = [[SCDecryptCache shared] decrypt:message.message atIndex:message.messageID withCallback:^(NSInteger ident, SCMessageObject *msg) {
 		// row loaded, so reload
 		[self.tableView reloadRowsAtIndexPaths:@[ indexPath ] withRowAnimation:UITableViewRowAnimationFade];
 	}];
 	if (msg == nil) {
-		msg = NSLocalizedString(@"(decrypt)", @"message");
+		// TODO: Rethink the decrypt placeholder
+		msg = [[SCMessageObject alloc] initWithString:NSLocalizedString(@"(decrypt)", @"message")];
 	}
 	[cell setMessage:msg atTime:message.timestamp];
 

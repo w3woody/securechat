@@ -20,11 +20,17 @@ package com.chaosinmotion.securechat.activities;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,14 +38,19 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.chaosinmotion.securechat.R;
 import com.chaosinmotion.securechat.chatusers.ChatAdapter;
+import com.chaosinmotion.securechat.encapsulation.SCMessageObject;
 import com.chaosinmotion.securechat.messages.SCMessageDatabase;
 import com.chaosinmotion.securechat.messages.SCMessageQueue;
+import com.chaosinmotion.securechat.utils.JPEGImage;
 
-import java.util.List;
+import java.io.File;
+import java.util.UUID;
 
 /**
  * Created by woody on 4/22/16.
@@ -52,6 +63,11 @@ public class ChatActivity extends AppCompatActivity
 	private ListView listView;
 	private Button sendButton;
 	private EditText textView;
+	private ImageButton photoButton;
+
+	private Uri imageUri;
+	private static final int TAKE_PICTURE = 1;
+	private static final int MAXSIZE = 640; // maximum image size
 
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -83,8 +99,73 @@ public class ChatActivity extends AppCompatActivity
 		    }
 	    });
 
+	    photoButton = (ImageButton)findViewById(R.id.photo);
+	    photoButton.setOnClickListener(new View.OnClickListener()
+	    {
+		    @Override
+		    public void onClick(View v)
+		    {
+			    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+			    File photo = new File(Environment.getExternalStorageDirectory(),"pic" + UUID.randomUUID().toString() + ".jpg");
+				imageUri = Uri.fromFile(photo);
+			    intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+			    startActivityForResult(intent,TAKE_PICTURE);
+		    }
+	    });
+
 	    // TODO: Scroll to end, maintain scroll to end.
     }
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		super.onActivityResult(requestCode,resultCode,data);
+		if ((requestCode == TAKE_PICTURE) && (resultCode == Activity.RESULT_OK)) {
+			getContentResolver().notifyChange(imageUri,null);
+			ContentResolver cr = getContentResolver();
+			Bitmap bmap = null;
+
+			try {
+				bmap = MediaStore.Images.Media.getBitmap(cr,imageUri);
+
+				doSubmitPhoto(bmap);
+			}
+			catch (Exception ex) {
+				Toast.makeText(this,"Failed to load photograph",Toast.LENGTH_LONG).show();
+				Log.e("SecureChat","Camera failure",ex);
+			}
+			finally {
+				if (bmap != null) {
+					bmap.recycle();
+				}
+			}
+		}
+	}
+
+	private void doSubmitPhoto(final Bitmap bmap)
+	{
+		// TODO
+		JPEGImage image = new JPEGImage(bmap,MAXSIZE,MAXSIZE);
+		SCMessageObject msg = new SCMessageObject(image);
+		bmap.recycle();
+
+		String sending = getResources().getString(R.string.sending);
+		// TODO: wait spinner
+
+		SCMessageQueue.get().sendMessage(msg, username, new SCMessageQueue.SenderCompletion()
+		{
+			@Override
+			public void senderCallback(boolean success)
+			{
+				if (success) {
+					Toast.makeText(ChatActivity.this,"Image uploaded",Toast.LENGTH_LONG).show();
+					// TODO: send success?
+				} else {
+					// TODO: send failure?
+				}
+			}
+		});
+	}
 
 	private void doSubmit()
 	{
@@ -93,8 +174,10 @@ public class ChatActivity extends AppCompatActivity
 
 		textView.setText("");
 
+		SCMessageObject msg = new SCMessageObject(clearText);
+
 		String sending = getResources().getString(R.string.sending);
-		SCMessageQueue.get().sendMessage(clearText, username, new SCMessageQueue.SenderCompletion()
+		SCMessageQueue.get().sendMessage(msg, username, new SCMessageQueue.SenderCompletion()
 		{
 			@Override
 			public void senderCallback(boolean success)

@@ -244,7 +244,6 @@
                                                     <rect key="frame" x="70" y="5" width="520" height="39"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="text" value="Sent Message"/>
                                                         <userDefinedRuntimeAttribute type="boolean" keyPath="senderFlag" value="YES"/>
                                                     </userDefinedRuntimeAttributes>
                                                 </view>
@@ -285,7 +284,6 @@
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="boolean" keyPath="senderFlag" value="NO"/>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="text" value="Received Message"/>
                                                     </userDefinedRuntimeAttributes>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="11/12/16 11:45 PM" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eth-Il-fNZ">
@@ -330,6 +328,16 @@
                                             <constraint firstAttribute="height" constant="1" id="YSU-9A-hb3"/>
                                         </constraints>
                                     </view>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="T9l-mB-XI7">
+                                        <rect key="frame" x="0.0" y="1" width="44" height="44"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="44" id="HAD-rG-bxJ"/>
+                                        </constraints>
+                                        <state key="normal" image="photo"/>
+                                        <connections>
+                                            <action selector="doCamera:" destination="H1J-6l-LB6" eventType="touchUpInside" id="0lb-L9-paa"/>
+                                        </connections>
+                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fvl-dI-44m">
                                         <rect key="frame" x="534" y="1" width="66" height="44"/>
                                         <constraints>
@@ -344,7 +352,7 @@
                                         </connections>
                                     </button>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="kem-pv-XlS">
-                                        <rect key="frame" x="0.0" y="1" width="534" height="44"/>
+                                        <rect key="frame" x="44" y="1" width="490" height="44"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="yes" spellCheckingType="yes"/>
@@ -353,7 +361,7 @@
                                         </connections>
                                     </textView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="140" placeholderIntrinsicHeight="21" text="Chat Message" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WZC-1M-cSX">
-                                        <rect key="frame" x="5" y="9" width="140" height="21"/>
+                                        <rect key="frame" x="49" y="10" width="140" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
@@ -361,18 +369,21 @@
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstItem="WZC-1M-cSX" firstAttribute="leading" secondItem="89c-uE-eXl" secondAttribute="leading" constant="5" id="059-tv-jzw"/>
-                                    <constraint firstItem="WZC-1M-cSX" firstAttribute="top" secondItem="hIb-3N-U9V" secondAttribute="bottom" constant="8" id="1Ez-kE-NZc"/>
+                                    <constraint firstItem="WZC-1M-cSX" firstAttribute="leading" secondItem="89c-uE-eXl" secondAttribute="leading" constant="49" id="059-tv-jzw"/>
+                                    <constraint firstItem="WZC-1M-cSX" firstAttribute="top" secondItem="hIb-3N-U9V" secondAttribute="bottom" constant="9" id="1Ez-kE-NZc"/>
                                     <constraint firstItem="fvl-dI-44m" firstAttribute="leading" secondItem="kem-pv-XlS" secondAttribute="trailing" id="6Ux-T2-dbV"/>
                                     <constraint firstAttribute="bottom" secondItem="kem-pv-XlS" secondAttribute="bottom" id="9ct-vX-VrM"/>
+                                    <constraint firstAttribute="bottom" secondItem="T9l-mB-XI7" secondAttribute="bottom" id="CAg-HN-fDY"/>
                                     <constraint firstAttribute="trailing" secondItem="hIb-3N-U9V" secondAttribute="trailing" id="Lp8-Bb-YYA"/>
                                     <constraint firstAttribute="height" constant="45" id="MzN-SB-bZU"/>
                                     <constraint firstItem="fvl-dI-44m" firstAttribute="top" secondItem="hIb-3N-U9V" secondAttribute="bottom" id="QDc-Pj-nxv"/>
                                     <constraint firstItem="hIb-3N-U9V" firstAttribute="leading" secondItem="89c-uE-eXl" secondAttribute="leading" id="RWC-ME-ZKU"/>
                                     <constraint firstAttribute="bottom" secondItem="fvl-dI-44m" secondAttribute="bottom" id="TJF-gx-1BZ"/>
+                                    <constraint firstItem="T9l-mB-XI7" firstAttribute="leading" secondItem="89c-uE-eXl" secondAttribute="leading" id="X0q-ry-gP7"/>
                                     <constraint firstAttribute="trailing" secondItem="fvl-dI-44m" secondAttribute="trailing" id="eFq-Fp-3wW"/>
-                                    <constraint firstItem="kem-pv-XlS" firstAttribute="leading" secondItem="89c-uE-eXl" secondAttribute="leading" id="p9T-8d-0NQ"/>
+                                    <constraint firstItem="kem-pv-XlS" firstAttribute="leading" secondItem="89c-uE-eXl" secondAttribute="leading" constant="44" id="p9T-8d-0NQ"/>
                                     <constraint firstItem="kem-pv-XlS" firstAttribute="top" secondItem="hIb-3N-U9V" secondAttribute="bottom" id="qCI-tO-Ewf"/>
+                                    <constraint firstItem="T9l-mB-XI7" firstAttribute="top" secondItem="hIb-3N-U9V" secondAttribute="bottom" id="rtu-Lz-vsQ"/>
                                     <constraint firstItem="hIb-3N-U9V" firstAttribute="top" secondItem="89c-uE-eXl" secondAttribute="top" id="xFK-Vn-NNd"/>
                                 </constraints>
                             </view>
@@ -397,6 +408,7 @@
                         <outlet property="chatPrompt" destination="WZC-1M-cSX" id="VHq-4K-3gw"/>
                         <outlet property="deviceCount" destination="aBq-Vh-Fep" id="d3c-8H-8kG"/>
                         <outlet property="editHeight" destination="MzN-SB-bZU" id="1kq-YI-dyO"/>
+                        <outlet property="photoButton" destination="T9l-mB-XI7" id="BQP-Kk-ncs"/>
                         <outlet property="sendButton" destination="fvl-dI-44m" id="QYV-NU-4h9"/>
                         <outlet property="tableView" destination="j2S-Dy-l8K" id="vjj-AW-JO7"/>
                         <outlet property="textView" destination="kem-pv-XlS" id="U5k-Aw-aWn"/>
@@ -620,4 +632,7 @@
             <point key="canvasLocation" x="330" y="-223"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="photo" width="44" height="44"/>
+    </resources>
 </document>

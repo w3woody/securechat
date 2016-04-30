@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:stackFromBottom="true"
-            android:transcriptMode="alwaysScroll"
+            android:transcriptMode="normal"
             android:layout_weight="1"
             tools:showIn="@layout/activity_main">
 
@@ -54,6 +54,13 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+            <ImageButton
+                android:layout_width="44dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/photo"
+                android:id="@+id/photo"
+                style="@style/OnboardButton" />
 
             <EditText
                 android:layout_width="0dp"
