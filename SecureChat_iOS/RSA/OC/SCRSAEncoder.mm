@@ -77,10 +77,10 @@
 
 	SCRSAPadding padding(self.publicRSAKey->Size());
 	size_t msgSize = padding.GetMessageSize();
-	size_t encSize = padding.GetEncodeSize() / sizeof(uint32_t);	// in 32-bit words
+	size_t encSize = padding.GetEncodeSize() / sizeof(BIWORD);	// in 32-bit words
 
 	uint8_t *msgBuffer = (uint8_t *)malloc(msgSize);
-	uint32_t *encBuffer = (uint32_t *)malloc(padding.GetEncodeSize());
+	BIWORD *encBuffer = (BIWORD *)malloc(padding.GetEncodeSize());
 
 	uint8_t *dataPtr = (uint8_t *)[data bytes];
 	uint32_t len = (uint32_t)data.length;
@@ -116,35 +116,43 @@
 			// (I.E.: we have a stream of bytes but we want them
 			// flipped to deal with the host order for long words)
 			for (uint32_t i = 0; i < encSize; ++i) {
+#ifdef BIUSE32BIT
 				encBuffer[i] = ntohl(encBuffer[i]);
+#else
+				encBuffer[i] = ntohs(encBuffer[i]);
+#endif
 			}
 
 			// Spin the bytes. That's because our padding puts the MSB
 			// at word 0, and our SCBigInteger implementation wants the
 			// MSB at word n-1
 			for (size_t i = 0, j = encSize-1; i < j; ++i, --j) {
-				uint32_t tmp = encBuffer[i];
+				BIWORD tmp = encBuffer[i];
 				encBuffer[i] = encBuffer[j];
 				encBuffer[j] = tmp;
 			}
 
 			// Now convert to an integer, and transform via RSA
-			SCBigInteger bi(encBuffer,(uint32_t)encSize);
+			SCBigInteger bi(encBuffer,(size_t)encSize);
 			SCBigInteger ei = self.publicRSAKey->Transform(bi);
-			memcpy(encBuffer,ei.GetData(),encSize * sizeof(uint32_t));
+			memcpy(encBuffer,ei.GetData(),encSize * sizeof(BIWORD));
 
 			// Spin the bytes
 			for (size_t i = 0, j = encSize-1; i < j; ++i, --j) {
-				uint32_t tmp = encBuffer[i];
+				BIWORD tmp = encBuffer[i];
 				encBuffer[i] = encBuffer[j];
 				encBuffer[j] = tmp;
 			}
 
 			// Spin the bits back to network order and write the data
 			for (uint32_t i = 0; i < encSize; ++i) {
+#ifdef BIUSE32BIT
 				encBuffer[i] = htonl(encBuffer[i]);
+#else
+				encBuffer[i] = htons(encBuffer[i]);
+#endif
 			}
-			[ret appendBytes:encBuffer length:encSize * sizeof(uint32_t)];
+			[ret appendBytes:encBuffer length:encSize * sizeof(BIWORD)];
 		}
 	}
 
@@ -162,36 +170,44 @@
 		// (I.E.: we have a stream of bytes but we want them
 		// flipped to deal with the host order for long words)
 		for (uint32_t i = 0; i < encSize; ++i) {
+#ifdef BIUSE32BIT
 			encBuffer[i] = ntohl(encBuffer[i]);
+#else
+			encBuffer[i] = ntohs(encBuffer[i]);
+#endif
 		}
 
 		// Spin the bytes. That's because our padding puts the MSB
 		// at word 0, and our SCBigInteger implementation wants the
 		// MSB at word n-1
 		for (size_t i = 0, j = encSize-1; i < j; ++i, --j) {
-			uint32_t tmp = encBuffer[i];
+			BIWORD tmp = encBuffer[i];
 			encBuffer[i] = encBuffer[j];
 			encBuffer[j] = tmp;
 		}
 
 		// Now convert to an integer, and transform via RSA
 
-		SCBigInteger bi(encBuffer,(uint32_t)encSize);
+		SCBigInteger bi(encBuffer,(size_t)encSize);
 		SCBigInteger ei = self.publicRSAKey->Transform(bi);
-		memcpy(encBuffer,ei.GetData(),encSize * sizeof(uint32_t));
+		memcpy(encBuffer,ei.GetData(),encSize * sizeof(BIWORD));
 
 		// Spin the bytes
 		for (size_t i = 0, j = encSize-1; i < j; ++i, --j) {
-			uint32_t tmp = encBuffer[i];
+			BIWORD tmp = encBuffer[i];
 			encBuffer[i] = encBuffer[j];
 			encBuffer[j] = tmp;
 		}
 
 		// Spin the bits back to network order and write the data
 		for (uint32_t i = 0; i < encSize; ++i) {
+#ifdef BIUSE32BIT
 			encBuffer[i] = htonl(encBuffer[i]);
+#else
+			encBuffer[i] = htons(encBuffer[i]);
+#endif
 		}
-		[ret appendBytes:encBuffer length:encSize * sizeof(uint32_t)];
+		[ret appendBytes:encBuffer length:encSize * sizeof(BIWORD)];
 	}
 
 	/*

@@ -47,6 +47,9 @@ void SCMontMath::MontInit()
 	/*
 	 *	All this assumes m is odd, which is true for RSA keys. This
 	 *	calculates the value - (m-1) % b using newton iteration
+	 *
+	 *	Note: I'm not sure how this works. But I know BIWORD is either
+	 *	uint16_t or uint32_t, and 2**16 evenly divides 2**32.
 	 */
 
 	uint32_t v = m.dataArray[0];
@@ -55,7 +58,7 @@ void SCMontMath::MontInit()
 	t *= 2 - v*t;
 	t *= 2 - v*t;
 	t *= 2 - v*t;
-	minv = - t;				// All mod 32, so we don't care unsigned
+	minv = (BIWORD)(-t);		// All mod 32, so we don't care unsigned
 
 	/*
 	 *	Now calculate rmod (R % mod) and r2mod ((R*R) % mod). These are
@@ -64,7 +67,7 @@ void SCMontMath::MontInit()
 
 	SCBigInteger r;
 	r.Realloc(m.dataSize + 1);
-	memset(r.dataArray,0,m.dataSize * sizeof(uint32_t));
+	memset(r.dataArray,0,m.dataSize * sizeof(BIWORD));
 	r.dataArray[m.dataSize] = 1;
 	r.dataSize = m.dataSize + 1;
 
@@ -84,10 +87,10 @@ SCBigInteger SCMontMath::MontMult(const SCBigInteger &x, const SCBigInteger &y)
 	SCBigInteger a = 0;
 
 	/* 2 */
-	for (uint32_t i = 0; i < m.dataSize; i++) {
+	for (size_t i = 0; i < m.dataSize; i++) {
 		/* 2.1: calculate ui */
-		uint32_t ui = 0;
-		uint32_t xi = 0;
+		BIWORD ui = 0;
+		BIWORD xi = 0;
 
 		/*
 		 *	Note that b = 2**32, so all math we perform in uint32_t will be
@@ -105,9 +108,9 @@ SCBigInteger SCMontMath::MontMult(const SCBigInteger &x, const SCBigInteger &y)
 		ui *= minv;
 
 		/* 2.2: A <- (A + xi * y + ui * m) / b */
-		a.MulAdd(y,xi,0);		/* A += xi * y */
-		a.MulAdd(m,ui,0);		/* A += ui * m */
-		a.ShiftRight(32);		/* A /= b */
+		a.MulAdd(y,xi);			/* A += xi * y */
+		a.MulAdd(m,ui);			/* A += ui * m */
+		a.RightShiftWord();
 	}
 
 	/* 3 */
@@ -148,17 +151,24 @@ SCBigInteger SCMontMath::ExpMod(const SCBigInteger &val, const SCBigInteger &e)
 	SCBigInteger x = MontMult(v, r2mod);
 
 	// 2
-	int32_t nbits = e.GetBitLength();
-	for (int32_t i = nbits; i >= 0; --i) {
-		// 2.1
-		a = MontMult(a, a);
+//	size_t nbits = e.GetBitLength();
+//	for (int32_t i = (int32_t)nbits; i >= 0; --i) { // Need signed number; int32_t should be big enough
+//		// 2.1
+//		a = MontMult(a, a);
+//
+//		// 2.2
+//		if (e.BitTest(i)) {
+//			a = MontMult(a, x);
+//		}
+//	}
 
-		// 2.2
+	size_t nbits = e.GetBitLength();
+	for (size_t i = 0; i < nbits; ++i) { // Need signed number; int32_t should be big enough
 		if (e.BitTest(i)) {
-			a = MontMult(a, x);
+			a = MontMult(a,x);
 		}
+		x = MontMult(x,x);
 	}
-
 	return MontMult(a, SCBigInteger(1));
 }
 
