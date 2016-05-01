@@ -661,8 +661,6 @@ void SCBigInteger::RightShiftWord()
 
 void SCBigInteger::MulAdd(const SCBigInteger &add, BIWORD mul)
 {
-//	SCBigInteger test = *this;
-
 	// Set size to be big enough
 	size_t msize = add.dataSize + 1;
 	if (msize < dataSize + 1) msize = dataSize + 1;
@@ -677,9 +675,9 @@ void SCBigInteger::MulAdd(const SCBigInteger &add, BIWORD mul)
 	BIWORD *src = add.dataArray;
 
 	size_t addSize = add.dataSize;
-//	for (i = 0; i < addSize; ++i) {
 	while (addSize-- > 0) {
 		scratch += *dst;
+
 		scratch += ((BIWIDEWORD)mul) * *src;
 		*dst = (BIWORD)scratch;
 		scratch >>= BITSPERWORD;
@@ -706,11 +704,6 @@ void SCBigInteger::MulAdd(const SCBigInteger &add, BIWORD mul)
 		if (dataArray[dataSize-1] == 0) --dataSize;
 		else break;
 	}
-
-//	test.MulAdd(add, mul, 0);
-//	if (test != *this) {
-//		printf("### WTF?\n");
-//	}
 }
 
 /************************************************************************/
