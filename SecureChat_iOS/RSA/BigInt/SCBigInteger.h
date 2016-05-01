@@ -38,8 +38,15 @@
 /*																		*/
 /************************************************************************/
 
-typedef uint16_t	BIWORD;
-typedef int16_t		SIGNED_BIWORD;
+#define BIUSE32BIT		1
+
+#ifdef BIUSE32BIT
+	typedef uint32_t	BIWORD;
+	typedef int32_t		SIGNED_BIWORD;
+#else
+	typedef uint16_t	BIWORD;
+	typedef int16_t		SIGNED_BIWORD;
+#endif
 
 /*	SCBigInteger
  *
@@ -157,6 +164,17 @@ class SCBigInteger
 		bool					PassRabinMiller(int iter) const;
 
 		SCBigInteger			ModPowOdd(const SCBigInteger &e, const SCBigInteger &m) const;
+
+		/*
+		 *	Montgomery Multiplication support
+		 *
+		 *	When generating an RSA key these two routines are called a lot.
+		 *	So they are highly optimized versions of other routines we have
+		 *	elsewhere
+		 */
+
+		void					RightShiftWord();
+		void					MulAdd(const SCBigInteger &i, BIWORD mul);
 
 		/*
 		 *	Values are stored in the array with the least significant byte

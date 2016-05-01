@@ -36,14 +36,26 @@
 /*																		*/
 /************************************************************************/
 
-typedef uint32_t	BIWIDEWORD;			// twice the width of BIWORD
-typedef int32_t		SIGNED_BIWIDEWORD;	// twice the width of BIWORD
+#ifdef BIUSE32BIT
+	// 32-bit word size
+	typedef uint64_t	BIWIDEWORD;			// twice the width of BIWORD
+	typedef int64_t		SIGNED_BIWIDEWORD;	// twice the width of BIWORD
 
-#define MINALLOC	32					// minimum words to allocate
-#define BITSPERWORD	16					// Bits in BIWORD
+	#define MINALLOC	64					// minimum words to allocate
+	#define BITSPERWORD	32					// Bits in BIWORD
 
-#define ESTIMATE(x)		((3 + (x))/4)	// Estimate words by number length
-//#define ESTIMATE(x)		((8 + (x))/9)	// Estimate words by number length (32-bit version)
+	#define ESTIMATE(x)		((8 + (x))/9)	// Estimate words by number length (32-bit version)
+
+#else
+	// 16-bit word size
+	typedef uint32_t	BIWIDEWORD;			// twice the width of BIWORD
+	typedef int32_t		SIGNED_BIWIDEWORD;	// twice the width of BIWORD
+
+	#define MINALLOC	32					// minimum words to allocate
+	#define BITSPERWORD	16					// Bits in BIWORD
+
+	#define ESTIMATE(x)		((3 + (x))/4)	// Estimate words by number length
+#endif
 
 /************************************************************************/
 /*																		*/
@@ -366,8 +378,8 @@ void SCBigInteger::ShiftLeft(size_t bits)
 	if (dataSize == 0) return;
 
 	BIWIDEWORD scratch;
-	size_t off = bits % 32;
-	size_t words = bits / 32;
+	size_t off = bits % BITSPERWORD;
+	size_t words = bits / BITSPERWORD;
 	size_t src,dst;
 
 	// Make sure big enough
@@ -407,8 +419,8 @@ void SCBigInteger::ShiftRight(size_t bits)
 	if (dataSize == 0) return;
 
 	BIWIDEWORD scratch;
-	size_t off = bits % 32;
-	size_t words = bits / 32;
+	size_t off = bits % BITSPERWORD;
+	size_t words = bits / BITSPERWORD;
 	size_t src,dst;
 
 	src = words;
@@ -505,18 +517,25 @@ void SCBigInteger::SubInternal(const SCBigInteger &bi)
 
 void SCBigInteger::SetBit(size_t bit)
 {
-//	size_t len = (bit + BITSPERWORD) >> 5;		// necessary space to fit.
+#ifdef BIUSE32BIT
+	size_t len = (bit + BITSPERWORD) >> 5;		// necessary space to fit.
+#else
 	size_t len = (bit + BITSPERWORD) >> 4;		// necessary space to fit.
+#endif
+
 	Realloc(len);
 
 	/*
 	 *	note that we have garbage at the bits above the data size count.
 	 */
 
-//	BIWORD bmask = (BIWORD)(1L << (bit & 31));	// (1<<5)-1
-//	size_t index = bit >> 5;
+#ifdef BIUSE32BIT
+	BIWORD bmask = (BIWORD)(1L << (bit & 31));	// (1<<5)-1
+	size_t index = bit >> 5;
+#else
 	BIWORD bmask = (BIWORD)(1L << (bit & 15));	// (1<<4)-1
 	size_t index = bit >> 4;
+#endif
 
 	while (index >= dataSize) {
 		dataArray[dataSize++] = 0;
@@ -532,10 +551,13 @@ void SCBigInteger::SetBit(size_t bit)
 
 bool SCBigInteger::BitTest(size_t bit) const
 {
-//	BIWORD bmask = (BIWORD)(1L << (bit & 31));
-//	size_t index = (size_t)(bit >> 5);
+#ifdef BIUSE32BIT
+	BIWORD bmask = (BIWORD)(1L << (bit & 31));
+	size_t index = (size_t)(bit >> 5);
+#else
 	BIWORD bmask = (BIWORD)(1L << (bit & 15));
 	size_t index = (size_t)(bit >> 4);
+#endif
 
 	if (index >= dataSize) return false;
 	return 0 != (dataArray[index] & bmask);
@@ -614,6 +636,85 @@ void SCBigInteger::MulAdd(const SCBigInteger &add, BIWORD mul, size_t shift)
 
 /************************************************************************/
 /*																		*/
+/*	Montgomery Math Support												*/
+/*																		*/
+/************************************************************************/
+
+/*	SCBigInteger::RightShiftWord
+ *
+ *		Right shift (divide) by one word in size
+ */
+
+void SCBigInteger::RightShiftWord()
+{
+	if (dataSize > 0) {
+		memmove(dataArray, dataArray+1, sizeof(BIWORD) * (dataSize-1));
+		--dataSize;
+	}
+}
+
+/*	SCBigInteger::MulAdd
+ *
+ *		Multiply/add: this += i * mul. This routine has been optimized
+ *	to run as fast as possible, as it is called from our MontMath routine.
+ */
+
+void SCBigInteger::MulAdd(const SCBigInteger &add, BIWORD mul)
+{
+//	SCBigInteger test = *this;
+
+	// Set size to be big enough
+	size_t msize = add.dataSize + 1;
+	if (msize < dataSize + 1) msize = dataSize + 1;
+	Realloc(msize);
+
+	// Zero out the top
+	memset(dataArray + dataSize, 0, sizeof(BIWORD) * (msize - dataSize));
+
+	// Multiply and add in our destination
+	BIWIDEWORD scratch = 0;
+	BIWORD *dst = dataArray;
+	BIWORD *src = add.dataArray;
+
+	size_t addSize = add.dataSize;
+//	for (i = 0; i < addSize; ++i) {
+	while (addSize-- > 0) {
+		scratch += *dst;
+		scratch += ((BIWIDEWORD)mul) * *src;
+		*dst = (BIWORD)scratch;
+		scratch >>= BITSPERWORD;
+
+		++src;
+		++dst;
+	}
+
+	// Continue to add and shift until we no longer have anything to
+	// carry
+	size_t i = add.dataSize;
+	while (scratch) {
+		scratch += dataArray[i];
+		dataArray[i] = (BIWORD)scratch;
+		scratch >>= BITSPERWORD;
+		++i;
+	}
+
+	// Resize
+	if (dataSize < i) dataSize = i;
+
+	// Shrink
+	while (dataSize > 0) {
+		if (dataArray[dataSize-1] == 0) --dataSize;
+		else break;
+	}
+
+//	test.MulAdd(add, mul, 0);
+//	if (test != *this) {
+//		printf("### WTF?\n");
+//	}
+}
+
+/************************************************************************/
+/*																		*/
 /*	Big Integer Routines												*/
 /*																		*/
 /************************************************************************/
@@ -639,19 +740,28 @@ SCBigInteger SCBigInteger::Random(size_t nbits)
 
 	if (nbits < 1) nbits = 1;			// zero bits? Really?
 
-//	size_t nwords = (nbits + 31) >> 5;	// # words of storage we need
+#ifdef BIUSE32BIT
+	size_t nwords = (nbits + 31) >> 5;	// # words of storage we need
+#else
 	size_t nwords = (nbits + 15) >> 4;	// # words of storage we need
+#endif
+
 	ret.Realloc(nwords);
 
 	SecRandomCopyBytes(kSecRandomDefault, nwords * sizeof(BIWORD), (uint8_t *)ret.dataArray);
 
 	// Now trim the top
-//	if (nbits & 31) {
+#ifdef BIUSE32BIT
+	if (nbits & 31) {
+		BIWORD mswmask = (BIWORD)(1L << (nbits & 31)) - 1;
+		ret.dataArray[nwords-1] &= mswmask;
+	}
+#else
 	if (nbits & 15) {
-//		BIWORD mswmask = (BIWORD)(1L << (nbits & 31)) - 1;
 		BIWORD mswmask = (BIWORD)(1L << (nbits & 15)) - 1;
 		ret.dataArray[nwords-1] &= mswmask;
 	}
+#endif
 
 	// And count the bits. Note that there is a (VERY VERY VERY SMALL) chance
 	// the msw is zero, so we need to handle that case
@@ -682,10 +792,15 @@ SCBigInteger SCBigInteger::ProbablePrime(int nbits)
 	for (;;) {
 		// Set the nth bit. Random returned a word wide enough so we just
 		// need to flip the correct bit
-//		size_t word = (nbits-1) >> 5;
-//		BIWORD mask = (1 << ((nbits-1) & 31));
+
+#ifdef BIUSE32BIT
+		size_t word = (nbits-1) >> 5;
+		BIWORD mask = (1 << ((nbits-1) & 31));
+#else
 		size_t word = (nbits-1) >> 4;
 		BIWORD mask = (1 << ((nbits-1) & 15));
+#endif
+
 		tmp.dataArray[word] |= mask;
 		tmp.dataSize = word+1;
 		tmp.dataArray[0] |= 1;		// make odd
@@ -782,8 +897,11 @@ bool SCBigInteger::IsProbablePrime(int certainty) const
 
 size_t SCBigInteger::GetBitLength() const
 {
-//	return (dataSize - 1) * 32 + BitCount(dataArray[dataSize-1]);
+#ifdef BIUSE32BIT
+	return (dataSize - 1) * 32 + BitCount(dataArray[dataSize-1]);
+#else
 	return (dataSize - 1) * 16 + BitCount(dataArray[dataSize-1]);
+#endif
 }
 
 size_t SCBigInteger::GetLowestSetBit() const
@@ -800,8 +918,11 @@ size_t SCBigInteger::GetLowestSetBit() const
 		++x;
 	}
 
+#ifdef BIUSE32BIT
+	return index * 32 + x;
+#else
 	return index * 16 + x;
-//	return index * 32 + x;
+#endif
 }
 
 /*	SCBigInteger::PassRabinMiller
@@ -1296,8 +1417,11 @@ bool SCBigInteger::operator == (const SCBigInteger &i) const
 	if (isNeg != i.isNeg) return false;
 	if (dataSize != i.dataSize) return false;
 
-//	size_t nwords = (i.dataSize + 31) >> 5;
+#ifdef BIUSE32BIT
+	size_t nwords = (i.dataSize + 31) >> 5;
+#else
 	size_t nwords = (i.dataSize + 15) >> 4;
+#endif
 
 	return memcmp(i.dataArray, dataArray, nwords * sizeof(BIWORD)) == 0;
 }

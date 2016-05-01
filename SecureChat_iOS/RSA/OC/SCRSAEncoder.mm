@@ -116,8 +116,11 @@
 			// (I.E.: we have a stream of bytes but we want them
 			// flipped to deal with the host order for long words)
 			for (uint32_t i = 0; i < encSize; ++i) {
-//				encBuffer[i] = ntohl(encBuffer[i]);
+#ifdef BIUSE32BIT
+				encBuffer[i] = ntohl(encBuffer[i]);
+#else
 				encBuffer[i] = ntohs(encBuffer[i]);
+#endif
 			}
 
 			// Spin the bytes. That's because our padding puts the MSB
@@ -143,8 +146,11 @@
 
 			// Spin the bits back to network order and write the data
 			for (uint32_t i = 0; i < encSize; ++i) {
-//				encBuffer[i] = htonl(encBuffer[i]);
+#ifdef BIUSE32BIT
+				encBuffer[i] = htonl(encBuffer[i]);
+#else
 				encBuffer[i] = htons(encBuffer[i]);
+#endif
 			}
 			[ret appendBytes:encBuffer length:encSize * sizeof(BIWORD)];
 		}
@@ -164,8 +170,11 @@
 		// (I.E.: we have a stream of bytes but we want them
 		// flipped to deal with the host order for long words)
 		for (uint32_t i = 0; i < encSize; ++i) {
+#ifdef BIUSE32BIT
+			encBuffer[i] = ntohl(encBuffer[i]);
+#else
 			encBuffer[i] = ntohs(encBuffer[i]);
-//			encBuffer[i] = ntohl(encBuffer[i]);
+#endif
 		}
 
 		// Spin the bytes. That's because our padding puts the MSB
@@ -192,8 +201,11 @@
 
 		// Spin the bits back to network order and write the data
 		for (uint32_t i = 0; i < encSize; ++i) {
+#ifdef BIUSE32BIT
+			encBuffer[i] = htonl(encBuffer[i]);
+#else
 			encBuffer[i] = htons(encBuffer[i]);
-//			encBuffer[i] = htonl(encBuffer[i]);
+#endif
 		}
 		[ret appendBytes:encBuffer length:encSize * sizeof(BIWORD)];
 	}

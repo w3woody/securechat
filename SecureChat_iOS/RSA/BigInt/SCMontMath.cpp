@@ -108,10 +108,9 @@ SCBigInteger SCMontMath::MontMult(const SCBigInteger &x, const SCBigInteger &y)
 		ui *= minv;
 
 		/* 2.2: A <- (A + xi * y + ui * m) / b */
-		a.MulAdd(y,xi,0);		/* A += xi * y */
-		a.MulAdd(m,ui,0);		/* A += ui * m */
-		a.ShiftRight(16);		/* A /= b */
-//		a.ShiftRight(32);		/* A /= b */
+		a.MulAdd(y,xi);			/* A += xi * y */
+		a.MulAdd(m,ui);			/* A += ui * m */
+		a.RightShiftWord();
 	}
 
 	/* 3 */
@@ -152,17 +151,24 @@ SCBigInteger SCMontMath::ExpMod(const SCBigInteger &val, const SCBigInteger &e)
 	SCBigInteger x = MontMult(v, r2mod);
 
 	// 2
+//	size_t nbits = e.GetBitLength();
+//	for (int32_t i = (int32_t)nbits; i >= 0; --i) { // Need signed number; int32_t should be big enough
+//		// 2.1
+//		a = MontMult(a, a);
+//
+//		// 2.2
+//		if (e.BitTest(i)) {
+//			a = MontMult(a, x);
+//		}
+//	}
+
 	size_t nbits = e.GetBitLength();
-	for (int32_t i = (int32_t)nbits; i >= 0; --i) { // Need signed number; int32_t should be big enough
-		// 2.1
-		a = MontMult(a, a);
-
-		// 2.2
+	for (size_t i = 0; i < nbits; ++i) { // Need signed number; int32_t should be big enough
 		if (e.BitTest(i)) {
-			a = MontMult(a, x);
+			a = MontMult(a,x);
 		}
+		x = MontMult(x,x);
 	}
-
 	return MontMult(a, SCBigInteger(1));
 }
 
