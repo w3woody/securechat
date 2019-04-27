@@ -93,7 +93,7 @@
 
 - (void)doLogin:(SCNetworkCredentials *)creds withCallback:(void (^)(SCLoginError err))callback
 {
-	void (^copyCallback)(BOOL success) = [callback copy];
+	void (^copyCallback)(SCLoginError success) = [callback copy];
 
 	[self request:@"login/token" withParameters:nil caller:self response:^(SCNetworkResponse *response) {
 		if (response.success) {
